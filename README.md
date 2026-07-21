@@ -38,7 +38,7 @@ Toàn bộ hệ thống được phân rã thành các tầng rõ ràng, đảm 
 ┌──────────────────────────────────────────┐
 │         Python Simulator / YOLO Uno      │
 └──────────────────────────────────────────┘
-
+```
 ### Chi tiết các thành phần:
 1. **IoT Devices / Simulator:** Đọc thông số cảm biến (nhiệt độ, độ ẩm, ánh sáng) và gửi bản tin telemetry định kỳ lên Cloud (hiện mô phỏng bằng Python, có thể thay thế bằng phần cứng thực tế như YOLO Uno, ESP32, Arduino mà không cần sửa đổi Backend).
 2. **AWS EC2 (Backend):** Đóng vai trò là "bộ não" chạy FastAPI, chịu trách nhiệm tiếp nhận request, xác thực, xử lý logic, ghi log qua CloudWatch và tương tác với Database.
