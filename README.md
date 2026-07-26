@@ -70,6 +70,7 @@ Toàn bộ hệ thống được phân rã thành các tầng rõ ràng, đảm 
 - **Tối ưu vận hành:** Loại bỏ chi phí và phức tạp khi phải tự duy trì server vật lý tại từng địa điểm.
 
 ---
-
+Ghé thăm website của mình tại đây nhé: **[https://lekhanh1210lhp-cyber.github.io/aws-fcj-report/](https://lekhanh1210lhp-cyber.github.io/aws-fcj-report/)** 🎉
+---
 ## 📄 License & Bản quyền
 Copyright © 2026 Lê Bảo Khánh - HCMUT. All rights reserved.

@@ -1,6 +1,6 @@
 ---
 title: "Worklog Tuần 1"
-date: "2025-09-09"
+date: "2026-06-15"
 weight: 1
 chapter: false
 pre: " <b> 1.1. </b> "
@@ -8,36 +8,25 @@ pre: " <b> 1.1. </b> "
 
 ### Mục tiêu tuần 1:
 
-- Phân tích bài toán quản lý tập trung cho **Hệ thống Quản lý Tòa nhà (BMS)** đa chi nhánh.
-- Thiết kế **Kiến trúc hệ thống 5 tầng** cho Enterprise IoT Cloud Dashboard.
-- Lựa chọn và đánh giá các **Dịch vụ AWS** (EC2, RDS, CloudWatch) phù hợp cho hạ tầng Backend.
-- Định nghĩa **Mô hình dữ liệu** (Telemetry, Command) và chuẩn hóa cấu trúc REST API.
-- Khởi tạo repository dự án, thiết lập quản lý phiên bản và phân chia công việc trong nhóm.
+- Thiết lập môi trường AWS.
+- Xác định kiến trúc cốt lõi của hệ thống.
+- Thiết lập các giao thức bảo mật IAM.
 
 ### Công việc thực hiện trong tuần này:
 
-| Day | Task                                                                                                                                                                                                                                                                                                                                                                                                                                     | Start Date | Completion Date |
-| :-- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- | :-------------- |
-| 1   | **Phân tích yêu cầu bài toán (Business Requirement)** <br> - **Xác định vấn đề:** Phân tích nhu cầu giám sát và điều khiển tập trung các tòa nhà thông minh ở nhiều vị trí địa lý khác nhau (Hà Nội, Đà Nẵng, TP.HCM). <br> - **Phạm vi hệ thống:** Chốt danh sách cảm biến (nhiệt độ, độ ẩm, ánh sáng) và thiết bị cần điều khiển (quạt, đèn, rèm).                                                                                     | 08/09/2025 | 08/09/2025      |
-| 2   | **Thiết kế kiến trúc hệ thống (System Architecture)** <br> - **Mô hình 5 tầng:** Vẽ sơ đồ kiến trúc tổng thể từ Thiết bị IoT (Simulator/YOLO Uno) ➔ HTTP REST API ➔ FastAPI (EC2) ➔ PostgreSQL ➔ React Dashboard. <br> - **Luồng dữ liệu:** Phân tích luồng đẩy dữ liệu (Telemetry) từ thiết bị lên Cloud và luồng điều khiển (Command) từ Cloud xuống thiết bị.                                                                     | 09/09/2025 | 09/09/2025      |
-| 3   | **Quy hoạch hạ tầng Cloud** <br> - **Lựa chọn dịch vụ:** Đánh giá việc sử dụng AWS EC2 để chạy FastAPI Backend và AWS RDS (PostgreSQL) để lưu trữ dữ liệu chuỗi thời gian của cảm biến. <br> - **Chiến lược giám sát:** Lên kế hoạch tích hợp AWS CloudWatch để ghi log hoạt động của Backend và theo dõi tình trạng hệ thống.                                                                                                         | 10/09/2025 | 10/09/2025      |
-| 4   | **Thiết kế Database & API Contract** <br> - **Mô hình Database:** Phác thảo cấu trúc bảng PostgreSQL để lưu lịch sử đo đạc của thiết bị và trạng thái các lệnh điều khiển. <br> - **Đặc tả API:** Lập tài liệu cho các REST API core (VD: `POST /telemetry`, `POST /command`), quy định rõ cấu trúc JSON cho Request/Response.                                                                                                         | 11/09/2025 | 11/09/2025      |
-| 5   | **Khởi tạo dự án & Môi trường làm việc** <br> - **Thiết lập Git:** Khởi tạo repository trên GitHub, thiết lập các nhánh làm việc (branching rules) và viết file `README.md` nền tảng. <br> - **Phân công nhiệm vụ:** Chốt rõ vai trò của 4 thành viên (Cloud, Backend, Frontend, IoT) để đảm bảo tiến độ công việc không bị chồng chéo.                                                                                                | 12/09/2025 | 12/09/2025      |
+| Day | Task | Start Date | Completion Date |
+| :-- | :--- | :--------- | :-------------- |
+| 1 | **Đánh giá Kiến trúc (Architecture Review):** Chốt sơ đồ kiến trúc 5 tầng và phân công vai trò nghiêm ngặt cho các thành viên trong nhóm. | 15/06/2026 | 15/06/2026 |
+| 2 | **Thiết lập AWS IAM:** Kỹ sư Cloud thiết lập IAM users, groups, policies và bắt buộc áp dụng MFA cho tất cả các tài khoản. | 16/06/2026 | 16/06/2026 |
+| 3 | **VPC & Networking:** Thiết kế VPC, các subnet public/private, Internet Gateway và Route Tables. | 17/06/2026 | 17/06/2026 |
+| 4 | **Cấp phát EC2 (EC2 Provisioning):** Khởi chạy máy chủ Ubuntu EC2 cho FastAPI backend, gắn Elastic IP, cấu hình Security Groups (HTTP/SSH). | 18/06/2026 | 19/06/2026 |
+| 5 | **Thiết lập Repo:** Khởi tạo kho lưu trữ Git, xác định chiến lược phân nhánh (theo tiêu chuẩn Agile/Scrum). | 20/06/2026 | 21/06/2026 |
 
 ### Thành tựu Tuần 1:
 
-- **Hoàn thiện Kiến trúc Hệ thống**
-  - Thiết lập thành công bản thiết kế kiến trúc IoT 5 tầng rõ ràng, dễ mở rộng.
-  - Tách bạch hoàn toàn phần cứng và Backend, đảm bảo tương lai có thể thay thế Python Simulator bằng phần cứng thật (YOLO Uno/ESP32) mà không làm vỡ hệ thống.
-
-- **Chuẩn hóa Thông số Kỹ thuật**
-  - Hoàn thành thiết kế lược đồ Cơ sở dữ liệu (Database Schema) cho PostgreSQL.
-  - Chốt cấu trúc dữ liệu JSON giao tiếp giữa thiết bị và Cloud.
-
-- **Sẵn sàng triển khai**
-  - Repository đã được cấu hình chuẩn chỉ.
-  - Các thành viên đã nắm rõ vai trò kỹ thuật và lộ trình phát triển của các tuần tiếp theo.
+- Đã cấp phát thành công các tài nguyên AWS nền tảng.
+- Xác định rõ ràng quy trình làm việc (workflows) của nhóm.
 
 ---
 
-👉 **Kết quả:** Sau Tuần 1, nền tảng lý thuyết và bản vẽ kiến trúc của hệ thống Enterprise IoT Dashboard đã hoàn toàn vững chắc. Nhóm đã sẵn sàng bắt tay vào viết code cho Python Simulator và Backend API trong Tuần 2.
+👉 **Kết quả:** Sau Tuần 1, hạ tầng điện toán đám mây cốt lõi và kiến trúc hệ thống đã được thiết lập, tạo nền tảng vững chắc để tiến hành thiết kế cơ sở dữ liệu và khởi tạo backend trong Tuần 2.

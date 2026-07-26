@@ -1,6 +1,6 @@
 ---
 title: "Week 6 Worklog"
-date: "2025-09-09"
+date: "2026-07-20"
 weight: 1
 chapter: false
 pre: " <b> 1.6. </b> "
@@ -8,24 +8,19 @@ pre: " <b> 1.6. </b> "
 
 ### Week 6 Objectives:
 
-- **Containerization Mastery:** Master the process of packaging and operating applications on Container platforms (Docker) and orchestrating at scale with Amazon ECS.
-- **Automation & Optimization:** Automate the software development lifecycle (CI/CD) and optimize global user experience via CDN.
-- **Decoupled Architecture:** Understand and implement Event-driven/Decoupled architectures using AWS messaging and queuing services.
-- **Modern Backend Development:** Build high-performance, secure, and maintainable APIs using the modern FastAPI framework (Python).
+- Build the React.js foundational architecture for the Enterprise IoT Dashboard.
+- Design and implement the primary UI layout for the frontend application.
 
 ### Tasks to be carried out this week:
 
-| Day | Task                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Start Date | Completion Date | Reference Material                                                                           |
-| :-- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- | :-------------- | :------------------------------------------------------------------------------------------- |
-| 1   | **Containerization & Orchestration (Docker & ECS)** <br> - **Docker Deployment:** Packaged full-stack applications (Frontend/Backend/DB) into containers. Managed Images with **Docker Hub** and **Amazon ECR**. Configured Nginx as a Reverse Proxy. <br> - **Amazon ECS:** Orchestrated containers at scale. Differentiated between **EC2 Launch Type** and **AWS Fargate** (Serverless). <br> - **Deployment Strategies:** Practiced deployment strategies on ECS: **Rolling Update** (minimize downtime) and **Blue/Green** (safe traffic shifting).                                        | 13/10/2025 | 13/10/2025      | [Module Re-hand-on](https://github.com/danielleit241/aws-fcj-learning/tree/main/Re-hand-ons) |
-| 2   | **Content Delivery & CI/CD Automation** <br> - **CDN Optimization (Lab 9.4):** Integrated **Amazon CloudFront** with S3 Static Hosting, reducing global latency (from ~200ms to ~30ms) and setting up SSL/Custom Domain security. <br> - **Serverless CI/CD (Lab 8.4):** Built automated workflows with **AWS CodePipeline**. <br> &nbsp;&nbsp; + **CI:** Automated code build and test (CodeBuild). <br> &nbsp;&nbsp; + **CD:** Automated artifact deployment to Staging/Production environments (CodeDeploy).                                                                                 | 14/10/2025 | 14/10/2025      | [Module Re-hand-on](https://github.com/danielleit241/aws-fcj-learning/tree/main/Re-hand-ons) |
-| 3   | **Decoupled Architecture (SQS & SNS)** <br> - **Amazon SQS (Message Queue):** Designed a distributed order processing system using Standard Queues (high throughput) and FIFO Queues (guaranteed ordering) to decouple system components. <br> - **Amazon SNS (Pub/Sub):** Configured asynchronous notification mechanisms (Fan-out pattern) to multiple endpoints (Lambda, SQS, Email/SMS). <br> - **Integration:** Combined SNS and SQS to build a reliable and highly scalable Event-driven architecture.                                                                                    | 15/10/2025 | 15/10/2025      | [Module Re-hand-on](https://github.com/danielleit241/aws-fcj-learning/tree/main/Re-hand-ons) |
-| 4   | **Modern API Development with FastAPI (Part 1)** <br> - **Framework Fundamentals:** Got started with **FastAPI** (Python), leveraging ASGI architecture for high performance and automatic documentation (Swagger UI/ReDoc). <br> - **Modular Design:** Structured the project using **APIRouter** to separate modules (Users, Items, Auth) for easier maintenance. <br> - **Data Validation:** Used **Pydantic** schemas to define and validate input/output data automatically. <br> - **Database Setup:** Integrated **SQLAlchemy**, established database connections, and managed Sessions. | 16/10/2025 | 16/10/2025      |                                                                                              |
-| 5   | **Advanced FastAPI Implementation (Part 2)** <br> - **Security & Auth:** Implemented secure authentication mechanisms using **OAuth2** with Password Flow and **JWT Tokens** (Access/Refresh tokens). <br> - **Database Operations:** Built full CRUD APIs, handling data relationships in SQLAlchemy. <br> - **Testing & CI/CD:** Wrote Unit/Integration tests with **pytest**. Set up pipelines (GitHub Actions) to automatically test and deploy the application (Zero-downtime).                                                                                                            | 17/10/2025 | 17/10/2025      |                                                                                              |
+| Day | Task | Start Date | Completion Date | Reference Material |
+| :-- | :--- | :--------- | :-------------- | :----------------- |
+| 1   | **React Init:** Frontend Engineer creates Vite-React project, sets up TailwindCSS and routing. | 20/07/2026 | 21/07/2026 | React & Vite Docs |
+| 2   | **Layout Design:** Implement Sidebar for multi-building navigation (Hanoi, Da Nang, HCM). | 22/07/2026 | 22/07/2026 | TailwindCSS Docs |
+| 3   | **API Integration Setup:** Configure Axios instances with base URLs pointing to the EC2 backend. | 23/07/2026 | 24/07/2026 | Axios Docs |
+| 4   | **Telemetry Display:** Fetch and render real-time temperature, humidity, and light data into UI cards. | 25/07/2026 | 25/07/2026 | React Components Guide |
+| 5   | **CORS Resolution:** Backend and Frontend engineers collaborate to resolve CORS policies on FastAPI. | 26/07/2026 | 26/07/2026 | FastAPI CORS Docs |
 
 ### Week 6 Achievements:
 
-- **ECS Proficiency:** Successfully containerized and deployed a Full-stack application on Amazon ECS, mastering deployment strategies (Rolling/Blue-Green).
-- **DevOps Optimization:** Successfully built a serverless CI/CD pipeline and reduced application access latency from 200ms to 30ms using CloudFront.
-- **Reliable Architecture:** Designed an asynchronous message processing system, ensuring decoupling and scalability between components.
-- **Secure API Construction:** Completed a robust Backend with FastAPI including full features: JWT Authentication, ORM Database connection, and automated testing.
+- **Frontend Structure:** Functional, responsive web application structure established.

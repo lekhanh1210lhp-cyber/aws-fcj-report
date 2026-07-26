@@ -1,6 +1,6 @@
 ---
 title: "Week 8 Worklog"
-date: "2025-09-09"
+date: "2026-08-03"
 weight: 1
 chapter: false
 pre: " <b> 1.8. </b> "
@@ -8,24 +8,23 @@ pre: " <b> 1.8. </b> "
 
 ### Week 8 Objectives:
 
-- **Master Serverless Concepts:** Deep dive into AWS Lambda theory, event-driven mechanisms, and the importance of Lambda Layers.
-- **Explore Generative AI:** Gain a theoretical overview of Amazon Bedrock, Foundation Models (FMs), and basic use cases.
-- **API Architecture:** Understand Amazon API Gateway theory and its critical role in Microservices architecture.
-- **Hands-on Lab (Weekend):** Successfully build an automated image processing pipeline: Upload to S3 -> Trigger Lambda (w/ Pillow Layer) -> Resize Image -> Save to destination S3 bucket.
+- Connect all 5 layers of the architecture (Frontend, Backend, Database, Monitoring, Simulator).
+- Ensure flawless, cohesive data flow from the Python Simulator to the React Dashboard and back.
+- Prepare documentation for the eventual hardware transition (YOLO Uno).
 
 ### Tasks to be carried out this week:
 
-| Day | Task                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Start Date | Completion Date | Reference Material                                                                                                                           |
-| :-- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- | :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **AWS Lambda Core Concepts (Research)** <br> - **Execution Model:** Studied the Lambda lifecycle (Init, Invoke, Shutdown) and the "Cold Start" phenomenon. <br> - **Resource Model:** Understood the relationship between Memory and CPU (higher RAM = proportional CPU power). <br> - **Billing:** Researched pricing models: Request count + Compute duration (GB-seconds). <br> - **Concurrency:** Differentiated between Reserved Concurrency (guaranteed resources) and Provisioned Concurrency (eliminated cold starts).                                                                                                                                          | 27/10/2025 | 27/10/2025      | [AWS Lambda Docs](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)                                                                 |
-| 2   | **Amazon Bedrock & GenAI Overview (Research)** <br> - **Key Concepts:** Explored Foundation Models (Claude, Titan, Stable Diffusion), Tokens, and Inference parameters (Temperature, Top P). <br> - **Bedrock Features:** Researched theoretical concepts of Knowledge Bases (RAG) for custom data and Agents for task execution. <br> - **Security:** Reviewed Bedrock's data privacy commitments (customer data is not used to retrain AWS base models). <br> - **Use Cases:** Read case studies on text summarization and image generation.                                                                                                                          | 28/10/2025 | 28/10/2025      | [Bedrock User Guide](https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html)                                              |
-| 3   | **API Gateway Fundamentals (Research)** <br> - **Architecture:** Studied the role of API Gateway: Authentication, Throttling, and Caching. <br> - **Types:** Compared REST API (Feature-rich) vs. HTTP API (Low-cost/Low-latency) vs. WebSocket API (Real-time). <br> - **Integration:** Deep dived into **Lambda Proxy Integration** (passing the raw event object directly to Lambda). <br> - **Endpoint Types:** Differentiated between Edge-optimized (Global), Regional (Region-specific), and Private endpoints (VPC internal).                                                                                                                                   | 29/10/2025 | 29/10/2025      | [API Gateway Concepts](https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html)                                            |
-| 4   | **S3 Event Notifications & IAM Preparation (Pre-Lab)** <br> - **Event Patterns:** Investigated S3 Event Notifications mechanism (specifically `s3:ObjectCreated:*`) to trigger Lambda functions. <br> - **IAM Permissions:** Drafted the necessary IAM Policy: Lambda requires `s3:GetObject` (Source bucket), `s3:PutObject` (Destination bucket), and `logs:CreateLogGroup`. <br> - **Library Research:** Researched the **Pillow (PIL)** Python library for image manipulation and the process of packaging it into a Lambda Layer (since it's not in the standard runtime).                                                                                         | 30/10/2025 | 30/10/2025      | [S3 Event Notifications](https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html)                                      |
-| 5   | **Lab: Serverless Image Resizer (Implementation)** <br> - **Lambda Layer:** Created and uploaded a Layer containing the `Pillow` library (compatible with Python 3.x runtime). <br> - **Coding:** Developed the Lambda function (Python/Boto3) to retrieve the image from the S3 event, resize it to a thumbnail (e.g., 128x128), and save it to the target bucket. <br> - **Configuration:** Configured S3 Bucket Triggers to automatically invoke the function upon file upload to the `/raw` folder. <br> - **Testing & Debug:** Uploaded test images, verified results in the destination bucket, and analyzed CloudWatch Logs to resolve import/permission errors. | 31/10/2025 | 01/11/2025      | [Serverless Image Resizing](https://aws.amazon.com/blogs/compute/resize-images-on-the-fly-with-amazon-s3-aws-lambda-and-amazon-api-gateway/) |
+| Day | Task | Start Date | Completion Date | Reference Material |
+| :-- | :--- | :--------- | :-------------- | :----------------- |
+| 1   | **E2E Flow Test:** Run Dashboard, EC2 Backend, and Simulator simultaneously. Trace data packets to ensure smooth integration. | 03/08/2026 | 04/08/2026 | System Architecture Flow |
+| 2   | **Latency Optimization:** Analyze API response times. Add DB indexing in PostgreSQL if necessary to improve query speeds. | 05/08/2026 | 05/08/2026 | PostgreSQL Indexing Guide |
+| 3   | **Bug Squashing:** Fix edge cases (e.g., simulator disconnects, UI desync, malformed JSON handling). | 06/08/2026 | 07/08/2026 | QA Testing Guidelines |
+| 4   | **YOLO Uno Prep:** Refine simulator documentation to clearly outline how the YOLO Uno hardware will replace it later. | 08/08/2026 | 09/08/2026 | Hardware Specs Docs |
+| 5   | **Monitoring Review:** Verify CloudWatch logs capture all API successes (HTTP 200) and errors (HTTP 500) accurately. | 08/08/2026 | 09/08/2026 | AWS CloudWatch Metrics |
 
 ### Week 8 Achievements:
 
-- **Solidified Serverless & AI Theory:** Gained a comprehensive understanding of the Serverless ecosystem (Lambda, API Gateway) and Generative AI trends (Bedrock) through deep documentation review.
-- **Mastered Lambda Environment:** Recognized the critical importance of **Lambda Layers** when working with external dependencies like `Pillow` or `Pandas`, optimizing code efficiency.
-- **Implemented Event-Driven Architecture:** Successfully built a functional, real-world application: a serverless Image Processing Pipeline.
-- **IAM & Debugging Skills:** Applied "Least Privilege" principles for Lambda security and utilized CloudWatch Logs effectively for troubleshooting execution errors.
+- **Full System Integration:** System functions cohesively as a single, fully integrated Enterprise IoT Cloud solution.
+- **Optimized Performance:** Analyzed API latency and optimized PostgreSQL queries to ensure real-time responsiveness.
+- **System Resilience:** Successfully squashed critical bugs related to UI desynchronization and simulator disconnects.
+- **Transition Ready:** Completed transition documentation detailing the replacement of the Python simulator with physical YOLO Uno edge devices.

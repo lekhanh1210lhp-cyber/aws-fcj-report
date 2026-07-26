@@ -1,6 +1,6 @@
 ---
 title: "Week 4 Worklog"
-date: "2025-09-09"
+date: "2026-07-06"
 weight: 1
 chapter: false
 pre: " <b> 1.4. </b> "
@@ -8,24 +8,23 @@ pre: " <b> 1.4. </b> "
 
 ### Week 4 Objectives:
 
-- The goal of this week was to strengthen understanding of AWS data and AI services — from building scalable **DataLake architectures** to working with **serverless NoSQL databases (DynamoDB)** and exploring **AI development lifecycle management**.
-- Additionally, this week aimed to enhance **technical translation** and **communication skills** through hands-on labs, blog translations, and participation in AWS events.
+- Develop the **Python Simulator** to act as the YOLO Uno/ESP32 edge devices for the Enterprise IoT Cloud Dashboard.
+- Establish a reliable mechanism to generate and transmit simulated telemetry data directly to the EC2 backend.
+- Ensure system robustness through multi-threading, error handling, and end-to-end integration testing.
 
 ### Tasks to be carried out this week:
 
-| Day | Task                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Start Date | Completion Date | Reference Material                                                                 |
-| :-- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- | :-------------- | :--------------------------------------------------------------------------------- |
-| 1   | **Building a Data Lake on AWS** <br> - **Data Lake Concepts:** Explored centralized repository architectures for varied data analytics workloads. <br> - **AWS Glue (ETL):** Studied Glue Crawlers for automated schema discovery and Data Catalog generation. <br> - **Amazon Athena:** Performed serverless SQL queries directly on S3 data. <br> - **Amazon QuickSight:** Visualized data insights via interactive Dashboards. <br> - **Hands-on Lab 35:** Deployed Data Lake infrastructure, ingested data via Kinesis Firehose, and queried cataloged data using Athena. | 29/09/2025 | 29/09/2025      | [Module 07](https://github.com/danielleit241/aws-fcj-learning/tree/main/Module-07) |
-| 2   | **Query Optimization & Cost Analysis (Lab 40)** <br> - **ETL Workflow:** Executed end-to-end pipeline: Raw Data Ingestion -> Glue Crawler -> Transformation (Parquet) -> Athena Query. <br> - **Cost Analysis:** Analyzed AWS billing data using SQL in Athena (Service breakdown, Tagging). <br> - **Optimization Techniques:** Applied cost-saving strategies: Parquet compression, query LIMITs, and data partitioning.                                                                                                                                                    | 30/09/2025 | 30/09/2025      | [Module 07](https://github.com/danielleit241/aws-fcj-learning/tree/main/Module-07) |
-| 3   | **NoSQL Databases with Amazon DynamoDB (Lab 60)** <br> - **DynamoDB Fundamentals:** Researched Serverless NoSQL architecture, auto-scaling, and Capacity Modes (On-demand vs Provisioned). <br> - **Data Modeling:** Deep dived into Primary Keys (Partition + Sort) and Secondary Indexes (GSI/LSI). <br> - **Consistency Models:** Compared Eventual Consistency vs. Strong Consistency trade-offs. <br> - **Implementation:** Practiced table creation, item manipulation, and querying via AWS Console and SDK (Boto3).                                                   | 01/10/2025 | 01/10/2025      | [Module 06](https://github.com/danielleit241/aws-fcj-learning/tree/main/Module-06) |
-| 4   | **AWS Technical Blog Research & Translation** <br> - **Generative AI:** Translated and studied GenAI lifecycle management using MLflow on SageMaker. <br> - **Industry Application:** Researched Deep Learning applications for subsurface infrastructure mapping. <br> - **Contact Center AI:** Explored Amazon Connect optimization using AI capabilities. <br> - **Skill Development:** Enhanced technical vocabulary and domain knowledge in SageMaker, Batch, and ParallelCluster.                                                                                       | 02/10/2025 | 02/10/2025      |                                                                                    |
-| 5   | **AWS Event: AI Development Lifecycle & Kiro** <br> - **AI Lifecycle:** Gained insights into the full AI development pipeline: Data Prep -> Training -> Deployment -> Monitoring. <br> - **AWS AI Ecosystem:** Understood the role of SageMaker, Bedrock, and CodeWhisperer in AI DevSecOps. <br> - **New Tooling (Kiro):** Explored Kiro for unified AI workflow management. <br> - **Real-world Use Cases:** Analyzed case studies on AI automation and model optimization in production.                                                                                   | 03/10/2025 | 03/10/2025      |                                                                                    |
+| Day | Task | Start Date | Completion Date | Reference Material |
+| :-- | :--- | :--------- | :-------------- | :----------------- |
+| 1   | **Simulator Design** <br> - **Data Generation:** IoT Engineer created Python scripts to generate randomized, realistic sensor data. | 06/07/2026 | 07/07/2026 | Python `random` Docs |
+| 2   | **HTTP Client Setup** <br> - **API Communication:** Implemented the Python `requests` library to POST JSON data to the FastAPI public IP on EC2. | 08/07/2026 | 08/07/2026 | Python `requests` Docs |
+| 3   | **Multi-Building Simulation** <br> - **Scaling:** Scaled the simulator script using threading to simulate traffic from HN, DN, and HCM buildings simultaneously. | 09/07/2026 | 10/07/2026 | Python `threading` Docs |
+| 4   | **Error Handling** <br> - **Network Resilience:** Added retry logic and exception handling to gracefully manage dropped network connections during transmission. | 11/07/2026 | 11/07/2026 | System Architecture Docs |
+| 5   | **Integration Test** <br> - **End-to-End Verification:** Verified that telemetry data from all simulated buildings successfully and accurately appears in the PostgreSQL database. | 12/07/2026 | 12/07/2026 | PostgreSQL Docs |
 
 ### Week 4 Achievements:
 
-- **Built an AWS DataLake pipeline** integrating **Glue, Athena, and QuickSight**, gaining hands-on experience in data ingestion, transformation, and visualization.
-- **Configured AWS Glue Crawlers and Athena queries** for cost analysis and schema automation, applying cost optimization strategies (e.g., Parquet, partitioning, query limits).
-- **Mastered DynamoDB fundamentals**, including primary/composite keys, indexes (GSI, LSI), consistency models, and capacity modes.
-- **Enhanced translation and comprehension skills** by translating AWS technical blogs on AI, MLflow, and HPC, deepening understanding of **SageMaker, Batch, ParallelCluster**, and **Connect**.
-- **Participated in an AWS event** focused on the **AI Development Lifecycle** and **Kiro**, gaining insights into end-to-end model management, versioning, and deployment best practices.
-- **Improved technical vocabulary and practical knowledge** in cloud computing, AI model governance, and data-driven architecture design within the AWS ecosystem.
+- **IoT Simulation Success:** Python scripts are reliably generating and sending telemetry data to the EC2 backend.
+- **Scalability Achieved:** Successfully simulated concurrent data streams from multiple building locations (HN, DN, HCM) using threading.
+- **System Reliability:** Improved the simulator's stability by implementing robust error handling and retry logic for network drops.
+- **Verified Data Flow:** Confirmed full integration where simulated sensor data is properly stored in the backend PostgreSQL database.

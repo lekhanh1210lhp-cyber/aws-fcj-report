@@ -1,6 +1,6 @@
 ---
 title: "Worklog Tuần 8"
-date: "2025-09-09"
+date: "2026-08-03"
 weight: 1
 chapter: false
 pre: " <b> 1.8. </b> "
@@ -8,24 +8,23 @@ pre: " <b> 1.8. </b> "
 
 ### Mục tiêu tuần 8:
 
-- **Nghiên cứu Serverless:** Hiểu sâu lý thuyết về AWS Lambda, cơ chế Event-driven và tầm quan trọng của Lambda Layers.
-- **Nghiên cứu GenAI:** Tìm hiểu tổng quan về Amazon Bedrock, các mô hình Foundation Models (FM) và các use-case cơ bản.
-- **Kiến trúc API:** Nắm vững lý thuyết về Amazon API Gateway và vai trò của nó trong kiến trúc Microservices.
-- **Thực hành Lab (Weekend):** Xây dựng thành công luồng xử lý ảnh tự động: Upload S3 -> Trigger Lambda (kèm Layer xử lý ảnh) -> Resize -> Lưu S3 đích.
+- Kết nối toàn bộ 5 lớp của kiến trúc hệ thống (Frontend, Backend, Database, Monitoring, Simulator).
+- Đảm bảo luồng dữ liệu trơn tru, liền mạch từ Python Simulator đến React Dashboard và ngược lại.
+- Chuẩn bị tài liệu kỹ thuật cho việc chuyển đổi sang phần cứng thực tế (YOLO Uno) sau này.
 
 ### Công việc thực hiện trong tuần này:
 
-| Day | Task                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Start Date | Completion Date | Reference Material                                                                                                                           |
-| :-- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- | :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **AWS Lambda Core Concepts (Research)** <br> - **Execution Model:** Tìm hiểu vòng đời của Lambda (Init, Invoke, Shutdown) và khái niệm Cold Start. <br> - **Resource Model:** Hiểu mối quan hệ giữa Memory và CPU (tăng RAM = tăng CPU power). <br> - **Billing:** Nghiên cứu cách tính phí: số lần request + thời gian chạy (GB-seconds). <br> - **Concurrency:** Phân biệt Reserved Concurrency (đảm bảo tài nguyên) và Provisioned Concurrency (giảm Cold Start).                                                                                                          | 27/10/2025 | 27/10/2025      | [AWS Lambda Docs](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)                                                                 |
-| 2   | **Amazon Bedrock & GenAI Overview (Research)** <br> - **Key Concepts:** Tìm hiểu về Foundation Models (Claude, Titan, Stable Diffusion), Tokens, và Inference parameters (Temperature, Top P). <br> - **Bedrock Features:** Nghiên cứu lý thuyết về Knowledge Bases (RAG) để train dữ liệu riêng và Agents để thực thi tác vụ. <br> - **Security:** Tìm hiểu cam kết bảo mật của Bedrock (dữ liệu khách hàng không dùng để train lại model của AWS). <br> - **Use Cases:** Đọc case study về tóm tắt văn bản và tạo ảnh.                                                      | 28/10/2025 | 28/10/2025      | [Bedrock User Guide](https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html)                                              |
-| 3   | **API Gateway Fundamentals (Research)** <br> - **Architecture:** Tìm hiểu vai trò của API Gateway: Authentication, Throttling, Caching. <br> - **Types:** So sánh REST API (Feature-rich) vs HTTP API (Low-cost/Low-latency) vs WebSocket API (Real-time). <br> - **Integration:** Nghiên cứu lý thuyết về Lambda Proxy Integration (cách API GW chuyển nguyên event object cho Lambda). <br> - **Endpoint Types:** Phân biệt Edge-optimized (toàn cầu), Regional (trong vùng), và Private endpoints (nội bộ VPC).                                                            | 29/10/2025 | 29/10/2025      | [API Gateway Concepts](https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html)                                            |
-| 4   | **S3 Event Notifications & IAM Preparation (Pre-Lab)** <br> - **Event Patterns:** Tìm hiểu cơ chế S3 Event Notifications (cụ thể là `s3:ObjectCreated:*`) để kích hoạt Lambda function. <br> - **IAM Permissions:** Soạn thảo chính sách (IAM Policy) cần thiết: Lambda cần quyền `s3:GetObject` (bucket nguồn), `s3:PutObject` (bucket đích) và `logs:CreateLogGroup`. <br> - **Library Research:** Tìm hiểu về thư viện **Pillow (PIL)** của Python để xử lý ảnh và quy trình đóng gói thư viện này vào Lambda Layer (do môi trường Lambda mặc định không có).              | 30/10/2025 | 30/10/2025      | [S3 Event Notifications](https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html)                                      |
-| 5   | **Lab: Serverless Image Resizer (Implementation)** <br> - **Lambda Layer:** Thực hiện tạo và upload Layer chứa thư viện `Pillow` (tương thích Python 3.x runtime). <br> - **Coding:** Viết Lambda function (Python/Boto3) để lấy ảnh từ sự kiện S3, resize về thumbnail (ví dụ 128x128) và lưu sang bucket đích. <br> - **Configuration:** Cấu hình S3 Bucket Trigger để tự động chạy hàm khi có file mới upload vào folder `/raw`. <br> - **Testing & Debug:** Upload ảnh test, kiểm tra kết quả trong bucket đích và xem CloudWatch Logs để fix lỗi import hoặc permission. | 31/10/2025 | 01/11/2025      | [Serverless Image Resizing](https://aws.amazon.com/blogs/compute/resize-images-on-the-fly-with-amazon-s3-aws-lambda-and-amazon-api-gateway/) |
+| Day | Task | Start Date | Completion Date | Reference Material |
+| :-- | :--- | :--------- | :-------------- | :----------------- |
+| 1   | **E2E Flow Test:** Khởi chạy đồng thời Dashboard, EC2 Backend và Simulator. Theo dõi (trace) các gói dữ liệu để đảm bảo tích hợp thông suốt. | 03/08/2026 | 04/08/2026 | Sơ đồ luồng hệ thống |
+| 2   | **Tối ưu độ trễ (Latency Optimization):** Phân tích thời gian phản hồi API. Bổ sung đánh chỉ mục (DB indexing) trong PostgreSQL nếu cần để tăng tốc độ truy vấn. | 05/08/2026 | 05/08/2026 | Hướng dẫn Index PostgreSQL |
+| 3   | **Sửa lỗi (Bug Squashing):** Xử lý các trường hợp ngoại lệ (edge cases) như rớt kết nối simulator, UI mất đồng bộ, lỗi xử lý JSON. | 06/08/2026 | 07/08/2026 | Hướng dẫn kiểm thử QA |
+| 4   | **Chuẩn bị phần cứng (YOLO Uno Prep):** Tinh chỉnh tài liệu simulator, hướng dẫn rõ ràng cách thay thế simulator bằng phần cứng YOLO Uno. | 08/08/2026 | 09/08/2026 | Tài liệu thông số phần cứng |
+| 5   | **Đánh giá giám sát (Monitoring Review):** Xác minh CloudWatch logs đã ghi nhận chính xác tất cả các API thành công (200) và lỗi (500). | 08/08/2026 | 09/08/2026 | Tài liệu AWS CloudWatch |
 
-### Thành tựu tuần 8:
+### Thành tựu Tuần 8:
 
-- **Nắm vững lý thuyết Serverless & AI:** Hiểu rõ bức tranh tổng thể về Serverless (Lambda, API Gateway) và xu hướng Generative AI (Bedrock) thông qua việc đọc tài liệu chuyên sâu.
-- **Hiểu sâu về Lambda Environment:** Nhận thức được tầm quan trọng của **Lambda Layers** khi làm việc với các thư viện ngoại lai như `Pillow` hay `Pandas`, tránh việc code quá nặng.
-- **Thực hành thành công Event-Driven:** Xây dựng hoàn chỉnh ứng dụng thực tế đầu tiên: hệ thống xử lý ảnh tự động (Image Processing Pipeline) không cần máy chủ.
-- **Kỹ năng IAM & Debug:** Biết cách cấp quyền tối thiểu (Least Privilege) cho Lambda và sử dụng CloudWatch Logs để truy vết lỗi trong quá trình thực thi code.
+- **Tích hợp toàn diện:** Hệ thống hoạt động gắn kết như một giải pháp Enterprise IoT Cloud thống nhất.
+- **Hiệu năng tối ưu:** Phân tích độ trễ API và tối ưu hóa truy vấn PostgreSQL, đảm bảo khả năng phản hồi theo thời gian thực.
+- **Hệ thống bền bỉ:** Khắc phục thành công các lỗi nghiêm trọng liên quan đến mất đồng bộ giao diện và mất kết nối bộ mô phỏng.
+- **Sẵn sàng chuyển giao:** Hoàn thiện tài liệu chuyển đổi, mô tả chi tiết cách thay thế phần mềm mô phỏng bằng thiết bị phần cứng YOLO Uno.

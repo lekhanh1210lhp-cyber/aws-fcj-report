@@ -1,6 +1,6 @@
 ---
 title: "Week 1 Worklog"
-date: "2025-09-09"
+date: "2026-06-15"
 weight: 1
 chapter: false
 pre: " <b> 1.1. </b> "
@@ -8,36 +8,25 @@ pre: " <b> 1.1. </b> "
 
 ### Week 1 Objectives:
 
-- Analyze the business requirements for a **Multi-branch Building Management System (BMS)**.
-- Design the **5-Layer System Architecture** for the Enterprise IoT Cloud Dashboard.
-- Select and evaluate appropriate **AWS Cloud Services** (EC2, RDS, CloudWatch) for the backend infrastructure.
-- Define the **Data Models** (Telemetry, Command, History) and establish the REST API specifications.
-- Set up the project repository, version control, and assign roles for the engineering team.
+- Set up the AWS environment.
+- Define the core architecture. 
+- Establish IAM security protocols.
 
 ### Tasks to be carried out this week:
 
-| Day | Task                                                                                                                                                                                                                                                                                                                                                                                                                   | Start Date | Completion Date |
-| :-- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------- | :-------------- |
-| 1   | **Business Requirement Analysis** <br> - **Problem Definition:** Analyzed the need for centralized monitoring and control of smart buildings across multiple locations (Hanoi, Da Nang, HCMC). <br> - **System Scope:** Defined the required IoT sensors (temperature, humidity, light) and controllable devices (fans, lights, curtains).                                                                               | 08/09/2025 | 08/09/2025      |
-| 2   | **System Architecture Design** <br> - **5-Layer Model:** Designed the end-to-end architecture covering IoT Devices (Simulator/YOLO Uno) ➔ HTTP REST API ➔ FastAPI (EC2) ➔ PostgreSQL ➔ React Dashboard. <br> - **Data Flow:** Mapped out the telemetry upstream (Device to Cloud) and command downstream (Cloud to Device).                                                                                            | 09/09/2025 | 09/09/2025      |
-| 3   | **Cloud Infrastructure Planning** <br> - **Service Selection:** Evaluated AWS EC2 for hosting the FastAPI backend and AWS RDS (PostgreSQL) for time-series and relational data storage. <br> - **Monitoring Strategy:** Planned the integration of AWS CloudWatch for backend logging and system health monitoring.                                                                                                    | 10/09/2025 | 10/09/2025      |
-| 4   | **API & Database Schema Definition** <br> - **Database Design:** Drafted the PostgreSQL schema for tracking device telemetry histories and command execution states. <br> - **API Contracts:** Documented the core REST API endpoints (e.g., `POST /telemetry`, `POST /command`) including request/response JSON payloads.                                                                                             | 11/09/2025 | 11/09/2025      |
-| 5   | **Project Initialization & Git Setup** <br> - **Repository Setup:** Initialized the GitHub repository, established branching strategies, and created the foundational `README.md`. <br> - **Role Delegation:** Clarified responsibilities among team members (Cloud, Backend, Frontend, and IoT Engineers) to ensure smooth collaboration.                                                                             | 12/09/2025 | 12/09/2025      |
+| Day | Task | Start Date | Completion Date |
+| :-- | :--- | :--------- | :-------------- |
+| 1 | **Architecture Review:** Finalize 5-layer architecture diagram and assign strict roles to team members. | 15/06/2026 | 15/06/2026 |
+| 2 | **AWS IAM Setup:** Cloud Engineer sets up IAM users, groups, policies, and enforces MFA for all accounts. | 16/06/2026 | 16/06/2026 |
+| 3 | **VPC & Networking:** Design VPC, public/private subnets, Internet Gateway, and Route Tables. | 17/06/2026 | 17/06/2026 |
+| 4 | **EC2 Provisioning:** Launch Ubuntu EC2 instance for FastAPI backend, attach Elastic IP, configure Security Groups (HTTP/SSH). | 18/06/2026 | 19/06/2026 |
+| 5 | **Repo Setup:** Initialize Git repository, define branching strategies (Agile/Scrum standards). | 20/06/2026 | 21/06/2026 |
 
 ### Week 1 Achievements:
 
-- **Finalized System Architecture**
-  - Successfully laid out a robust, scalable 5-layer IoT architecture.
-  - Clearly separated hardware concerns from backend logic, allowing future transition from Python Simulator to physical ESP32/YOLO Uno without backend modification.
-
-- **Established Technical Specifications**
-  - Completed initial Database schema design for PostgreSQL.
-  - Defined strict JSON payloads for device-to-cloud communication.
-
-- **Project Readiness**
-  - Git repository is fully configured.
-  - Team members have a clear understanding of their technical roles and upcoming development phases.
+- Successfully provisioned foundational AWS resources.
+- Defined team workflows.
 
 ---
 
-👉 **Outcome:** After Week 1, the theoretical foundation and architectural blueprint of the Enterprise IoT Dashboard are fully established. The team is now ready to begin coding the Python Simulator and Backend APIs in Week 2.
+👉 **Outcome:** After Week 1, the core cloud infrastructure and system architecture are established, setting the foundation for database design and backend initialization in Week 2.

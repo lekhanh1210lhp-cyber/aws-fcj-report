@@ -1,6 +1,6 @@
 ---
 title: "Worklog Tuần 4"
-date: "2025-09-09"
+date: "2026-07-06"
 weight: 1
 chapter: false
 pre: " <b> 1.4. </b> "
@@ -8,24 +8,23 @@ pre: " <b> 1.4. </b> "
 
 ### Mục tiêu tuần 4:
 
-- Mục tiêu của tuần này là củng cố hiểu biết về các dịch vụ dữ liệu và AI của AWS — từ xây dựng kiến trúc **DataLake** có khả năng mở rộng đến làm việc với **cơ sở dữ liệu NoSQL serverless (DynamoDB)** và khám phá **quản lý vòng đời phát triển AI**.
-- Ngoài ra, tuần này còn nhằm nâng cao **kỹ năng dịch thuật kỹ thuật** và **kỹ năng giao tiếp** thông qua các lab thực hành, dịch blog và tham gia các sự kiện của AWS.
+- Phát triển **Python Simulator** để đóng vai trò như các thiết bị edge YOLO Uno/ESP32 cho hệ thống Enterprise IoT Cloud Dashboard.
+- Thiết lập cơ chế đáng tin cậy để tạo và truyền dữ liệu viễn trắc (telemetry) mô phỏng trực tiếp đến backend trên EC2.
+- Đảm bảo độ bền bỉ của hệ thống thông qua xử lý đa luồng (multi-threading), bắt lỗi và kiểm thử tích hợp toàn trình.
 
 ### Công việc thực hiện trong tuần này:
 
-| Day | Task                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Start Date | Completion Date | Reference Material                                                                 |
-| :-- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--------- | :-------------- | :--------------------------------------------------------------------------------- |
-| 1   | **Xây dựng Data Lake trên AWS** <br> - **Data Lake Concepts:** Tìm hiểu kiến trúc Data Lake tập trung cho phân tích dữ liệu đa dạng (batch, real-time). <br> - **AWS Glue (ETL):** Nghiên cứu Glue Crawlers để tự động phát hiện schema và xây dựng Data Catalog từ S3. <br> - **Amazon Athena:** Truy vấn dữ liệu S3 trực tiếp bằng SQL chuẩn, không cần server (Serverless). <br> - **Amazon QuickSight:** Trực quan hóa dữ liệu thông qua Dashboard và Analysis từ dataset đã xử lý. <br> - **Hands-on Lab 35:** Triển khai hạ tầng Data Lake, sử dụng Kinesis Firehose đẩy dữ liệu vào S3, chạy Glue Crawler và truy vấn kết quả bằng Athena. | 29/09/2025 | 29/09/2025      | [Module 07](https://github.com/danielleit241/aws-fcj-learning/tree/main/Module-07) |
-| 2   | **Tối ưu hóa Truy vấn & Phân tích Chi phí (Lab 40)** <br> - **ETL Workflow:** Thực hành quy trình chuẩn: Upload Raw Data -> Glue Crawler -> Transform (Parquet) -> Query (Athena). <br> - **Cost Analysis:** Sử dụng SQL trong Athena để phân tích chi phí AWS (Top services, Cost allocation tags). <br> - **Optimization Techniques:** Học cách giảm chi phí Athena bằng định dạng Parquet (nén), giới hạn kết quả (LIMIT) và phân vùng dữ liệu (Partitioning).                                                                                                                                                                                 | 30/09/2025 | 30/09/2025      | [Module 07](https://github.com/danielleit241/aws-fcj-learning/tree/main/Module-07) |
-| 3   | **Cơ sở dữ liệu NoSQL với Amazon DynamoDB (Lab 60)** <br> - **DynamoDB Fundamentals:** Nghiên cứu kiến trúc Serverless NoSQL, khả năng tự động mở rộng và các chế độ Capacity (On-demand vs Provisioned). <br> - **Data Modeling:** Hiểu sâu về Primary Key (Partition Key + Sort Key) và Indexing (Global/Local Secondary Indexes). <br> - **Consistency Models:** So sánh Eventual Consistency (nhanh, rẻ) và Strong Consistency (chính xác tuyệt đối). <br> - **Implementation:** Thực hành tạo bảng, thêm/xóa items và truy vấn dữ liệu thông qua AWS Console và AWS SDK (Boto3).                                                             | 01/10/2025 | 01/10/2025      | [Module 06](https://github.com/danielleit241/aws-fcj-learning/tree/main/Module-06) |
-| 4   | **Nghiên cứu & Dịch thuật Blog Kỹ thuật AWS** <br> - **Generative AI:** Dịch và nghiên cứu về quản lý vòng đời GenAI với MLflow trên SageMaker. <br> - **Industry Application:** Tìm hiểu ứng dụng Deep Learning trong vẽ bản đồ hạ tầng ngầm. <br> - **Contact Center AI:** Nghiên cứu tối ưu hóa Amazon Connect với các tính năng AI. <br> - **Skill Development:** Nâng cao vốn từ vựng chuyên ngành Cloud/AI và hiểu biết sâu về SageMaker, Batch, ParallelCluster.                                                                                                                                                                           | 02/10/2025 | 02/10/2025      |                                                                                    |
-| 5   | **Tham dự Sự kiện AWS: AI Development Lifecycle & Kiro** <br> - **AI Lifecycle:** Nắm bắt toàn trình phát triển AI trên AWS: Chuẩn bị dữ liệu -> Training -> Deploy -> Monitor. <br> - **AWS AI Ecosystem:** Tìm hiểu vai trò của SageMaker, Bedrock và CodeWhisperer trong quy trình DevSecOps cho AI. <br> - **New Tooling (Kiro):** Khám phá giải pháp Kiro giúp thống nhất quy trình quản lý AI workflow. <br> - **Real-world Use Cases:** Học hỏi từ các case study thực tế về tự động hóa và tối ưu hóa mô hình AI trong sản xuất.                                                                                                          | 03/10/2025 | 03/10/2025      |                                                                                    |
+| Day | Task | Start Date | Completion Date | Reference Material |
+| :-- | :--- | :--------- | :-------------- | :----------------- |
+| 1   | **Thiết kế Simulator** <br> - **Tạo dữ liệu:** Kỹ sư IoT (IoT Engineer) tạo các script Python để sinh ra dữ liệu cảm biến ngẫu nhiên, sát với thực tế. | 06/07/2026 | 07/07/2026 | Tài liệu Python `random` |
+| 2   | **Thiết lập HTTP Client** <br> - **Giao tiếp API:** Triển khai thư viện `requests` để gửi dữ liệu JSON (POST) đến public IP của FastAPI backend. | 08/07/2026 | 08/07/2026 | Tài liệu Python `requests` |
+| 3   | **Mô phỏng đa tòa nhà (Multi-Building)** <br> - **Mở rộng quy mô:** Sử dụng threading (đa luồng) để script có thể mô phỏng đồng thời lưu lượng dữ liệu từ các tòa nhà ở HN, ĐN và HCM. | 09/07/2026 | 10/07/2026 | Tài liệu Python `threading` |
+| 4   | **Xử lý lỗi (Error Handling)** <br> - **Khả năng chịu lỗi mạng:** Thêm logic thử lại (retry) và bắt ngoại lệ (exception handling) cho các trường hợp rớt kết nối mạng. | 11/07/2026 | 11/07/2026 | Tài liệu Kiến trúc Hệ thống |
+| 5   | **Kiểm thử Tích hợp (Integration Test)** <br> - **Xác minh toàn trình:** Kiểm tra và xác nhận dữ liệu từ tất cả các tòa nhà mô phỏng đã xuất hiện thành công trong cơ sở dữ liệu PostgreSQL. | 12/07/2026 | 12/07/2026 | Tài liệu PostgreSQL |
 
 ### Thành tựu Tuần 4:
 
-- **Xây dựng pipeline DataLake trên AWS** tích hợp **Glue, Athena và QuickSight**, có kinh nghiệm thực hành trong ingest, chuyển đổi và trực quan hóa dữ liệu.
-- **Cấu hình AWS Glue Crawlers và truy vấn Athena** cho phân tích chi phí và tự động hóa schema, áp dụng các chiến lược tối ưu chi phí (ví dụ: Parquet, partitioning, giới hạn truy vấn).
-- **Nắm vững các kiến thức cơ bản về DynamoDB**, bao gồm khóa chính/khóa hợp nhất, index (GSI, LSI), mô hình nhất quán đọc và chế độ dung lượng.
-- **Nâng cao kỹ năng dịch và hiểu nội dung kỹ thuật** bằng cách dịch các bài blog kỹ thuật về AI, MLflow và HPC, nắm vững các dịch vụ như **SageMaker, Batch, ParallelCluster** và **Connect**.
-- **Tham gia một sự kiện AWS** tập trung vào **AI Development Lifecycle** và **Kiro**, thu nhận kiến thức về quản lý phiên bản mô hình, theo dõi thử nghiệm và best practice triển khai.
-- **Cải thiện vốn từ kỹ thuật và hiểu biết thực tiễn** về thiết kế kiến trúc dữ liệu, quản trị mô hình AI và cloud computing trong hệ sinh thái AWS.
+- **Mô phỏng IoT thành công:** Các script Python hoạt động ổn định trong việc tạo và gửi dữ liệu viễn trắc về backend EC2.
+- **Khả năng mở rộng:** Đã mô phỏng thành công các luồng dữ liệu đồng thời từ nhiều vị trí tòa nhà (HN, ĐN, HCM) bằng kỹ thuật đa luồng.
+- **Độ tin cậy của hệ thống:** Cải thiện tính ổn định của bộ mô phỏng bằng cách triển khai cơ chế bắt lỗi và thử lại khi rớt mạng.
+- **Luồng dữ liệu được xác minh:** Xác nhận tích hợp thành công, dữ liệu cảm biến mô phỏng được lưu trữ chính xác vào cơ sở dữ liệu PostgreSQL.
