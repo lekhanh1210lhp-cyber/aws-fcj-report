@@ -1,13 +1,13 @@
 ---
 title: "Self-Assessment"
-date: "2025-09-09"
+date: "2026-06-15"
 weight: 6
 chapter: false
 pre: " <b> 6. </b> "
 ---
 
-Throughout my internship at the **AWS/First cloud journey program** from **08/08/2025** to **12/12/2025**, I had the opportunity to learn, train, and apply the knowledge equipped at school into a real-world working environment.
-I participated **in learning AWS services, as well as applying learned knowledge into a group project with a FinTech theme**, thereby improving **teamwork skills, task allocation for team members, and especially achieving desired skills such as Docker, DevOps, and applying AWS services to support programming work**.
+Throughout my internship program from **15/06/2026** to **23/08/2026**, I had the opportunity to learn, train, and apply the knowledge equipped at school into a real-world working environment.
+I participated **in learning AWS services, as well as applying learned knowledge into an Enterprise IoT Cloud Dashboard project**, thereby improving **teamwork skills, task allocation for team members, and especially achieving desired skills such as React, FastAPI, Docker, and applying AWS services to support cloud-based application development**.
 
 Regarding professional conduct, I always strive to complete tasks well, adhere to regulations, and actively exchange with colleagues to improve work efficiency.
 

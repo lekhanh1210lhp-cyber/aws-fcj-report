@@ -1,45 +1,41 @@
 ---
-title: "Giới thiệu các dịch vụ"
-date: "2025-09-09"
-weight: 1
+title: "Các Dịch vụ & Công nghệ"
+date: "2026-06-15"
+weight: 2
 chapter: false
 pre: " <b> 5.1.2 </b> "
 ---
 
-Kiến trúc giải pháp được xây dựng dựa trên sự phối hợp của 4 thành phần dịch vụ chính sau đây:
+Kiến trúc giải pháp được xây dựng dựa trên sự phối hợp của các thành phần dịch vụ và công nghệ chính sau đây:
 
-#### Knowledge Bases for Amazon Bedrock
+#### React (Frontend Dashboard)
 
-Đây là một khả năng được quản lý toàn diện (fully managed capability) giúp kết nối các Mô hình Nền tảng (Foundation Models) với nguồn dữ liệu nội bộ của doanh nghiệp.
+Một ứng dụng web đáp ứng (responsive), hoạt động đầy đủ chức năng, đóng vai trò là giao diện quản lý tòa nhà thông minh tập trung.
 
-- **Tự động hóa quy trình RAG:** Quản lý toàn bộ luồng công việc từ đầu đến cuối (end-to-end), bao gồm nhập dữ liệu (ingestion), chia nhỏ văn bản (chunking), tạo vector (embedding) và truy xuất thông tin (retrieval).
-- **Kết nối ngữ cảnh:** Giúp các ứng dụng AI trả lời câu hỏi dựa trên dữ liệu riêng tư thay vì chỉ dựa vào dữ liệu huấn luyện chung chung.
-- **Không cần quản lý hạ tầng:** Loại bỏ nhu cầu tự xây dựng và duy trì các đường ống dữ liệu (data pipelines) phức tạp.
+- **Trực quan hóa dữ liệu:** Lấy và hiển thị dữ liệu viễn trắc theo thời gian thực (nhiệt độ, độ ẩm, ánh sáng) lên các UI cards, đồng thời vẽ biểu đồ dữ liệu lịch sử bằng Chart.js/Recharts.
+- **Bảng điều khiển (Control Panel):** Xây dựng các công tắc bật/tắt (toggle switches) trên giao diện, cho phép quản trị viên gửi lệnh điều khiển từ xa cho quạt, đèn và rèm.
+- **Điều hướng đa tòa nhà:** Triển khai thanh điều hướng (Sidebar) để chuyển đổi giữa các vị trí tòa nhà khác nhau như Hà Nội, Đà Nẵng và HCM.
 
-#### Amazon Simple Storage Service (Amazon S3)
+#### FastAPI trên AWS EC2 (Backend)
 
-Là dịch vụ lưu trữ đối tượng (object storage) với khả năng mở rộng, độ bền dữ liệu 99,999999999% (11 số 9) và bảo mật hàng đầu.
+Máy chủ backend lõi được khởi tạo bằng FastAPI và hoạt động liên tục trên một phiên bản Ubuntu EC2.
 
-- **Vai trò nguồn dữ liệu (Data Source):** Đóng vai trò là kho chứa "sự thật" (source of truth).
-- **Lưu trữ tài liệu:** Chứa các tệp phi cấu trúc như PDF, Word, hoặc Text mà doanh nghiệp muốn AI học.
-- **Đồng bộ hóa:** Knowledge Base sẽ định kỳ quét bucket S3 này để đồng bộ hóa và cập nhật kiến thức mới nhất.
+- **Thu thập & Xác thực Dữ liệu:** Nhận dữ liệu viễn trắc và triển khai các bộ xác thực (validators) bằng Pydantic để loại bỏ các payload JSON bị lỗi định dạng.
+- **Điều phối Lệnh (Command Dispatching):** Cung cấp các API endpoint để Dashboard gửi lệnh điều khiển và để các thiết bị IoT truy xuất các lệnh đang chờ xử lý của chúng.
+- **Bảo mật & Giới hạn tốc độ:** Triển khai tính năng giới hạn tốc độ (rate limiting) cơ bản để ngăn chặn DDoS hoặc viễn trắc rác, được bảo mật đằng sau các Security Groups định cấu hình chặt chẽ.
 
-#### Amazon OpenSearch Serverless
+#### PostgreSQL trên AWS RDS (Database)
 
-Là tùy chọn triển khai không máy chủ (serverless) của Amazon OpenSearch Service, giúp chạy khối lượng công việc tìm kiếm và phân tích mà không cần quản lý cụm (cluster).
+Cơ sở dữ liệu quan hệ được quản lý, triển khai bên trong một subnet nội bộ (private subnet), chỉ chấp nhận các kết nối (inbound rules) từ EC2 backend.
 
-- **Vai trò kho lưu trữ Vector (Vector Store):** Lưu trữ các chỉ mục vector (vector embeddings) được tạo ra từ tài liệu gốc.
-- **Tìm kiếm ngữ nghĩa (Semantic Search):** Thực hiện thuật toán tìm kiếm tương đồng (similarity search/k-NN) để xác định các đoạn văn bản có ý nghĩa gần nhất với câu hỏi của người dùng.
-- **Tự động mở rộng:** Tự động điều chỉnh tài nguyên tính toán và lưu trữ dựa trên nhu cầu thực tế.
+- **Quản lý Schema:** Sử dụng Alembic để thực hiện migrate cấu trúc dữ liệu, quản lý các bảng quan hệ cho Tòa nhà, Lịch sử Viễn trắc và Lệnh điều khiển.
+- **Hàng đợi Lệnh (Command Queueing):** Triển khai logic cơ sở dữ liệu để xếp hàng (queue) các lệnh chờ xử lý một cách an toàn cho từng thiết bị biên cụ thể.
+- **Tối ưu hóa Hiệu năng:** Sử dụng tính năng đánh chỉ mục (indexing) của cơ sở dữ liệu để tối ưu hóa độ trễ và thời gian phản hồi API khi truy xuất dữ liệu lịch sử.
 
-#### Amazon Bedrock Foundation Models (FMs)
+#### Python Simulator & AWS CloudWatch (IoT & Monitoring)
 
-Cung cấp quyền truy cập vào các mô hình AI hàng đầu thông qua API thống nhất. Trong kiến trúc này, chúng ta sử dụng hai loại mô hình với vai trò riêng biệt:
+Sự kết hợp giữa giả lập điện toán biên và tính năng giám sát đám mây bản địa để đảm bảo hệ thống vận hành đáng tin cậy.
 
-- **Embedding Model (Amazon Titan Embeddings v2):**
-  - Chuyển đổi văn bản (tài liệu từ S3 và câu hỏi của người dùng) thành các vector số học.
-  - Giúp máy tính có thể so sánh mức độ tương đồng về ý nghĩa giữa các đoạn văn.
-- **Text Generation Model (Anthropic Claude 3):**
-  - Đóng vai trò là "bộ não" suy luận.
-  - Nhận câu hỏi kèm theo thông tin ngữ cảnh đã được truy xuất từ Vector Store.
-  - Tổng hợp thông tin và sinh ra câu trả lời tự nhiên, chính xác, có kèm trích dẫn nguồn.
+- **Mô phỏng Thiết bị IoT:** Các kịch bản (scripts) Python đóng vai trò như thiết bị biên YOLO Uno hoặc ESP32, tạo ra dữ liệu cảm biến thực tế, ngẫu nhiên và sử dụng đa luồng (threading) để giả lập lưu lượng đồng thời từ nhiều tòa nhà.
+- **Truy vấn Thiết bị & Đồng bộ Hai chiều:** Bộ mô phỏng định kỳ truy vấn (GET) các lệnh chờ xử lý từ backend và xác nhận đã thực thi, thiết lập giao tiếp hai chiều hoàn chỉnh.
+- **Lưu vết Kiểm toán & Giám sát:** AWS CloudWatch được tích hợp để theo dõi tỷ lệ lỗi API (các phản hồi HTTP 200/500) và ghi log toàn bộ các lệnh đã thực thi nhằm phục vụ kiểm toán bảo mật.

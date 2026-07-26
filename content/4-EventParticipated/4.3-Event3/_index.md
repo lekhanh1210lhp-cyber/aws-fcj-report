@@ -209,5 +209,3 @@ Attending the workshop “AI Services on AWS for Data Science” was very valuab
 - Gained clearer knowledge of how to bring AI models into real products using AWS services.
 
 #### Some photos from the event
-
-## ![](/images/4-EventParticipated/event4-3-1.png)

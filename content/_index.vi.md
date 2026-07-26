@@ -1,6 +1,6 @@
 ---
 title: "Báo cáo thực tập"
-date: "2025-09-09"
+date: "2026-06-15"
 weight: 1
 chapter: false
 ---
@@ -9,25 +9,25 @@ chapter: false
 
 ### Thông tin sinh viên:
 
-&emsp; **Họ và tên:** Lê Vũ Phương Hòa
+&emsp; **Họ và tên:** Lê Bảo Khánh
 
-&emsp; **Số điện thoại:** 0327 030 024
+&emsp; **Số điện thoại:** 0908380983
 
-&emsp; **Email:** danielleee241@gmail.com
+&emsp; **Email:** lekhanh1210lhp@gmail.com
 
-&emsp; **Trường:** Đại học FPT TP.HCM
+&emsp; **Trường:** Trường Đại học Bách Khoa (HCMUT)
 
-&emsp; **Ngành:** Công nghệ thông tin
+&emsp; **Ngành:** Kỹ Thuật Máy Tính
 
-&emsp; **Lớp:** SE181951
+&emsp; **Lớp:** CC23KTM1
 
 &emsp; **Công ty thực tập:** Công ty TNHH Amazon Web Services Vietnam
 
-&emsp; **Vị trí thực tập:** FCJ Cloud Intern
+&emsp; **Vị trí thực tập:** FCAJ Cloud Intern
 
-&emsp; **Thời gian thực tập:** Từ ngày 12/08/2025 đến ngày 12/12/2025
+&emsp; **Thời gian thực tập:** Từ ngày 15/06/2026 đến ngày 23/08/2026[cite: 55, 57]
 
-<img src="/images/Phuong_Hoa.png" alt="Ảnh đại diện của bạn" width="450"/>
+<img src="/images/Le_Bao_Khanh.png" alt="Ảnh đại diện của bạn" width="450"/>
 
 ### Nội dung báo cáo
 

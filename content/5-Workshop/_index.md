@@ -1,42 +1,42 @@
 ---
-title: "Workshop"
-date: "2025-09-09"
+title: "Project Architecture & Deployment Guide"
+date: "2026-06-15"
 weight: 5
 chapter: false
 pre: " <b> 5. </b> "
 ---
 
-# Building a RAG Application using Knowledge Bases for Amazon Bedrock
+# Enterprise IoT Cloud Dashboard - Project Implementation Guide
 
 #### Overview
 
-**Knowledge Bases for Amazon Bedrock** is a fully managed feature that helps you implement RAG (Retrieval-Augmented Generation) techniques by connecting Foundation Models to your internal data sources to deliver accurate, cited, and contextually relevant responses.
+**An Enterprise IoT Cloud Dashboard** is a centralized smart building management (BMS) solution built on AWS. The system integrates a React frontend, a FastAPI backend hosted on AWS EC2, a PostgreSQL RDS database, CloudWatch for monitoring, and a Python Simulator acting as IoT edge devices.
 
-> RAG is a technique to optimize Large Language Model (LLM) output by retrieving information from a trusted external database (Retrieval) and adding it to the context (Augmentation) before generating the answer (Generation). This method helps overcome limitations regarding outdated training data and ensures the AI answers based on the actual provided information.
+> The solution is architected around 5 core layers to ensure smooth telemetry data ingestion, reliable two-way command execution, and real-time visualization across multiple building locations (Hanoi, Da Nang, and Ho Chi Minh City).
 
-In this lab, we will learn how to build an AI assistant capable of "reading and understanding" proprietary enterprise documents. You will perform the process from data ingestion and creating vector indexes to configuring the model to answer questions based on those documents without managing any servers.
+In this guide, we will review the complete lifecycle of the project—from initial cloud infrastructure and database provisioning to REST API implementation, multi-building device simulation, bi-directional communication, frontend control panel development, system integration, security stress testing, and final project documentation.
 
-We will use three main components to set up a complete RAG processing workflow:
+We will use key components to establish a complete IoT cloud solution:
 
-- **Data Source (Amazon S3)** - Acts as the repository of "truth". You will upload documents (PDF, Word, Text) to an S3 bucket. The Knowledge Base will use this source to synchronize data.
-- **Vector Store (OpenSearch Serverless)** - The place to store vector embeddings (numerically encoded data). When a user asks a question, the system will perform a semantic search here to extract the most relevant text segments instead of standard keyword searching.
-- **Foundation Model (Claude 3)** - The Large Language Model acting as the processing brain. It receives the user's question along with information found from the Vector Store, then synthesizes and generates a natural, accurate answer accompanied by source citations.
+- **Frontend (React & TailwindCSS)** - Acts as the user interface for real-time telemetry monitoring, historical data visualization (via Chart.js/Recharts), and remote device control (Fan, Lights, Curtains).
+- **Backend & Database (FastAPI on EC2 & PostgreSQL RDS)** - Handles data ingestion validation via Pydantic, manages relational data schemas using SQLAlchemy/Alembic, and queues remote commands securely.
+- **IoT Simulation & Monitoring (Python Simulator & CloudWatch)** - Simulates multi-building traffic concurrently using threading, handles network exceptions, and monitors API error rates and audit trails.
 
 #### Outcomes
 
-By the end of the workshop, you will have a practical, functioning Chatbot system with the following features:
+By the end of this project guide, you will have a fully functioning Enterprise IoT Cloud solution featuring:
 
-- Q&A chat regarding proprietary document content.
-- Accurate answers, no hallucinations.
-- Source citations (knowing exactly which page the answer comes from).
-- Rapid deployment without writing complex data processing code.
+- Centralized smart building management across multiple regions.
+- Real-time telemetry ingestion and historical analytics dashboards.
+- Bi-directional communication supporting remote command execution and device polling.
+- Hardened cloud infrastructure with API rate limiting, security group isolation, and stress-tested stability.
 
 #### Contents
 
-1. [Workshop Overview](5.1-Workshop-overview/)
-2. [Environment Preparation](5.2-Prerequiste/)
-3. [Create and Configure Knowledge Base](5.3-Knowledge-Base/)
-4. [Test Chatbot (RAG)](5.4-Test-Chatbot/)
-5. [Client Application Integration (Optional)](5.5-Client-Integration/)
-6. [Update Data](5.6-Cleanup/)
-7. [Clean Up Resources](5.7-Cleanup/)
+1. [System Architecture & Cloud Infrastructure Foundation](5.1-Workshop-overview/)
+2. [Database Design & Backend Foundation](5.2-Prerequiste/)
+3. [REST API Implementation (Data Ingestion)](5.3-Knowledge-Base/)
+4. [IoT Device Simulation](5.4-Test-Chatbot/)
+5. [Command Execution & Two-Way Communication](5.5-Client-Integration/)
+6. [Frontend Dashboard UI & Control Panel](5.6-Cleanup/)
+7. [End-to-End Integration, Security & Hand-off](5.7-Cleanup/)

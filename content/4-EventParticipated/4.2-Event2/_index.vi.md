@@ -166,5 +166,3 @@ Tham gia buổi workshop **“AI DLC x Kiro: Reinventing Developer Experience wi
 - Tôi học được rằng việc áp dụng AI hiệu quả không chỉ nằm ở công nghệ, mà còn ở **cách tích hợp và triết lý thiết kế**, điều này có thể được mang vào các dự án học tập hoặc phát triển phần mềm thực tế của tôi.
 
 #### Một số hình ảnh khi tham gia sự kiện
-
-## ![](/images/4-EventParticipated/event4-2-1.png)

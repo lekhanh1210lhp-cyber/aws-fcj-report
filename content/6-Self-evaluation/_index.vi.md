@@ -1,13 +1,13 @@
 ---
 title: "Tự đánh giá"
-date: "2025-09-09"
+date: "2026-06-15"
 weight: 6
 chapter: false
 pre: " <b> 6. </b> "
 ---
 
-Trong suốt thời gian thực tập tại **AWS/First cloud journey program** từ **08/08/2025** đến **12/12/2025**, tôi đã có cơ hội học hỏi, rèn luyện và áp dụng kiến thức đã được trang bị tại trường vào môi trường làm việc thực tế.  
-Tôi đã tham gia **vào việc học tập dịch vụ của AWS, cũng như áp dụng các kiến thức đã được học vào dự án nhóm với chủ đề FinTech**, qua đó cải thiện kỹ năng **làm việc nhóm, phân bổ công việc cho các thành viên trong nhóm, và đặc biệt đã đạt được các kĩ năng mong muốn như Docker, Devops, và áp dụng các dịch vụ AWS hỗ trợ công việc lập trình**.
+Trong suốt thời gian thực hiện dự án từ ngày **15/06/2026** đến **23/08/2026**, tôi đã có cơ hội học hỏi, rèn luyện và áp dụng kiến thức đã được trang bị tại trường vào môi trường làm việc thực tế.  
+Tôi đã tham gia **vào việc học tập các dịch vụ của AWS, cũng như áp dụng các kiến thức đã học vào dự án Enterprise IoT Cloud Dashboard**, qua đó cải thiện kỹ năng **làm việc nhóm, phân bổ công việc cho các thành viên trong nhóm, và đặc biệt đã đạt được các kỹ năng mong muốn như React, FastAPI, Docker, và áp dụng các dịch vụ AWS hỗ trợ xây dựng hệ thống IoT trên đám mây**.
 
 Về tác phong, tôi luôn cố gắng hoàn thành tốt nhiệm vụ, tuân thủ nội quy, và tích cực trao đổi với đồng nghiệp để nâng cao hiệu quả công việc.
 
@@ -30,9 +30,9 @@ Về tác phong, tôi luôn cố gắng hoàn thành tốt nhiệm vụ, tuân t
 
 ### Cần cải thiện
 
-- Nâng cao tính kỹ luật, chấp hành nghiêm chỉnh nội quy của công ty hoặc bất kỳ trong một tổ chức nào
-- Rèn luyện cho bản thân tính kiên trì một việc cụ thể thay vì lan man với những vấn đề khác gây sao nhãng công việc
-- Cải thiện trong cách tư duy giải quyết vấn đề
-- Cải thiệt kĩ năng giao tiếp và diễn đạt vấn đề của bàn thân đang mắc phải cho các anh Mentors cũng như đồng đội
-- Cần tìm hiểu và học hỏi thêm các công nghệ mới, và học để áp dụng thay vì học để biết
-- Hỗ trợ các thành viên trong nhóm nhiều hơn trong công việc cũng như học tập
+- Nâng cao tính kỷ luật, chấp hành nghiêm chỉnh nội quy của công ty hoặc bất kỳ trong một tổ chức nào.
+- Rèn luyện cho bản thân tính kiên trì một việc cụ thể thay vì lan man với những vấn đề khác gây sao nhãng công việc.
+- Cải thiện trong cách tư duy giải quyết vấn đề.
+- Cải thiện kỹ năng giao tiếp và diễn đạt vấn đề của bản thân đang mắc phải cho các anh Mentors cũng như đồng đội.
+- Cần tìm hiểu và học hỏi thêm các công nghệ mới, và học để áp dụng thay vì học để biết.
+- Hỗ trợ các thành viên trong nhóm nhiều hơn trong công việc cũng như học tập.

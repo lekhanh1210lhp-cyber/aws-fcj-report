@@ -1,6 +1,6 @@
 ---
 title: "Introduction"
-date: "2025-09-09"
+date: "2026-06-15"
 weight: 1
 chapter: false
 pre: " <b> 5.1. </b> "
@@ -8,19 +8,19 @@ pre: " <b> 5.1. </b> "
 
 ### Overview
 
-In this workshop, we will focus on building an intelligent AI assistant capable of "reading and understanding" and answering questions based on proprietary enterprise data (RAG technique).
+In this project, we will focus on building an Enterprise IoT Cloud Dashboard on AWS for centralized smart building management (BMS)[cite: 29].
 
-The main objective is to establish a fully automated and serverless data processing workflow, consisting of the following steps:
+The main objective is to establish a 5-layer architecture utilizing React (Frontend), FastAPI on AWS EC2 (Backend), PostgreSQL RDS (Database), CloudWatch (Monitoring), and a Python Simulator (IoT Devices)[cite: 29]. The workflow consists of the following steps:
 
-1.  **Ingestion:** Loading source documents into the system.
-2.  **Indexing:** Converting text into vectors and storing them for retrieval.
-3.  **Retrieval & Generation:** Configuring the AI model to search for relevant information and generate answers to user questions.
+1.  **Infrastructure & Database:** Provisioning foundational AWS resources (VPC, EC2) and deploying a PostgreSQL RDS instance[cite: 29].
+2.  **API & IoT Simulation:** Building telemetry ingestion API endpoints and developing a Python script to simulate YOLO Uno/ESP32 edge devices[cite: 29].
+3.  **Frontend & Integration:** Building a React dashboard for historical data visualization and remote device control, ensuring full bi-directional communication[cite: 29].
 
-> 💡 **Highlight:** This solution allows you to **eliminate the need to manage any server infrastructure**, optimizing costs and operational time.
+> 💡 **Highlight:** This solution allows administrators to **view trends and send commands directly from the UI**, ensuring flawless data flow from the Simulator to the Dashboard and back[cite: 29].
 
 ![overview](/images/5-Workshop/5.1-Workshop-overview/overview_diagram.png)
 
 #### Implementation Steps
 
-1. [RAG Explanation](5.1.1-WhatIsRag/)
-2. [Service Introduction](5.1.2-Services/)
+1. [System Architecture & Cloud Infrastructure Foundation](5.1.1-Architecture/)
+2. [Database Design & REST API Implementation](5.1.2-Backend/)

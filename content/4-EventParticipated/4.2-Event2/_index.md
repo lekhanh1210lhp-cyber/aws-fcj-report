@@ -168,5 +168,3 @@ Attending the workshop “AI DLC x Kiro: Reinventing Developer Experience with A
 - I learned that successful AI adoption depends not only on technology but also on the design philosophy and integration approach used in tooling.
 
 #### Sample images from the event
-
-## ![Event images](/images/4-EventParticipated/event4-2-1.png)

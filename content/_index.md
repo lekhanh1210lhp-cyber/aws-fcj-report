@@ -1,6 +1,6 @@
 ---
 title: "Internship Report"
-date: "2025-09-09"
+date: "2026-06-15"
 weight: 1
 chapter: false
 ---
@@ -9,25 +9,25 @@ chapter: false
 
 ### Student Information:
 
-&emsp; **Full Name:** Le Vu Phuong Hoa
+&emsp; **Full Name:** Lê Bảo Khánh
 
-&emsp; **Phone Number:** 0327 030 024
+&emsp; **Phone Number:** 0908380983
 
-&emsp; **Email:** danielleee241@gmail.com
+&emsp; **Email:** lekhanh1210lhp@gmail.com
 
-&emsp; **University:** FPT University Campus Ho Chi Minh
+&emsp; **University:** Ho Chi Minh City University of Technology (HCMUT)
 
-&emsp; **Major:** Information Technology
+&emsp; **Major:** Computer Engineering
 
-&emsp; **Class:** SE181951
+&emsp; **Class:** CC23KTM1
 
 &emsp; **Internship Company:** Amazon Web Services Vietnam Co., Ltd.
 
-&emsp; **Internship Position:** FCJ Cloud Intern
+&emsp; **Internship Position:** FCAJ Cloud Intern
 
-&emsp; **Internship Duration:** From 12/08/2025 to 12/12/2025
+&emsp; **Internship Duration:** From 15/06/2026 to 23/08/2026[cite: 55, 56]
 
-<img src="/images/Phuong_Hoa.png" alt="Your profile picture" width="450"/>
+<img src="/images/Le_Bao_Khanh.png" alt="Your profile picture" width="450"/>
 
 ### Report Content
 

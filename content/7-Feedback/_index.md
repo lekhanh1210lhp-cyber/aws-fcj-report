@@ -1,6 +1,6 @@
 ---
 title: "Sharing and Feedback"
-date: "2025-09-09"
+date: "2026-06-15"
 weight: 7
 chapter: false
 pre: " <b> 7. </b> "
@@ -20,7 +20,7 @@ The Mentors are extremely dedicated and conscientious; not only is the quality h
 The work I performed was like the missing puzzle piece from my studies at university. Developing products locally is different from developing a product that is more user-oriented, which requires handling more issues, especially regarding security as well as software consistency. Doing harder and more advanced tasks in my field of study has helped me no longer feel "afraid" of working with them. Thanks to this, I both consolidated my programming knowledge and learned DevOps skills and other soft skills such as teamwork, communication, etc., which has helped me develop significantly in the present and even for the future.
 
 **4. Learning & Skill Development Opportunities**  
-During the internship, I learned many new skills, not only regarding my major but also other soft skills. I got to work with new people, with people not from the same major, thereby gaining different perspectives of each major as well as skills through sharing among group members. I attended many cool events hosted by seniors with extensive experience in large corporations, learning how they apply AI to work as well as other advanced programming skills, helping me better orient the career I am pursuing.
+During the internship period from **15/06/2026** to **23/08/2026**, I learned many new skills, not only regarding my major but also other soft skills. I got to work with new people, with people not from the same major, thereby gaining different perspectives of each major as well as skills through sharing among group members. I attended many cool events hosted by seniors with extensive experience in large corporations, learning how they apply AI to work as well as other advanced programming skills, helping me better orient the career I am pursuing.
 
 **5. Company Culture & Team Spirit**  
 The company culture is very positive; everyone supports each other enthusiastically with a primary spirit of learning and sharing knowledge. During work, everyone is extremely focused, but there are also times that are extremely fun. When deadlines approach, everyone strives together, supporting each other regardless of position; those who are finished help those who are not, and those who know help those who don't. As long as there is a problem, everyone will support solving that problem as quickly and effectively as possible. This helped me easily integrate with everyone, even just in the role of an intern.

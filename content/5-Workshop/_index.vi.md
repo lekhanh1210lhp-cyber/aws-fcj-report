@@ -1,42 +1,42 @@
 ---
-title: "Workshop"
-date: "2025-09-09"
+title: "Hướng dẫn Dự án"
+date: "2026-06-15"
 weight: 5
 chapter: false
 pre: " <b> 5. </b> "
 ---
 
-# Xây dựng ứng dụng RAG sử dụng Knowledge Bases cho Amazon Bedrock
+# Hướng dẫn Triển khai Dự án Enterprise IoT Cloud Dashboard
 
 #### Tổng quan
 
-**Knowledge Bases for Amazon Bedrock** là một tính năng được quản lý hoàn toàn giúp bạn triển khai kỹ thuật RAG (Retrieval-Augmented Generation) bằng cách kết nối các Foundation Models với nguồn dữ liệu nội bộ của bạn để cung cấp các phản hồi chính xác, có trích dẫn và phù hợp với ngữ cảnh.
+**Enterprise IoT Cloud Dashboard** là một giải pháp quản lý tòa nhà thông minh (BMS) tập trung được xây dựng trên nền tảng AWS. Hệ thống tích hợp giao diện React frontend, FastAPI backend chạy trên AWS EC2, cơ sở dữ liệu PostgreSQL RDS, giám sát bằng CloudWatch và Python Simulator đóng vai trò các thiết bị IoT.
 
-> RAG là một kỹ thuật để tối ưu hóa đầu ra của Large Language Model (LLM) bằng cách truy xuất thông tin từ cơ sở dữ liệu bên ngoài đáng tin cậy (Retrieval) và thêm nó vào ngữ cảnh (Augmentation) trước khi tạo ra câu trả lời (Generation). Phương pháp này giúp khắc phục những hạn chế về dữ liệu huấn luyện lỗi thời và đảm bảo AI trả lời dựa trên thông tin thực tế được cung cấp.
+> Giải pháp được thiết kế xung quanh 5 lớp cốt lõi nhằm đảm bảo quá trình thu thập dữ liệu viễn trắc thông suốt, thực thi lệnh điều khiển hai chiều đáng tin cậy và trực quan hóa thời gian thực trên nhiều địa điểm tòa nhà (Hà Nội, Đà Nẵng và TP. Hồ Chí Minh).
 
-Trong bài lab này, chúng ta sẽ học cách xây dựng một trợ lý AI có khả năng "đọc và hiểu" các tài liệu doanh nghiệp độc quyền. Bạn sẽ thực hiện quy trình từ việc nhập dữ liệu và tạo chỉ mục vector đến cấu hình mô hình để trả lời câu hỏi dựa trên những tài liệu đó mà không cần quản lý bất kỳ máy chủ nào.
+Trong hướng dẫn này, chúng ta sẽ xem xét toàn bộ vòng đời của dự án—từ việc thiết lập hạ tầng đám mây ban đầu và cấp phát cơ sở dữ liệu, triển khai REST API, mô phỏng thiết bị đa tòa nhà, giao tiếp hai chiều, phát triển bảng điều khiển frontend, tích hợp hệ thống, kiểm thử bảo mật chịu tải cho đến hoàn thiện tài liệu bàn giao dự án.
 
-Chúng ta sẽ sử dụng ba thành phần chính để thiết lập quy trình xử lý RAG hoàn chỉnh:
+Chúng ta sẽ sử dụng các thành phần chính để thiết lập một giải pháp đám mây IoT hoàn chỉnh:
 
-- **Nguồn dữ liệu (Amazon S3)** - Đóng vai trò là kho lưu trữ "sự thật". Bạn sẽ tải các tài liệu (PDF, Word, Text) lên một S3 bucket. Knowledge Base sẽ sử dụng nguồn này để đồng bộ hóa dữ liệu.
-- **Vector Store (OpenSearch Serverless)** - Nơi lưu trữ các embeddings vector (dữ liệu được mã hóa bằng số). Khi người dùng đặt câu hỏi, hệ thống sẽ thực hiện tìm kiếm ngữ nghĩa tại đây để trích xuất các đoạn văn bản liên quan nhất thay vì tìm kiếm từ khóa tiêu chuẩn.
-- **Foundation Model (Claude 3)** - Large Language Model đóng vai trò là bộ não xử lý. Nó nhận câu hỏi của người dùng cùng với thông tin tìm thấy từ Vector Store, sau đó tổng hợp và tạo ra câu trả lời tự nhiên, chính xác kèm theo trích dẫn nguồn.
+- **Frontend (React & TailwindCSS)** - Đóng vai trò là giao diện người dùng để giám sát viễn trắc thời gian thực, trực quan hóa dữ liệu lịch sử (qua Chart.js/Recharts) và điều khiển thiết bị từ xa (Quạt, Đèn, Rèm).
+- **Backend & Database (FastAPI trên EC2 & PostgreSQL RDS)** - Xử lý xác thực dữ liệu thu thập qua Pydantic, quản lý lược đồ dữ liệu quan hệ bằng SQLAlchemy/Alembic và xếp hàng các lệnh điều khiển từ xa một cách an toàn.
+- **IoT Simulation & Monitoring (Python Simulator & CloudWatch)** - Mô phỏng lưu lượng đa tòa nhà đồng thời bằng luồng (threading), xử lý các ngoại lệ mạng và giám sát tỷ lệ lỗi API cùng dấu vết kiểm toán.
 
 #### Kết quả đạt được
 
-Khi kết thúc workshop, bạn sẽ có một hệ thống Chatbot thực tế, hoạt động với các tính năng sau:
+Khi hoàn thành hướng dẫn dự án này, bạn sẽ có một giải pháp Enterprise IoT Cloud hoạt động đầy đủ với các tính năng sau:
 
-- Trò chuyện hỏi đáp về nội dung tài liệu độc quyền.
-- Câu trả lời chính xác, không có ảo giác (hallucinations).
-- Trích dẫn nguồn (biết chính xác câu trả lời đến từ trang nào).
-- Triển khai nhanh chóng mà không cần viết mã xử lý dữ liệu phức tạp.
+- Quản lý tòa nhà thông minh tập trung trên nhiều vùng miền.
+- Thu thập dữ liệu viễn trắc thời gian thực và bảng điều khiển phân tích lịch sử.
+- Giao tiếp hai chiều hỗ trợ thực thi lệnh từ xa và polling thiết bị.
+- Hạ tầng đám mây được bảo mật với tính năng giới hạn tốc độ API, cô lập security group và kiểm thử độ ổn định dưới tải nặng.
 
 #### Nội dung
 
-1. [Tổng quan về Workshop](5.1-Workshop-overview/)
-2. [Chuẩn bị môi trường](5.2-Prerequiste/)
-3. [Tạo và cấu hình Knowledge Base](5.3-Knowledge-Base/)
-4. [Kiểm tra Chatbot (RAG)](5.4-Test-Chatbot/)
-5. [Tích hợp ứng dụng Client (Tùy chọn)](5.5-Client-Integration/)
-6. [Cập nhật dữ liệu](5.6-Cleanup/)
-7. [Dọn dẹp tài nguyên](5.7-Cleanup/)
+1. [Kiến trúc Hệ thống & Nền tảng Hạ tầng Đám mây](5.1-Workshop-overview/)
+2. [Thiết kế Cơ sở dữ liệu & Nền tảng Backend](5.2-Prerequiste/)
+3. [Triển khai REST API (Thu thập Dữ liệu)](5.3-Knowledge-Base/)
+4. [Mô phỏng Thiết bị IoT](5.4-Test-Chatbot/)
+5. [Thực thi Lệnh & Giao tiếp Hai chiều](5.5-Client-Integration/)
+6. [Giao diện Frontend Dashboard & Bảng điều khiển](5.6-Cleanup/)
+7. [Tích hợp Toàn trình, Bảo mật & Bàn giao](5.7-Cleanup/)

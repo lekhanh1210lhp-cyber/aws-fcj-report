@@ -1,45 +1,41 @@
 ---
-title: "Services"
-date: "2025-09-09"
+title: "Services & Technologies"
+date: "2026-06-15"
 weight: 2
 chapter: false
 pre: " <b> 5.1.2 </b> "
 ---
 
-The solution architecture is built upon the coordination of the following 4 key service components:
+The solution architecture is built upon the coordination of the following key components and services:
 
-#### Knowledge Bases for Amazon Bedrock
+#### React (Frontend Dashboard)
 
-This is a fully managed capability that helps connect Foundation Models to the enterprise's internal data sources.
+A functional, responsive web application that serves as the user interface for centralized smart building management.
 
-- **RAG workflow automation:** Manages the entire end-to-end workflow, including ingestion, chunking, embedding, and retrieval.
-- **Contextual connection:** Enables AI applications to answer questions based on private data rather than relying solely on generic training data.
-- **No infrastructure management:** Eliminates the need to build and maintain complex data pipelines.
+- **Data Visualization:** Fetches and renders real-time telemetry (temperature, humidity, light) into UI cards and plots historical data using Chart.js/Recharts.
+- **Control Panel:** Builds toggle switches in the UI, allowing administrators to dispatch remote commands for fans, lights, and curtains.
+- **Multi-building Navigation:** Implements a sidebar layout to navigate between different building locations like Hanoi, Da Nang, and HCM.
 
-#### Amazon Simple Storage Service (Amazon S3)
+#### FastAPI on AWS EC2 (Backend)
 
-An object storage service with scalability, 99.999999999% (11 nines) data durability, and top-tier security.
+The core backend server initialized with FastAPI and actively running on an Ubuntu EC2 instance.
 
-- **Data Source Role:** Acts as the "source of truth".
-- **Document storage:** Contains unstructured files such as PDF, Word, or Text that the business wants the AI to learn.
-- **Synchronization:** The Knowledge Base will periodically scan this S3 bucket to synchronize and update the latest knowledge.
+- **Data Ingestion & Validation:** Receives telemetry data and implements Pydantic validators to reject malformed JSON data payloads.
+- **Command Dispatching:** Provides API endpoints for the dashboard to send commands and for IoT devices to retrieve their pending commands.
+- **Security & Rate Limiting:** Implements basic rate limiting to prevent DDoS or spam telemetry, secured behind properly configured Security Groups.
 
-#### Amazon OpenSearch Serverless
+#### PostgreSQL on AWS RDS (Database)
 
-A serverless deployment option for Amazon OpenSearch Service that helps run search and analytics workloads without managing clusters.
+A managed relational database deployed within a private subnet, accepting inbound rules exclusively from the EC2 backend.
 
-- **Vector Store Role:** Stores vector embeddings generated from original documents.
-- **Semantic Search:** Performs similarity search algorithms (k-NN) to identify text segments with meanings closest to the user's question.
-- **Auto-scaling:** Automatically adjusts compute and storage resources based on actual demand.
+- **Schema Management:** Uses Alembic for schema migrations, managing relational tables for Buildings, Telemetry History, and Commands.
+- **Command Queueing:** Implements database logic to securely queue pending commands for specific edge devices.
+- **Performance Optimization:** Utilizes database indexing to optimize latency and API response times for historical data retrieval.
 
-#### Amazon Bedrock Foundation Models (FMs)
+#### Python Simulator & AWS CloudWatch (IoT & Monitoring)
 
-Provides access to leading AI models via a unified API. In this architecture, we use two types of models with distinct roles:
+A combination of simulated edge computing and cloud-native monitoring to ensure the system operates reliably.
 
-- **Embedding Model (Amazon Titan Embeddings v2):**
-  - Converts text (documents from S3 and user questions) into numerical vectors.
-  - Enables computers to compare semantic similarity between text segments.
-- **Text Generation Model (Anthropic Claude 3):**
-  - Acts as the reasoning "brain".
-  - Receives the question along with contextual information retrieved from the Vector Store.
-  - Synthesizes information and generates natural, accurate answers with source citations.
+- **IoT Device Simulation:** Python scripts act as YOLO Uno or ESP32 edge devices, generating randomized, realistic sensor data using threading to simulate simultaneous multi-building traffic.
+- **Device Polling & Two-Way Sync:** The simulator periodically polls (GET) pending commands from the backend and acknowledges execution, establishing full bi-directional communication.
+- **Audit Trails & Monitoring:** AWS CloudWatch is integrated to monitor API error rates (HTTP 200/500 successes and errors) and log all executed commands for security audit trails.

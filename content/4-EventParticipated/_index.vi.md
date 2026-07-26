@@ -41,39 +41,3 @@ Trong quá trình thực tập, em đã tham gia 6 events, với mỗi event là
 &emsp;**Địa điểm:** Đại học FPT, Đường D1, Khu Công nghệ cao, Phường Tăng Nhơn Phú, TP. Hồ Chí Minh.
 
 &emsp;**Vai trò trong sự kiện:** Người tham dự
-
----
-
-### [Event 4](4.4-Event4/)
-
-&emsp;**Tên sự kiện:** AWS Cloud Mastery Series #1
-
-&emsp;**Thời gian:** 08:30 ngày 15/11/2025
-
-&emsp;**Địa điểm:** Tầng 26, tòa nhà Bitexco, số 02 đường Hải Triều, phường Sài Gòn, thành phố Hồ Chí Minh
-
-&emsp;**Vai trò trong sự kiện:** Người tham dự
-
----
-
-### [Event 5](4.5-Event5/)
-
-&emsp;**Tên sự kiện:** AWS Cloud Mastery Series #2
-
-&emsp;**Thời gian:** 08:30 ngày 17/11/2025
-
-&emsp;**Địa điểm:** Tầng 26, tòa nhà Bitexco, số 02 đường Hải Triều, phường Sài Gòn, thành phố Hồ Chí Minh
-
-&emsp;**Vai trò trong sự kiện:** Người tham dự
-
----
-
-### [Event 6](4.6-Event6/)
-
-&emsp;**Tên sự kiện:** AWS Cloud Mastery Series #3
-
-&emsp;**Thời gian:** 08:30 ngày 29/11/2025
-
-&emsp;**Địa điểm:** Tầng 26, tòa nhà Bitexco, số 02 đường Hải Triều, phường Sài Gòn, thành phố Hồ Chí Minh
-
-&emsp;**Vai trò trong sự kiện:** Người tham dự

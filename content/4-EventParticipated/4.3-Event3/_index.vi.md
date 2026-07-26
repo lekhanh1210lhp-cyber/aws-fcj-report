@@ -209,5 +209,3 @@ Tham gia workshop **“AI Services on AWS for Data Science”** là một trải
 - Hiểu rõ hơn **cách đưa mô hình AI vào sản phẩm thực tế** qua các dịch vụ AWS.
 
 #### Một số hình ảnh khi tham gia sự kiện
-
-![](/images/4-EventParticipated/event4-3-1.png)

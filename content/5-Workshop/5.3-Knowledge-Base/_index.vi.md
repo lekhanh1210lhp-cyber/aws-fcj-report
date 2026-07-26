@@ -1,6 +1,6 @@
 ---
-title: "Tạo và Cấu hình Knowledge Base"
-date: "2025-09-09"
+title: "Thiết kế Cơ sở dữ liệu & Nền tảng Backend"
+date: "2026-06-15"
 weight: 3
 chapter: false
 pre: " <b> 5.3. </b> "
@@ -8,23 +8,23 @@ pre: " <b> 5.3. </b> "
 
 #### Mục tiêu
 
-Sau khi hoàn thành việc chuẩn bị môi trường và dữ liệu, bước tiếp theo là thiết lập thành phần cốt lõi của kiến trúc RAG. Trong phần này, chúng ta sẽ khởi tạo **Knowledge Base**, đóng vai trò là cơ chế trung gian thông minh kết nối các nguồn dữ liệu phi cấu trúc với khả năng suy luận của các foundation models.
+Sau khi hoàn thành việc chuẩn bị nền tảng hạ tầng đám mây, bước tiếp theo là thiết lập các thành phần cơ sở dữ liệu và backend cốt lõi của kiến trúc IoT. Trong phần này, chúng ta sẽ cung cấp PostgreSQL trên AWS RDS và khởi tạo cấu trúc backend FastAPI.
 
 Chúng ta sẽ thực hiện 3 mục tiêu kỹ thuật chính:
 
-1.  **Thiết lập Pipeline Tự động:** Cấu hình Knowledge Base để tự động hóa toàn bộ quy trình xử lý dữ liệu RAG (bao gồm trích xuất, phân đoạn văn bản và tạo vector) nhằm loại bỏ các tác vụ xử lý thủ công.
-2.  **Khởi tạo Vector Store:** Triển khai một collection trên **Amazon OpenSearch Serverless** để lưu trữ các vector ngữ nghĩa, phục vụ việc truy xuất thông tin chính xác và hiệu quả.
-3.  **Đồng bộ hóa Dữ liệu (Data Ingestion):** Thực hiện quy trình nhập dữ liệu ban đầu, chuyển đổi các tài liệu tĩnh từ S3 thành các vector có thể tìm kiếm trong hệ thống.
+1.  **Khởi tạo Cơ sở dữ liệu:** Triển khai một instance PostgreSQL RDS trong mạng con dùng riêng (private subnet) và cấu hình các quy tắc đầu vào (inbound rules) chỉ cho phép kết nối từ EC2.
+2.  **Khởi tạo FastAPI:** Khởi tạo dự án FastAPI từ đầu, tiến hành cấu hình SQLAlchemy và các Pydantic schemas.
+3.  **Database Migration:** Thiết lập Alembic cho việc di chuyển (migration) cấu trúc dữ liệu và thực thi bản migration đầu tiên lên RDS để tạo các bảng quan hệ cho Buildings, Telemetry History, và Commands.
 
 #### Các Thành phần Chính
 
-Trong quá trình cấu hình này, chúng ta sẽ tương tác và kết nối các dịch vụ sau:
+Trong quá trình cấu hình này, chúng ta sẽ tương tác và kết nối các dịch vụ cũng như công cụ sau:
 
-- **Knowledge Bases for Amazon Bedrock:** Dịch vụ được quản lý đóng vai trò là bộ điều phối luồng dữ liệu, kết nối các nguồn thông tin và thực thi các truy vấn ngữ nghĩa.
-- **Amazon Titan Embeddings G1 - Text v2:** Mô hình chuyên dụng để chuyển đổi dữ liệu văn bản thành các vector số (Embeddings) với độ chính xác cao và hỗ trợ đa ngôn ngữ.
-- **Amazon OpenSearch Serverless:** Cơ sở dữ liệu vector được quản lý hoàn toàn, chịu trách nhiệm lưu trữ và thực thi các thuật toán tìm kiếm tương đồng (k-NN).
+- **AWS RDS (PostgreSQL):** Dịch vụ cơ sở dữ liệu quan hệ được quản lý, dùng để lưu trữ an toàn các dữ liệu có cấu trúc bao gồm Buildings, Telemetry History, và Commands.
+- **FastAPI (Python):** Framework backend hiện đại đang hoạt động tích cực trên EC2 instance, chịu trách nhiệm xử lý logic API và xác thực dữ liệu.
+- **Alembic & SQLAlchemy:** Bộ công cụ cơ sở dữ liệu và công cụ di chuyển (migration) được sử dụng để thiết lập các lược đồ quan hệ và thực thi triển khai trực tiếp lên RDS instance.
 
 #### Các Bước Thực hiện
 
-1. [Khởi tạo Knowledge Base](5.3.1-Create-KB/)
-2. [Kiểm tra Vector Store và Đồng bộ Dữ liệu](5.3.2-Sync-Data/)
+1. [Thiết lập AWS RDS](5.3.1-RDS-Setup/)
+2. [Khởi tạo FastAPI & Database Migration](5.3.2-FastAPI-Migration/)
