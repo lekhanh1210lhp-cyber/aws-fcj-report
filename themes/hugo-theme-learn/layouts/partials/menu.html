@@ -35,11 +35,11 @@
         {{end}}
       </ul>
     </section>
-    {{end}} {{ if or hugo.IsMultilingual $showvisitedlinks }}
+    {{end}} {{ if or .Site.IsMultiLingual $showvisitedlinks }}
     <section id="prefooter">
       <hr />
       <ul>
-        {{ if and hugo.IsMultilingual (not
+        {{ if and .Site.IsMultiLingual (not
         .Site.Params.DisableLanguageSwitchingButton)}}
         <li>
           <a class="padding">
@@ -81,7 +81,7 @@
               >
                 <g>
                   <g id="arrow-drop-down">
-                    <polygon points="0,63.75 127.5,191.25 255,63.75 		" />
+                    <polygon points="0,63.75 127.5,191.25 255,63.75     " />
                   </g>
                 </g>
               </svg>

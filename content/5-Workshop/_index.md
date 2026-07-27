@@ -1,5 +1,5 @@
 ---
-title: "Project Architecture & Deployment Guide"
+title: "Workshop"
 date: "2026-06-15"
 weight: 5
 chapter: false

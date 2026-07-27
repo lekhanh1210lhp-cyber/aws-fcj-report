@@ -2,7 +2,6 @@
 
 ### 2. File tiếng Việt (`_index.vi.md`)
 
-```markdown
 ---
 title: "Tích hợp Ứng dụng Frontend"
 date: "2026-06-15"
