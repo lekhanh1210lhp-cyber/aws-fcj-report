@@ -26,6 +26,6 @@ Thông thường và cũng là tiêu chuẩn, một worklog cho dự án này đ
 
 **Tuần 8:** [Tích hợp Hệ thống Toàn trình (End-to-End)](1.8-week8/)
 
-**Tuần 9:** [Bảo mật Hệ thống & Kiểm thử Chịu tải (Stress Testing)](1.9-week9/)
+**[Dự kiến] Tuần 9:** [Bảo mật Hệ thống & Kiểm thử Chịu tải (Stress Testing)](1.9-week9/)
 
-**Tuần 10:** [Hoàn thiện Tài liệu & Chuẩn bị Thuyết trình](1.10-week10/)
+**[Dự kiến] Tuần 10:** [Hoàn thiện Tài liệu & Chuẩn bị Thuyết trình](1.10-week10/)

@@ -1,5 +1,5 @@
 ---
-title: "Dự kiến: Worklog Tuần 10"
+title: "[Dự kiến] Worklog Tuần 10"
 date: "2026-07-27"
 weight: 10
 chapter: false

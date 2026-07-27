@@ -1,5 +1,5 @@
 ---
-title: "Expected: Week 10 Worklog"
+title: "[Expected] Week 10 Worklog"
 date: "2026-07-27"
 weight: 10
 chapter: false
