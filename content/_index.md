@@ -27,7 +27,7 @@ chapter: false
 
 &emsp; **Internship Duration:** From 15/06/2026 to 23/08/2026
 
-<img src="/images/Le_Bao_Khanh.png" alt="Your profile picture" width="450"/>
+<img src="static/images/Ảnh CV_2.jpg" alt="Your profile picture" width="450"/>
 
 ### Report Content
 
