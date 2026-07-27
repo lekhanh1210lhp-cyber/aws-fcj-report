@@ -88,11 +88,11 @@ The project emphasizes cost optimization.
 - **Hardware Readiness:** Refined simulator documentation outlines how the YOLO Uno will eventually replace the software simulation.
 - **Final Output:** The project is ready for academic submission and a professional 30-second enterprise pitch presentation.
 
-#### Implementation Team Roles:
-The project architecture and tasks are strictly assigned to specific roles:
-| Role | Primary Responsibilities |
-| :--- | :--- |
-| **Cloud Engineer** | Sets up IAM, VPC, EC2, RDS, and CloudWatch monitoring. Reviews Security Groups. |
-| **Backend Engineer** | Initializes FastAPI, database schemas, Alembic migrations, and CORS resolution. |
-| **IoT Engineer** | Creates Python simulator scripts, multithreading, and high-frequency stress testing. |
-| **Frontend Engineer** | Creates Vite-React project, TailwindCSS layout, API integration, and dashboard aesthetics. |
+#### Implementation Team:
+
+| Name | Role | Email | Primary Responsibilities |
+| :--- | :--- | :--- | :--- |
+| **Pham Le Minh Khoi** | Cloud Developer (Leader) | khoi.pham2005ktmt@hcmut.edu.vn | Sets up IAM, VPC, EC2, RDS, and CloudWatch monitoring. Reviews Security Groups. |
+| **Ngo Minh Thuan** | Backend Developer (Member) | thuan.ngostudyhcmut@hcmut.edu.vn | Initializes FastAPI, database schemas, Alembic migrations, and CORS resolution. |
+| **Thuong Dinh Hung** | Frontend Developer (Member) | hung.thuongpeanut2005@gmail.com | Creates Vite-React project, TailwindCSS layout, API integration, and dashboard aesthetics. |
+| **Le Bao Khanh** | IoT Developer (Member) | lekhanh1210lhp@gmail.com | Creates Python simulator scripts, multithreading, and high-frequency stress testing. |

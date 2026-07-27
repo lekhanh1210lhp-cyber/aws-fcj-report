@@ -25,7 +25,7 @@ chapter: false
 
 &emsp; **Internship Position:** FCAJ Cloud Intern
 
-&emsp; **Internship Duration:** From 15/06/2026 to 23/08/2026[cite: 55, 56]
+&emsp; **Internship Duration:** From 15/06/2026 to 23/08/2026
 
 <img src="/images/Le_Bao_Khanh.png" alt="Your profile picture" width="450"/>
 

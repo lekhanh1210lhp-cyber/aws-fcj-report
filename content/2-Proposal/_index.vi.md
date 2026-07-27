@@ -88,11 +88,11 @@ Dự án chú trọng vào việc tối ưu hóa chi phí.
 - **Sẵn sàng phần cứng:** Tài liệu được tinh chỉnh hướng dẫn rõ cách thay thế phần mềm mô phỏng bằng thiết bị YOLO Uno thực tế sau này.
 - **Thành phẩm:** Dự án sẵn sàng để nộp báo cáo học thuật và có bài thuyết trình 30 giây chuẩn doanh nghiệp.
 
-#### Đội ngũ thực hiện (Vai trò):
-Kiến trúc và nhiệm vụ dự án được phân công nghiêm ngặt cho các vai trò cụ thể:
-| Vai trò | Trách nhiệm chính |
-| :--- | :--- |
-| **Cloud Engineer** | Thiết lập IAM, VPC, EC2, RDS và CloudWatch. Đánh giá Security Groups. |
-| **Backend Engineer** | Khởi tạo FastAPI, database schemas, migrate với Alembic và xử lý CORS. |
-| **IoT Engineer** | Tạo script mô phỏng Python, đa luồng (multithreading) và stress test tần số cao. |
-| **Frontend Engineer** | Khởi tạo dự án Vite-React, layout TailwindCSS, tích hợp API và hoàn thiện giao diện dashboard. |
+#### Đội ngũ thực hiện:
+
+| Name | Role | Email | Trách nhiệm chính |
+| :--- | :--- | :--- | :--- |
+| **Phạm Lê Minh Khôi** | Cloud Developer (Leader) | khoi.pham2005ktmt@hcmut.edu.vn | Thiết lập IAM, VPC, EC2, RDS và CloudWatch. Đánh giá Security Groups. |
+| **Ngô Minh Thuận** | Backend Developer (Member) | thuan.ngostudyhcmut@hcmut.edu.vn | Khởi tạo FastAPI, database schemas, migrate với Alembic và xử lý CORS. |
+| **Thượng Đình Hưng** | Frontend Developer (Member) | hung.thuongpeanut2005@gmail.com | Khởi tạo dự án Vite-React, layout TailwindCSS, tích hợp API và hoàn thiện giao diện dashboard. |
+| **Lê Bảo Khánh** | IoT Developer (Member) | lekhanh1210lhp@gmail.com | Tạo script mô phỏng Python, đa luồng (multithreading) và stress test tần số cao. |
