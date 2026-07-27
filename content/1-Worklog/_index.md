@@ -26,6 +26,6 @@ Typically, and as a standard, a worklog is carried out over exactly 10 weeks wit
 
 **Week 8:** [End-to-End System Integration](1.8-week8/)
 
-**Week 9:** [System Security & Stress Testing](1.9-week9/)
+**[Expected] Week 9:** [System Security & Stress Testing](1.9-week9/)
 
-**Week 10:** [Final Documentation & Pitch Preparation](1.10-week10/)
+**[Expected] Week 10** [Final Documentation & Pitch Preparation](1.10-week10/)
