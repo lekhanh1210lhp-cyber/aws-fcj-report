@@ -1,137 +1,237 @@
 ---
 title: "Blog 2"
-date: "2025-09-09"
-weight: 1
+date: "2025-07-25"
+weight: 2
 chapter: false
 pre: " <b> 3.2. </b> "
 ---
 
-# **AI-enhanced Subsurface Infrastructure Mapping on AWS**
+# **Optimize industrial IoT analytics with Amazon Data Firehose and Amazon S3 Tables with Apache Iceberg**
 
-_By: Santi Adavani, Jacques Guigne, Ryan Qi, Souvik Mukherjee, Srinivas Tadepalli, and Vidyasagar Ananthan — 13 May 2025 — [AWS Batch](https://aws.amazon.com/blogs/hpc/category/compute/aws-batch/), [AWS ParallelCluster](https://aws.amazon.com/blogs/hpc/category/compute/aws-parallel-cluster/), [Customer Solutions](https://aws.amazon.com/blogs/hpc/category/post-types/customer-solutions/), [High Performance Computing](https://aws.amazon.com/blogs/hpc/category/high-performance-computing/), [Thought Leadership](https://aws.amazon.com/blogs/hpc/category/post-types/thought-leadership/)_
+_by Ashok Padmanabhan, Joyson Neville Lewis, and Anil Vure on 25 JUL 2025 in Amazon Data Firehose, Amazon S3 Tables, Analytics, AWS IoT Greengrass, Internet of Things, Technical How-to_
 
-Subsurface infrastructure mapping is the process of identifying and visualizing buried structures such as pipes, cables, tanks, and foundations located beneath the surface without excavation. This technology is critical for urban planning, utility maintenance, oil & gas operations, construction safety, and environmental protection. Without accurate subsurface maps, construction projects risk costly delays, dangerous utility strikes, and environmental damage. For example, when Hurricane Ivan damaged an offshore oil platform in 2004, important infrastructure was buried under 35–45 meters of sediment, creating an invisible hazard that traditional mapping techniques could not fully detect.
+Manufacturing organizations are racing to digitize their operations through Industry 4.0 initiatives. A key challenge they face is capturing, processing, and analyzing real-time data from industrial equipment to enable data-driven decision making.
 
-Through a collaboration between **S2 Labs, Empact AI, and Kraken Robotics**, a breakthrough in subsurface infrastructure mapping has emerged on AWS. The approach combines advanced magnetic imaging with physics-informed AI to deliver unprecedentedly clear images of subsurface structures — especially in scenarios where traditional methods fail. The combination of cloud computing and AI is changing how the industry visualizes and understands critical buried infrastructure.
+Modern manufacturing facilities generate massive amounts of real-time data from their production lines. Capturing this valuable data requires a two-tier architecture: first, an edge device that understands industrial protocols collects data directly from the shop floor sensors. Then, these edge gateways securely buffer and transmit the data to AWS Cloud, providing reliability during network interruptions.
 
-## Detection methods and limitations
+In this post, we show how to use AWS service integrations to minimize custom code while providing a robust platform for industrial data ingestion, processing, and analytics. By using Amazon S3 Tables and its built-in optimizations, you can maximize query performance and minimize costs without additional infrastructure setup. Additionally, AWS IoT Greengrass supports VPC endpoints, and you can securely communicate between the edge gateway (hosted on premises) and AWS.
 
-Traditional subsurface imaging uses a range of geophysical techniques, each suited to specific materials and conditions. For example, **electromagnetic methods** detect metallic pipes and cables via conductivity, while **magnetometers** measure variations in Earth’s magnetic field to identify ferrous materials such as steel pipes. **Ground-penetrating radar (GPR)** is particularly effective at imaging concrete structures and geological layers; specialized frequencies can reveal plastic pipes or water-bearing assets because of dielectric contrasts.
+## **Solution overview**
+Let’s consider a manufacturing line with and equipment sensors capturing flow rate, temperature, and pressure. To perform analysis on this data, you ingest real-time streaming data from these sensors into the AWS environment using an edge gateway. After data lands in AWS, you can use various analytics services to gain insights.
 
-Manual interpretation of survey data typically involves 2D signal analysis and basic depth estimation — a fast but approximate approach. Two main challenges arise: first, different subsurface configurations can produce nearly identical sensor responses, making it ambiguous which configuration is correct without additional data. Second, real-world environments contain heterogeneous soils, moisture levels, and material densities that vary over short distances, producing complex signals that traditional algorithms struggle to interpret accurately.
+To demonstrate the data flow from the edge to the cloud, we have assets, machines, and tools publish data using MQTT. Optionally, we use a simulated edge device that publishes data to a local MQTT endpoint. We use an edge gateway with an AWS IoT Greengrass V2 edge runtime to stream data through Amazon Data Firehose in the cloud to S3 Tables.
 
-Examining a magnetic survey result, surface measurements show magnetic intensity variations across a 50 m area as illustrated in Figure 1(a). When processed with conventional methods, we obtain a blurred image suggesting a pipe-like structure down to about 5 m, but the result lacks detail (Figure 1(b)). This is where an AI-based approach shows its strength — producing a much sharper image that reveals a pipe-like structure at 1–1.5 m depth (Figure 1(c)). The AI-based result is far more precise while remaining consistent with the original magnetic measurements.
+The following diagram illustrates the solution architecture.
 
-## ![](/images/3-BlogsTranslated/3.2-Blog2/image1.png)
+## ![](/images/3-BlogsTranslated/3.2-Blog2/image_1.jpg) 
 
-Figure 1. (a) Map view over a 50 m survey patch. (b) Conventional small-square inversion. (c) Deep-learning-based inversion.
+The workflow consists of the following steps:
 
-## Physics-informed deep learning solution
+1. Collect data from Internet of Things (IoT) sensors and stream real-time data from edge devices to the AWS Cloud using AWS IoT Greengrass.
+2. Ingest, transform, and land data in near real time using Data Firehose, with the Firehose component on AWS IoT Greengrass, and S3 Tables integration.
+3. Store and organize the tabular data using S3 Tables, which provides purpose-built storage for Apache Iceberg format with a simple, performant, and cost-effective querying solution.
+4. Query and analyze the tabular data using Amazon Athena.
 
-**S2 Labs** applies physics-informed AI and **AWS high performance computing (HPC)** to solve hard engineering problems across oil & gas, manufacturing, healthcare, and biotech — delivering scientifically accurate results with reduced compute time. S2 Labs partnered with two domain specialists: **Empact AI**, which provides 3D subsurface pipe mapping, and **Kraken Robotics**, which contributes high-resolution underwater imagery via Synthetic Aperture Sonar. This collaboration integrates advanced sonar, 3D subsurface analysis, and AI-driven pattern recognition on **AWS Cloud** to locate and characterize pipeline leaks with higher accuracy and speed.
+The edge data flow consists of the following key components:
 
-Our AI approach combines the physics of magnetic fields with deep learning to better interpret what lies underground. By training AI on simulated data that models real-world structures like tanks and pipes, we teach it to “read” magnetic measurements like a map. Using a specialized neural network architecture called **U-Net**, the model learns to translate magnetic signals into crisp images of subsurface structures, identifying not only location but also composition and shape. For technical details, see the recent [research paper](https://www.researchgate.net/profile/Souvik-Mukherjee-3/publication/361686292_High-resolution_imaging_of_subsurface_infrastructure_using_deep_learning_artificial_intelligence_on_drone_magnetometry/links/62d2e42c66bd1654d66a1fa6/High-resolution-imaging-of-subsurface-infrastructure-using-deep-learning-artificial-intelligence-on-drone-magnetometry.pdf) published by S2 Labs.
+*   **IoT device to local MQTT broker** – A simulated device used to generate data for the purposes of this post. In a typical production implementation, this would be your equipment or gateway that supports MQTT. IoT devices can publish messages to a local MQTT broker (Moquette) running on AWS IoT Greengrass.
+*   **MQTT bridge** – The MQTT bridge component relays messages between the MQTT broker (where client devices communicate) and the Local AWS IoT Greengrass publish/subscribe (IPC).
+*   **Local PubSub (custom) component** – This component subscribes to the local IPC messages, forwards messages to the `kinesisfirehose/message` topic, and uses the IPC interface to subscribe to messages.
+*   **Firehose component** – The Firehose component subscribes to the `kinesisfirehose/message` topic. The component then streams the data to Data Firehose in the cloud. It uses QoS 1 for reliable message delivery.
 
-## Model training
+You can scale this solution to multiple edge locations, so you have a seamless view of data across multiple locations of the manufacturing site, as a low-code solution. 
 
-The physics-informed deep learning model was trained on **AWS** by combining high performance compute, scalable data storage, and parallel processing services, as illustrated in the architecture diagram in Figure 2.
+In the following sections, we walk through the steps to configure the cloud data ingestion flow:
 
-Using [**Amazon EC2 instances**](https://aws.amazon.com/ec2/instance-types/c5/), we generated 202,000 3D susceptibility models (each with 226,000 cells) representing many different subsurface scenarios — including pipes at multiple orientations, multiple-pipe configurations, and tanks.
+1. Create an S3 Tables bucket and enable integration with AWS analytics services.
+2. Create a namespace in the table bucket using the AWS Command Line Interface (AWS CLI).
+3. Create a table in the table bucket with the defined schema using the AWS CLI.
+4. Create an AWS Identity and Access Management (IAM) role for Data Firehose with necessary permissions.
+5. Configure AWS Lake Formation permissions by granting Super permissions on specific tables for the Data Firehose role.
+6. Set up a Data Firehose stream by choosing Direct PUT as the source and Iceberg tables as the destination. Configure the destination settings with database and table names, specify an Amazon Simple Storage Service (Amazon S3) bucket for error output, and associate the IAM role created earlier.
+7. Verify and query data using Athena by granting Lake Formation permissions for Athena access and querying the table to verify data ingestion.
 
-The models were parameterized by domain knowledge and stored as NumPy files in [**Amazon S3**](https://aws.amazon.com/s3/) buckets. S2 Labs’ proprietary magnetostatic solver was containerized and stored in [**Amazon ECR**](https://aws.amazon.com/ecr/) for consistent deployment across compute resources. The solver processed models sequentially from **S3** and wrote the response data back to **S3**.
+## **Prerequisites**
+You must have the following prerequisites:
+*   An AWS account
+*   The required IAM privileges to launch AWS IoT Greengrass on an edge gateway (or another supported device)
+*   An Amazon Elastic Compute Cloud (Amazon EC2) instance with a supported operating system to perform a proof of concept
 
-We also employed distributed computing using [**AWS Batch**](https://aws.amazon.com/batch/) to generate synthetic data, utilizing [**Spot Instances**](https://aws.amazon.com/ec2/spot/) to optimize cost. We used **P4d instances**, each providing eight **NVIDIA A100 GPUs**, to compute field responses at 1,800 measurement points spaced 2 meters apart. The pipeline synchronized data between **Amazon S3** and local storage, trained a **2D U-Net** architecture (500M parameters) for 110 epochs, achieving training loss 0.0018 and validation loss 0.0019. The full computation required 100,000 CPU hours.
+## **Install AWS IoT Greengrass on the edge gateway**
+For instructions to install AWS IoT Greengrass, refer to Install the AWS IoT Greengrass Core software. After you complete the installation, you will have a core device provisioned, as shown in the following screenshot. The status of the device says Healthy, which means that your account is able to communicate with the device successfully.
 
-## ![](/images/3-BlogsTranslated/3.2-Blog2/image2.png)
+For a proof of concept, you can use an Ubuntu-based EC2 instance as your edge gateway.
 
-Figure 2. Architecture diagram for synthetic data generation and model training on AWS.
+## ![](/images/3-BlogsTranslated/3.2-Blog2/image_2.jpg) 
 
-## Scalable inference workflow for large magnetic surveys
+## **Provision a Data Firehose stream**
+For detailed steps on setting up Data Firehose to deliver data to Iceberg tables, refer to Deliver data to Apache Iceberg Tables with Amazon Data Firehose. For S3 Tables integration, refer to Build a data lake for streaming data with Amazon S3 Tables and Amazon Data Firehose.
 
-Our magnetic survey pipeline applies a systematic four-stage workflow to process large surveys efficiently while preserving high-quality, reproducible reconstructions of subsurface infrastructure, illustrated in Figure 3.
+Because you’re using AWS IoT Greengrass to stream data, you can skip the Kinesis Data Generator steps mentioned in these tutorials. The data will instead flow from your edge devices through the Greengrass components to Data Firehose. 
 
-Stage 1 — Data Acquisition: Field data collection uses magnetometer systems customized to the survey environment — drone-mounted for airborne surveys, ground systems for land surveys, or underwater systems for marine applications. Surveys follow a systematic grid sampling pattern with consistent sensor heights and transect spacing to ensure uniform coverage of the target area.
+After you complete these steps, you will have a Firehose stream and S3 Tables bucket, as shown in the following screenshot. Note the Amazon Resource Name (ARN) of the Firehose stream to use in subsequent steps.
 
-Stage 2 — Survey Domain Preparation: Rather than processing the entire survey area at once, we adopt a modular approach by dividing the survey domain into smaller tiles sized to the AI training input. Adjacent tiles include overlap regions that are critical to ensuring smooth transitions in the final reconstruction and avoiding edge artifacts.
+## ![](/images/3-BlogsTranslated/3.2-Blog2/image_3.jpg) 
 
-Stage 3 — Parallel Processing Architecture: The workflow leverages parallel computing to process many tiles simultaneously, dramatically reducing compute time while preserving consistency with the trained model parameters. This distributed approach efficiently uses compute resources by processing tiles independently. For example, our deployment can process a survey volume of 400 m x 400 m x 60 m in under 5 seconds.
+## **Deploy the Greengrass components**
+Complete the following steps to configure and deploy the Greengrass components. For more details, refer to Create deployments.
 
-Stage 4 — AI-Based Inference: The trained AI model performs inference on each tile independently, reconstructing subsurface magnetic susceptibility distributions from field magnetic measurements. The reconstructions are then blended smoothly using weighted blending across overlap regions to ensure seamless transitions between neighboring tiles. This modular pipeline enables scalable surveying at any size while maintaining consistent resolution and optimizing memory usage via effective parallel processing, making it practical for real-world applications from infrastructure mapping to geological surveys.
+Use the following configuration to enable message routing from local MQTT to the AWS IoT Greengrass PubSub component. Note the topic in the code. This is the MQTT topic where the devices will send the data to.
 
-## ![](/images/3-BlogsTranslated/3.2-Blog2/image3.png)
+```json
+{
+  "reset": [""],
+  "merge": {
+    "mqttTopicMapping": {
+      "HelloWorldIotCoreMapping": {
+        "topic": "clients/#",
+        "source": "LocalMqtt",
+        "target": "Pubsub"
+      }
+    }
+  }
+}
+```
+Use the following configuration to deploy the Firehose component. Use the Firehose stream ARN that you noted earlier.
 
-Figure 3. Modular processing workflow for large-scale magnetic surveys.
+```json
+{
+  "reset": [""],
+  "merge": {
+    "lambdaExecutionParameters": {
+      "EnvironmentVariables": {
+        "DEFAULT_DELIVERY_STREAM_ARN": "arn:aws:firehose:us-east-1:<<account-id>>:deliverystream/<<stream name>>"
+      }
+    },
+    "containerMode": "NoContainer"
+  }
+}
+```
 
-## Case study: mapping buried offshore well conductors in the Gulf of Mexico
+Use the following configuration to deploy the legacy subscription router component (Note that this is a dependent component to the Firehose component):
 
-Hurricane Ivan (2004) damaged an offshore oil platform in the Gulf of Mexico, burying well conductors under 35–45 meters of sediment. Initial acoustic imaging in 2022 had some success but remained limited where gas-bearing sediments obscured critical areas. A high-resolution magnetometer array was deployed 3.5 m above the seafloor to detect iron-rich conductors through hydrocarbon-saturated sediment.
+```json
+{
+  "reset": [""],
+  "merge": {
+    "subscriptions": {
+      "aws-greengrass-kinesisfirehose": {
+        "id": "aws-greengrass-kinesisfirehose",
+        "source": "component:aws.greengrass.KinesisFirehose",
+        "subject": "kinesisfirehose/message/status",
+        "target": "cloud"
+      }
+    }
+  }
+}
+```
 
-The model described earlier successfully mapped conductors buried at 35–45 m depths, revealing a primary conductor bundle and a secondary fragment 40 m northeast of the well bay (see Figure 4). The results show strong discrimination of magnetic signatures even in complex debris fields, verified where possible with borehole locations and acoustic imagery. This demonstrates the power of deep learning in cases where traditional acoustic methods fail.
+Create and deploy a custom PubSub component. You can use the following sample code snippet in your preferred language to deploy as a Greengrass component. You can use gdk to create custom components.
 
-## ![](/images/3-BlogsTranslated/3.2-Blog2/image4.png)
+```json
+{
+  "reset": [""],
+  "merge": {
+    "subscriptions": {
+      "aws-greengrass-kinesisfirehose": {
+        "id": "aws-greengrass-kinesisfirehose",
+        "source": "component:aws.greengrass.KinesisFirehose",
+        "subject": "kinesisfirehose/message/status",
+        "target": "cloud"
+      }
+    }
+  }
+}
+```
 
-Figure 4. Plan view (a) and oblique view (b) of relative susceptibility distribution.
+After you deploy the components, you will see them on the Components tab of your core device.
 
-## Conclusion
+## **Ingest data**
+In this step, you ingest the data from your device to AWS IoT Greengrass, which will subsequently land in Data Firehose. Complete the following steps:
 
-Our work demonstrates how **AI-enhanced magnetic imaging** is transforming subsurface infrastructure mapping across industries — from onshore utilities to deep offshore well conductors. Physics-informed deep learning trained on **AWS** combines HPC resources, scalable storage, and parallel processing services to overcome limitations of traditional magnetic data interpretation.
+1. From your edge device that is MQTT aware, or your edge gateway, publish the data to the topic defined earlier (client/#). For example, we publish the data to the client/devices/telemetry MQTT topic.
 
-Through real-world case studies, we demonstrated that deep learning can exceed traditional magnetic interpretation limits and map structures successfully at 40 m depth beneath the seafloor — structures that remained “invisible” to acoustic methods for 18 years.
+2. If you want to do this as a proof of concept, refer to Create a virtual device with Amazon EC2 to create a sample IoT device.
 
-The impact of this technology spans **oil & gas decommissioning**, **urban utility mapping**, **environmental protection**, and **marine operations**. While results are promising, opportunities remain in **multi-physics integration**, real-time processing, and higher-resolution imaging.
+The following code is a sample payload for our example:
 
-To collaborate or learn more about deployment, please contact us at [**santi@s2labs.co**](mailto:santi@s2labs.co) or [**ryanqi@amazon.com**](mailto:ryanqi@amazon.com).
+```json
+PAYLOAD="{
+\"device_id\": \"$DEVICE_ID\",
+\"timestamp\": \"$TIMESTAMP\",
+\"temperature\": $TEMPERATURE,
+\"pressure\": $PRESSURE,
+\"flow_rate\": $FLOW_RATE,
+\"vibration\": $VIBRATION,
+\"motor_speed\": $MOTOR_SPEED,
+\"status\": \"$STATUS\",
+\"battery\": $((RANDOM % 30 + 70 )),}"
+```
 
-## Authors
+For additional details on how to publish messages from a sample device, refer to Just-in-time provisioning.
+
+The MQTT bridge component will route the payload from the MQTT topic (client/devices/telemetry) to an IPC topic by the same name. The custom component that you deployed earlier will listen to the IPC topic client/devices/telemetry and publish to the IPC topic kinesisfirehose/message. The message must follow the structure described in Input data.
+
+## **Validate the data in Athena**
+You can now query the data published from the edge IoT device using Athena. On the Athena console, find the catalog and database that you set up, and run the following query:
+
+```json
+SELECT * FROM <<database>>."device_telemetry" limit 10;
+```
+
+You should see the data displayed as shown in the following screenshot. Note the database and table name that you had defined as part of the “Provision a Data Firehose” stream step.
+
+## **Scale out the solution**
+In the preceding sections, we showed how multiple equipments can ingest data into the cloud using a single Greengrass edge gateway device. Because manufacturing locations are distributed in a real-world scenario, you might set up Greengrass devices at other sites and publish the data to the same Firehose stream. This makes sure the data from different sites is landed into a single S3 bucket, is partitioned appropriately (Device_Id in our example), and can be queried seamlessly.
+
+## **Clean up**
+After you validate the results, you can delete the following resources to avoid incurring additional costs:
+
+Delete the EC2 Ubuntu instance you created for your proof of concept.
+
+Delete the Firehose delivery stream and associated resources.
+
+Drop the Athena tables created for querying the data.
+
+Delete the S3 Tables bucket you provisioned.
+
+## **Conclusion**
+In this post, we showed how to set up a scalable edge-to-cloud near real-time data ingestion framework using AWS IoT Greengrass and start performing analytics on the data within AWS services using a low-code approach. We demonstrated how to optimize the data storage into Iceberg format with S3 Tables, and transform the streaming data before it lands on the storage layer using Data Firehose. We also discussed how you can scale this solution horizontally across multiple manufacturing locations (plants or sites) to create a low-code solution to analyze data in near real time.
+
+To learn more, refer to the following resources:
+
+Amazon Data Firehose Developer Guide
+
+Working with Amazon S3 Tables and table buckets
+
+Build a data lake for streaming data with Amazon S3 Tables and Amazon Data Firehose
+
+## **About the authors**
 
 <div style="display:flex; flex-direction:column; gap:1rem;">
 
-<div style="display:flex; align-items:flex-start; gap:1rem;">
-  <img src="/images/3-BlogsTranslated/3.2-Blog2/image5.png" alt="Santi Adavani" style="width:120px; height:120px; object-fit:cover; border-radius:8px; flex:0 0 120px; display:block;" />
-  <div style="flex:1; min-width:0; line-height:1.45;">
-    <strong>Santi Adavani</strong><br/>
-    Dr. Santi Adavani is the founder and CEO of <strong>S2 Labs</strong>, a deep-tech startup building <strong>AI</strong> products to accelerate scientific discovery. Prior to S2 Labs, Santi founded and served as CTO of <strong>RocketML</strong>, where he built an <strong>MLOps</strong> platform backed by <strong>HPC</strong>. He also served as Head of Product and AI at <strong>PostgresML</strong>, leading development of an in-memory Postgres-based vector database, and earlier held senior product leadership roles at <strong>Intel</strong>. Santi holds a PhD in Computational Science and Engineering from <strong>University of Pennsylvania</strong>.
+  <div style="display:flex; align-items:flex-start; gap:1rem;">
+    <img src="/images/3-BlogsTranslated/3.2-Blog2/image_6.jpg" alt="Joyson Neville Lewis" style="width:120px; height:120px; object-fit:cover; border-radius:8px;" />
+    <div>
+      <strong>Joyson Neville Lewis</strong><br/>
+      Joyson Neville Lewis is a Sr. Conversational AI Architect with AWS Professional Services. Joyson worked as a Software/Data engineer before diving into the Conversational AI and Industrial IoT space. He assists AWS customers to materialize their AI visions using Voice Assistant/Chatbot and IoT solutions.
+    </div>
   </div>
-</div>
 
-<div style="display:flex; align-items:flex-start; gap:1rem;">
-  <img src="/images/3-BlogsTranslated/3.2-Blog2/image6.png" alt="Jacques Guigné" style="width:120px; height:120px; object-fit:cover; border-radius:8px; flex:0 0 120px; display:block;" />
-  <div style="flex:1; min-width:0; line-height:1.45;">
-    <strong>Jacques Guigné</strong><br/>
-    Professor Jacques Yves Guigné is a Senior Advisor to <strong>Kraken Robotics</strong> in Newfoundland, Canada. He serves as Chief Scientific Officer of <strong>Subsea Micropiles Ltd.</strong>, which operates in Ireland and the U.K., and is CEO of <strong>Acoustic Zoom Inc.</strong>, a leading geophysical research company. Jacques brings deep experience in acoustic imaging and has made significant contributions to mapping complex seabed features. His scientific achievements include over 80 patents and 70 publications with strong citation counts on ResearchGate. He has been honored in physics with the <strong>Deryck Chesterman and Rayleigh Medals</strong>, holds degrees including a DSc and a PhD, and is recognized as a <strong>Geoscience Canada</strong> member and a director of <strong>PEGNL</strong> (Professional Engineers and Geoscientists Newfoundland and Labrador).
+  <div style="display:flex; align-items:flex-start; gap:1rem;">
+    <img src="/images/3-BlogsTranslated/3.2-Blog2/image_7.jpg" alt="Anil Vure" style="width:120px; height:120px; object-fit:cover; border-radius:8px;" />
+    <div>
+      <strong>Anil Vure</strong><br/>
+      Anil Vure is a Sr. IoT Data Architect with AWS Professional services. Anil has extensive experience building large-scale data platforms and works with manufacturing customers designing high-speed data ingestion systems.
+    </div>
   </div>
-</div>
 
-<div style="display:flex; align-items:flex-start; gap:1rem;">
-  <img src="/images/3-BlogsTranslated/3.2-Blog2/image7.png" alt="Ryan Qi" style="width:120px; height:120px; object-fit:cover; border-radius:8px; flex:0 0 120px; display:block;" />
-  <div style="flex:1; min-width:0; line-height:1.45;">
-    <strong>Ryan Qi</strong><br/>
-    Ryan has 19 years of experience in multiphysics modeling and simulation, strategy, and business development across industrial and digital domains. At AWS, Ryan is a <strong>Principal Worldwide BD/GTM Leader</strong> focused on simulation technologies and autonomous systems.
+  <div style="display:flex; align-items:flex-start; gap:1rem;">
+    <img src="/images/3-BlogsTranslated/3.2-Blog2/image_8.jpg" alt="Ashok Padmanabhan" style="width:120px; height:120px; object-fit:cover; border-radius:8px;" />
+    <div>
+      <strong>Ashok Padmanabhan</strong><br/>
+      Ashok Padmanabhan is a Sr. IoT Data Architect with AWS Professional Services. Ashok primarily works with manufacturing and automotive customers to design and build Industry 4.0 solutions.
+    </div>
   </div>
-</div>
-
-<div style="display:flex; align-items:flex-start; gap:1rem;">
-  <img src="/images/3-BlogsTranslated/3.2-Blog2/image8.png" alt="Souvik Mukherjee" style="width:120px; height:120px; object-fit:cover; border-radius:8px; flex:0 0 120px; display:block;" />
-  <div style="flex:1; min-width:0; line-height:1.45;">
-    <strong>Souvik Mukherjee</strong><br/>
-    Dr. Souvik Mukherjee is a founding member of <strong>EmPact-AI</strong> and Principal Technical Advisor. His 15+ year career spans energy and technology roles as a geophysicist, data scientist, and product leader. He has received industry recognition such as the <strong>Shell GameChanger (2015)</strong> award and the <strong>URTeC 2019 Best Paper & Innovation</strong> award, among others. He has led and delivered multi-million-dollar projects including commercialization of the award-winning QUANTUM hydraulic-fracture delineation technology for <strong>Carbo Ceramics</strong> and coordinated the <strong>Shell Frontier Exploration Study</strong>, managing a cross-disciplinary team of 15 technical specialists that influenced a $100M lease acquisition strategy.
-  </div>
-</div>
-
-<div style="display:flex; align-items:flex-start; gap:1rem;">
-  <img src="/images/3-BlogsTranslated/3.2-Blog2/image9.png" alt="Srinivas Tadepalli" style="width:120px; height:120px; object-fit:cover; border-radius:8px; flex:0 0 120px; display:block;" />
-  <div style="flex:1; min-width:0; line-height:1.45;">
-    <strong>Srinivas Tadepalli</strong><br/>
-    Srinivas is the <strong>Global HPC Go-to-Market lead at AWS</strong>, responsible for building a comprehensive GTM strategy across HPC and accelerated computing workloads serving commercial and public-sector customers. Previously he worked at <strong>Dassault Systems</strong> and holds a PhD in biomedical engineering.
-  </div>
-</div>
-
-<div style="display:flex; align-items:flex-start; gap:1rem;">
-  <img src="/images/3-BlogsTranslated/3.2-Blog2/image10.png" alt="Vidyasagar Ananthan" style="width:120px; height:120px; object-fit:cover; border-radius:8px; flex:0 0 120px; display:block;" />
-  <div style="flex:1; min-width:0; line-height:1.45;">
-    <strong>Vidyasagar Ananthan</strong><br/>
-    Vidyasagar specializes in high performance computing, numerical simulations, optimization engineering, and software development across industry and academia. At AWS, Vidyasagar is a <strong>Senior Solutions Architect</strong> building predictive models and simulation technologies.
-  </div>
-</div>
-
+  
 </div>
