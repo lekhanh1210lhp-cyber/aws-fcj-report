@@ -1,154 +1,93 @@
 ---
-
-title: "Event 1"
+title: "Sự kiện 1"
 date: "2025-09-09"
 weight: 1
 chapter: false
 pre: " <b> 4.1. </b> "
-
 ---
 
-# Bài thu hoạch “Vietnam Cloud Day 2025: Ho Chi Minh City Connect Edition for Builders (Track 1: GenAI & Data)”
+# Báo cáo về “First Cloud Journey Community Day”
 
-### Mục Đích Của Sự Kiện
+### Mục đích của sự kiện
 
-- Tìm hiểu **bảo mật trong GenAI và AI Agent** để tăng cường an toàn cho doanh nghiệp
-- Khám phá **AI-Driven Development Lifecycle (AI-DLC)** và ứng dụng vào quy trình phát triển phần mềm
-- Xây dựng **nền tảng dữ liệu hợp nhất** nhằm tối ưu cho phân tích và trí tuệ nhân tạo
-- Cập nhật **chiến lược và xu hướng GenAI** mới nhất trên AWS
+- Chia sẻ những hành trình nghề nghiệp thực tế, chuyển từ các vai trò CNTT cơ bản sang kỹ sư Cloud và DevOps.
+- Khám phá việc triển khai các ứng dụng GraphRAG sử dụng Amazon Bedrock và Amazon Neptune.
+- Hiểu các nguyên tắc vàng để làm việc nhóm hiệu quả và các công cụ cộng tác.
+- Tìm hiểu cách xây dựng kiến trúc game nhiều người chơi trên đám mây kết nối các máy khách Godot với AWS WebSockets.
+- Khám phá cách kết hợp AWS WAF với Học máy (Machine Learning) cho Hệ thống Phát hiện Xâm nhập Mạng (NIDS).
+- Giới thiệu Docker như một công nghệ container hóa và so sánh nó với công nghệ ảo hóa truyền thống.
 
-### Danh Sách Diễn Giả
+### Diễn giả
 
-- **Jun Kai Loke** – AI/ML Specialist SA, AWS
-- **Kien Nguyen** – Solutions Architect, AWS
-- **Tamelly Lim** – Storage Specialist SA, AWS
-- **Binh Tran** – Senior Solutions Architect, AWS
-- **Taiki Dang** – Solutions Architect, AWS
-- **Michael Armentano** – Principal WW GTM Specialist, AWS
+- **Trần Trung Vinh** – Quản trị viên Hệ thống (System Administrator) tại Central Retail Group
+- **Việt Phát** – Sinh viên chuyên ngành AI tại Đại học Công nghệ Swinburne
+- **Trương Huy Phước** – Diễn giả về Làm việc nhóm
+- **Nguyễn Quốc Bảo** – Diễn giả về Multiplayer trên Đám mây
+- **Lê Hoàng Gia Đại** – Sinh viên năm cuối Đại học HUTECH / AWS G3
+- **Bảo Huỳnh** – Junior Cloud Native Developer tại Endava Vietnam / Nhà sáng lập ITea Lab
 
-### Nội Dung Nổi Bật
+### Những Điểm Nổi Bật
 
 ## Nội dung chính
 
-1. **Nền tảng dữ liệu thống nhất trên AWS cho AI & Analytics**
+1. **Từ IT Helpdesk đến Senior Sysadmin & Cloud/DevOps**
+   - Việc chuyển đổi sang Cloud đòi hỏi phải áp dụng một tư duy mới liên quan đến AWS, mở rộng quy mô linh hoạt (elastic scaling) và các dịch vụ được quản lý, thay thế cho các cấu hình thủ công tại chỗ (on-premise).
+   - Cơ sở hạ tầng dưới dạng mã (IaC) sử dụng Terraform cho phép triển khai có thể lặp lại và kiểm soát phiên bản của cơ sở hạ tầng.
+   - Văn hóa DevOps hiện đại bao gồm các pipeline CI/CD, Docker, tự động hóa và sự cộng tác chặt chẽ với các nhóm phát triển.
 
+2. **Xây dựng Ứng dụng GraphRAG**
+   - RAG truyền thống tăng cường cho các LLM với kiến thức bên ngoài, nhưng GraphRAG bổ sung thêm khả năng nhận thức mối quan hệ và suy luận đa bước (multi-hop reasoning) thông qua việc duyệt đồ thị (graph traversal).
+   - **Hướng được quản lý hoàn toàn (Fully Managed Route):** Sử dụng Amazon Bedrock Knowledge Bases để phân chia (chunking), trích xuất thực thể và tạo embeddings, kết hợp với Amazon Neptune Analytics để lưu trữ đồ thị.
+   - **Hướng tùy chỉnh (Custom Route):** Sử dụng LlamaIndex cho pipeline xử lý và Amazon Neptune để lưu trữ Knowledge Graph (Sơ đồ Tri thức) và thực thi các truy vấn Cypher.
 
-    - Xây dựng data platform end-to-end: ingestion → lưu trữ → xử lý → truy cập → quản trị.
-    - Xóa silo dữ liệu, con người, quy trình; hỗ trợ self-service & chuẩn hóa governance.
-    - Dịch vụ tiêu biểu: S3, Glue, Redshift, Lake Formation, OpenSearch, Kinesis/MSK.
+3. **Nghệ thuật Làm việc nhóm hiệu quả**
+   - Hiệu quả của làm việc nhóm được thúc đẩy bởi 4 Nguyên tắc vàng: Mục tiêu rõ ràng & chung, Đúng người đúng việc, Giao tiếp cởi mở & Lắng nghe tích cực, và Trách nhiệm cá nhân.
+   - Các công cụ kỹ thuật số được đề xuất để quản lý nhóm và giao tiếp bao gồm Trello, ClickUp, Google Workspace, Slack và Discord.
 
-2. **Chiến lược GenAI trên AWS**
+4. **Multiplayer trên Đám mây (Godot + AWS)**
+   - Các game theo lượt hoặc có phòng chờ (lobby) có thể được xây dựng hiệu quả bằng cách sử dụng WebSockets, cung cấp giao tiếp hai chiều (full-duplex) theo thời gian thực và đáng tin cậy.
+   - Kiến trúc AWS tích hợp API Gateway WebSockets, AWS Lambda (Node.js) cho logic game và DynamoDB để lưu trữ trạng thái kết nối cùng các lựa chọn của người chơi.
+   - Các thách thức bao gồm các kết nối cũ/bị đứt (GoneException) và chi phí quét DynamoDB; AWS GameLift được khuyến nghị cho việc đồng bộ hóa liên tục và quản lý trạng thái game có thẩm quyền trong bộ nhớ.
 
+5. **NIDS dựa trên Học máy (Machine Learning) trên AWS**
+   - AWS WAF truyền thống dựa trên các quy tắc được định nghĩa trước, vốn gặp khó khăn trước các kỹ thuật tấn công mới, zero-day hoặc kết hợp (hybrid).
+   - Một mô hình Học máy được đào tạo trên tập dữ liệu CSE-CIC-IDS2018 có thể chủ động phát hiện các hành vi bất thường chưa từng có.
+   - Kiến trúc hệ thống tích hợp AWS WAF, Amazon EC2, Application Load Balancer và các mô hình Học máy như LightGBM và Random Forest để đạt độ chính xác cao.
 
-    - Tầm nhìn, xu hướng và lộ trình áp dụng GenAI.
-    - Amazon Bedrock: chọn model, RAG, guardrails, tối ưu chi phí/độ trễ.
-    - AgentCore & Amazon Nova hỗ trợ tích hợp công cụ và frameworks (CrewAI, LangGraph, LlamaIndex...).
+6. **Docker và Công nghệ Container hóa**
+   - Công nghệ container hóa đóng gói một ứng dụng với tất cả các thành phần phụ thuộc của nó để nó chạy nhất quán trên bất kỳ môi trường nào (vật lý, ảo hóa hoặc đám mây).
+   - Không giống như Máy ảo (Virtual Machines) vốn cồng kềnh, yêu cầu hệ điều hành riêng và mất nhiều phút để khởi động, các container Docker chia sẻ hệ điều hành máy chủ, khởi động tính bằng mili-giây và sử dụng ít tài nguyên hơn.
+   - Docker sử dụng các lớp (layers) từ Dockerfile; các lớp không thay đổi được sử dụng lại từ bộ nhớ đệm (cache) trong quá trình build để tăng tốc quá trình này.
 
-3. **Bảo mật ứng dụng GenAI**
+### Những Bài học Quan trọng
 
+- **Tư duy Thiết kế & Vận hành**
+  - Không bao giờ thử nghiệm trên môi trường production—hãy bảo vệ tính khả dụng, niềm tin và thời gian của nhóm bạn.
+  - Tự động hóa các tác vụ lặp đi lặp lại để tiết kiệm thời gian, đồng thời lập tài liệu rõ ràng cho các cấu hình và runbook (sổ tay vận hành).
+  - Một portfolio thực tế và kinh nghiệm thực hành có giá trị hơn nhiều so với việc chỉ sở hữu các chứng chỉ.
 
-    - Rủi ro OWASP LLM; bảo mật nhiều lớp: hạ tầng → mô hình → ứng dụng.
-    - 5 trụ cột: Compliance, Privacy, Controls, Risk Management, Resilience.
-    - Công cụ: Bedrock Guardrails, Human-in-the-loop, Observability (OpenTelemetry).
+- **Kiến trúc Kỹ thuật**
+  - Khi xây dựng các game multiplayer không máy chủ (serverless), hãy lưu ý rằng AWS Lambda là phi trạng thái (stateless), nghĩa là trạng thái game phải được lưu và truy xuất từ DynamoDB trong mỗi yêu cầu.
+  - Việc chỉ sử dụng bảo vệ dựa trên chữ ký (signature-based) là không đủ đối với bảo mật hiện đại; NIDS dựa trên ML bổ sung hiệu quả cho các tường lửa truyền thống như AWS WAF.
+  - Việc tận dụng công nghệ container (Docker) là lý tưởng cho các pipeline CI/CD, kiến trúc microservices và hiện đại hóa các ứng dụng cũ.
 
-4. **AI Agents – Tăng cường năng suất**
+- **Chiến lược Dữ liệu & AI**
+  - Trong Học máy, chất lượng dữ liệu là rất quan trọng; việc xử lý sự mất cân bằng dữ liệu là cần thiết để cải thiện khả năng phát hiện các lớp tấn công thiểu số.
+  - Các phương pháp tiếp cận GraphRAG vượt qua những hạn chế của LLM tiêu chuẩn bằng cách cung cấp khả năng lưu trữ mối quan hệ rõ ràng thông qua các nút (nodes) và cạnh (edges).
 
+### Ứng dụng vào Công việc
 
-    - Từ assistant đến multi-agent systems, tự động hóa và giảm giám sát.
-    - Ứng dụng: CSKH, BI với Amazon Q (QuickSight), tự động hóa quy trình.
+- **Trong cơ sở hạ tầng & vận hành**:
+  - Áp dụng Cơ sở hạ tầng dưới dạng mã (Terraform) để định nghĩa cơ sở hạ tầng ảo và cơ sở dữ liệu thay vì thực hiện các cấu hình thủ công.
+  - Triển khai giám sát hệ thống trước khi sự cố xảy ra và duy trì tư duy vận hành tập trung vào việc phòng ngừa.
 
-5. **Độ tin cậy & tính đúng đắn của GenAI**
+- **Trong phát triển phần mềm & AI**:
+  - Đóng gói các ứng dụng bằng Docker để loại bỏ các vấn đề tương thích kiểu "nó chạy ngon trên máy tôi".
+  - Thử nghiệm với Amazon Bedrock và Neptune để trích xuất các thực thể và xây dựng Sơ đồ Tri thức (Knowledge Graphs) cho các phản hồi LLM chính xác hơn.
 
+- **Trong làm việc nhóm**:
+  - Áp dụng nguyên tắc "Đúng người, đúng việc" và tận dụng các công cụ như ClickUp hoặc Slack để tối ưu hóa việc theo dõi dự án và giao tiếp.
 
-    - Giảm hallucination bằng Prompt Engineering, RAG, Fine-tuning.
-    - RAG workflow: input → embedding → context → LLM → output.
+#### Hình ảnh Sự kiện
 
-6. **AI-Driven Development Lifecycle (AI-DLC)**
-
-
-    - Vòng đời: Inception → Construction → Operation.
-    - Tiến hóa: AI-Assisted → AI-Driven → AI-Managed.
-    - Triển khai với IaC, test tự động, giám sát & quản trị rủi ro.
-
-7. **Amazon SageMaker – Unified Studio**
-
-
-    - Nền tảng hợp nhất cho data, analytics & AI.
-    - Hỗ trợ Lakehouse, governance, Zero-ETL integration (S3 ↔ Redshift, Aurora, DynamoDB, RDS…).
-    - MLOps đầy đủ: pipelines, registry, deployment, monitoring.
-    - Tích hợp Bedrock & JumpStart để tăng tốc phát triển ứng dụng GenAI.
-
-### Những Gì Học Được
-
-- **Tư duy thiết kế**
-
-  - Thiết kế hệ thống dữ liệu & AI theo hướng end-to-end, loại bỏ silo.
-  - Ứng dụng nguyên tắc self-service và governance ngay từ đầu.
-
-- **Kiến trúc kỹ thuật**
-
-  - Tích hợp dịch vụ AWS (S3, Glue, Redshift, SageMaker, Bedrock…) thành nền tảng thống nhất.
-  - Áp dụng Zero-ETL, Lakehouse, MLOps để đảm bảo tính mở rộng, quản trị và vận hành bền vững.
-  - Tận dụng AI Agents và GenAI frameworks để tự động hóa quy trình & tăng năng suất.
-
-- **Chiến lược**
-
-  - Xác định lộ trình áp dụng GenAI trong doanh nghiệp, cân bằng giữa tốc độ đổi mới và chi phí.
-  - Chú trọng bảo mật nhiều lớp: hạ tầng, mô hình, ứng dụng; kết hợp guardrails & human-in-the-loop.
-  - Ưu tiên độ tin cậy và tính đúng đắn của AI qua RAG, prompt engineering, fine-tuning.
-
-- **Tư duy phát triển phần mềm**
-  - Tiến hóa từ AI-Assisted → AI-Driven → AI-Managed.
-  - AI-DLC (AI-Driven Development Lifecycle) giúp chuẩn hóa quy trình phát triển với AI tham gia ở mọi giai đoạn.
-
-### Ứng Dụng Vào Công Việc
-
-- **Trong dự án**:
-
-  - Thử AI Agent cho đăng ký/đăng nhập và hỗ trợ khách hàng.
-  - Dùng validation/guardrails để tích hợp GenAI an toàn.
-
-- **Trong học tập & team project**:
-
-  - Áp dụng AI-DLC để chia việc: AI hỗ trợ tạo code/tài liệu, team review & approve.
-  - Biết khi nào dùng Lambda (serverless) và khi nào dùng container (ECS/Fargate).
-
-- **Trong vai trò học việc**:
-  - Học cách tiếp cận business-first khi viết tài liệu, thu thập yêu cầu.
-  - Nhận ra data foundation là yếu tố cốt lõi để GenAI mang lại giá trị.
-
-### Trải nghiệm trong event
-
-Tham gia workshop **“GenAI-powered App-DB Modernization”** là một trải nghiệm rất bổ ích, giúp tôi có cái nhìn toàn diện về cách hiện đại hóa ứng dụng và cơ sở dữ liệu bằng các phương pháp và công cụ hiện đại. Một số trải nghiệm nổi bật:
-
-#### Học hỏi từ các chuyên gia
-
-- Các chuyên gia AWS chia sẻ xu hướng mới về **GenAI, Data Foundation và Security**.
-- Hiểu rõ hơn cách xây dựng **nền tảng dữ liệu thống nhất** để phục vụ AI & Analytics.
-- Ấn tượng với tầm nhìn **AI Agents** và tiềm năng nâng cao năng suất trong doanh nghiệp.
-
-#### Trải nghiệm kỹ thuật thực tế
-
-- Học cách thiết kế pipeline dữ liệu end-to-end: ingestion → lưu trữ → xử lý → truy cập → governance.
-- Tiếp cận các công cụ như **Amazon Bedrock, AgentCore, SageMaker Unified Studio**.
-- Trải nghiệm các giải pháp **giảm hallucination** (Prompt Engineering, RAG).
-- Hiểu cách áp dụng **AI-DLC** để phân chia task giữa AI và con người trong quá trình phát triển phần mềm.
-
-#### Ứng dụng công cụ và phương pháp
-
-- Tìm hiểu **Bedrock Guardrails** để đảm bảo tính an toàn khi triển khai GenAI.
-- Thấy rõ giá trị của **serverless (AWS Lambda)** và khi nào nên dùng **containerization (ECS/Fargate)**.
-- Biết cách tận dụng **Amazon Q** cho BI (QuickSight) và hỗ trợ customer support.
-
-#### Kết nối & trao đổi
-
-- Event là cơ hội để trao đổi với chuyên gia AWS và học hỏi từ case study thực tế.
-- Nhận ra tầm quan trọng của **business-first approach** trong mọi quyết định công nghệ.
-
-#### Bài học rút ra
-
-- GenAI không chỉ là công cụ, mà cần **chiến lược & kiến trúc kỹ thuật** đúng đắn để tạo giá trị.
-- **Dữ liệu và bảo mật** là nền tảng, không có thì AI khó phát huy hiệu quả.
-- **AI Agents và AI-DLC** hứa hẹn thay đổi cách chúng ta thiết kế và vận hành hệ thống.
-
-#### Một số hình ảnh khi tham gia sự kiện
+<img src="/images/4-EventParticipated/image_1.jpg" alt="Event 1" width="600"/>

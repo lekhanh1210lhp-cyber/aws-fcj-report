@@ -1,211 +1,76 @@
 ---
-title: "Event 3"
-date: "2025-09-09"
-weight: 1
+title: "Sự kiện 3"
+date: "2026-07-28"
+weight: 3
 chapter: false
 pre: " <b> 4.3. </b> "
 ---
 
-# Bài thu hoạch “WORKSHOP KHOA HỌC DỮ LIỆU TRÊN AWS”
+# Báo cáo về “First Cloud AI Journey: Bảo mật Ứng dụng, Chiến lược thi Cloud Practitioner và Giám sát SLA”
 
-### Mục Đích Của Sự Kiện
+### Mục đích của sự kiện
 
-- Chia sẻ các dịch vụ AI trên AWS
-- Hướng dẫn triển khai mô hình AI thông qua Amazon SageMaker
-- Chia sẻ cách deploy mô hình AI và truy cập thông qua API
+- Khám phá cách bảo mật các ứng dụng web bằng các tác nhân AI tự trị (autonomous AI agents) với AWS Security Agent (Frontier Agent).
+- Tìm hiểu lộ trình chiến lược và các kỹ thuật thực tế để chinh phục kỳ thi chứng chỉ AWS Certified Cloud Practitioner (CLF-C02).
+- Hiểu về Thỏa thuận Mức Dịch vụ (SLA) và cách chuyển đổi từ giám sát cơ sở hạ tầng cơ bản sang giám sát lấy người dùng làm trung tâm (user-centric monitoring).
 
-### Danh Sách Diễn Giả
+### Diễn giả
 
-- **Văn Hoàng Kha** - Cloud Solutions Architec AWS User Group Leader
-- **Bạch Doãn Vương** - Cloud Develops Engineer AWS Community Builder
+- **Thịnh Nguyễn** – Kỹ sư DevOps / DevSecOps / Cloud tại Styl Solutions.
+- **Ngô Lê Tấn Huy** – Diễn giả về Chiến lược thi AWS Cloud Practitioner.
+- **Nguyễn Huỳnh Sơn** – Kỹ sư Hỗ trợ Cơ sở hạ tầng tại Endava, Thành viên nhóm AWS Student Builder HUFLIT.
 
-### Nội Dung Nổi Bật
+### Những Điểm Nổi Bật
 
-#### **Giới thiệu & Tầm quan trọng của Cloud trong Data Science**
+## Nội dung chính
 
-- Trình bày vai trò của **điện toán đám mây (Cloud Computing)** trong việc hỗ trợ xử lý dữ liệu, huấn luyện và triển khai mô hình AI quy mô lớn.
-- So sánh **Cloud vs. On-premise**:
+1. **Bảo mật Ứng dụng Web với AWS Security Agent**
+   - Kiểm thử xâm nhập (pentest) thủ công truyền thống thường tốn thời gian, đắt đỏ ($5k–$20k mỗi lần) và thiếu tính nhất quán.
+   - AWS Security Agent (Frontier Agent) sử dụng khả năng suy luận tự trị được cung cấp sức mạnh bởi Amazon Bedrock trên toàn bộ vòng đời ứng dụng: Đánh giá Thiết kế (Design Review), Đánh giá Mã nguồn (Code Review) và Kiểm thử Xâm nhập Chủ động (Active Pentesting).
+   - **Đánh giá Thiết kế:** Phân tích các tài liệu kiến trúc hoặc mã Terraform đối chiếu với các framework như PCI DSS, NIST CSF và AWS Well-Architected (Gói miễn phí: 200 lượt đánh giá/tháng).
+   - **Đánh giá Mã nguồn:** Tích hợp trực tiếp vào các Pull Request (PR) trên GitHub/GitLab để bình luận về các lỗ hổng, phát hiện dữ liệu nhạy cảm (secrets) và đề xuất các bản sửa lỗi tự động cho PR (Gói miễn phí: 1.000 lượt đánh giá PR/tháng).
+   - **Pentest Tự động:** Thực thi các chuỗi khai thác đa bước với các bằng chứng có thể xác minh, mặc dù vẫn tồn tại các hạn chế về chặn xác thực (MFA/sinh trắc học) và các lỗi logic nghiệp vụ.
 
-  - Cloud: khả năng mở rộng linh hoạt, triển khai nhanh, tiết kiệm chi phí vận hành, dễ dàng tích hợp.
-  - On-premise: tốn kém chi phí đầu tư ban đầu, khó mở rộng, bảo trì phức tạp.
+2. **Lộ trình Chiến lược thi AWS Cloud Practitioner (CLF-C02)**
+   - **Tổng quan Kỳ thi:** 65 câu trắc nghiệm, 90 phút (+30 phút cho người không dùng tiếng Anh bản ngữ), điểm đậu 700/1000, có giá trị trong 3 năm.
+   - **Tỷ trọng các phần:** Khái niệm Cloud (24%), Bảo mật và Tuân thủ (30%), Công nghệ và Dịch vụ Cloud (34%), và Thanh toán, Đặt giá & Hỗ trợ (12%).
+   - **Chiến lược Ôn thi:** Ánh xạ các dịch vụ với các từ khóa (ví dụ: "Decouple/Tách rời" → SQS), xem lại kỹ các lỗi sai khi làm bài thi thử và thực hành trực tiếp bằng AWS Free Tier.
+   - **Mẹo & Thủ thuật:** Sử dụng phương pháp loại trừ để bỏ đi các dịch vụ giả hoặc không liên quan, tránh suy nghĩ quá phức tạp ở các câu hỏi nền tảng đơn giản và gắn cờ (flag) các câu hỏi không chắc chắn để xem lại sau.
 
-- Cloud (đặc biệt là **AWS**) mang lại nền tảng mạnh mẽ cho **Data Science pipeline** — từ thu thập, lưu trữ, xử lý dữ liệu, huấn luyện, cho đến triển khai mô hình AI.
+3. **Từ SLA đến Giám sát những gì thực sự quan trọng**
+   - Thỏa thuận Mức Dịch vụ (SLA) xác định các mức dịch vụ kỳ vọng giữa nhà cung cấp và khách hàng nhằm đảm bảo trách nhiệm giải trình và quản lý rủi ro.
+   - **Khoảng trống Giám sát (The Monitoring Gap):** Một bảng điều khiển cơ sở hạ tầng "màu xanh" (CPU thấp, health check 200 OK) không đảm bảo trải nghiệm người dùng tốt nếu kết nối cơ sở dữ liệu bị lỗi trong quá trình người dùng đăng nhập.
+   - **Kim tự tháp Giám sát:** Mở rộng tầm nhìn xuyên suốt Nhà cung cấp Cloud (Cloud Provider) → Cơ sở hạ tầng → Ứng dụng → Chỉ số Kinh doanh → Trải nghiệm Khách hàng.
+   - **Luồng Cảnh báo (Alerting Flow):** Theo dõi các chỉ số ứng dụng tùy chỉnh (ví dụ: tỷ lệ lỗi đăng nhập) trong CloudWatch và gửi cảnh báo sớm qua Amazon SNS đến Slack hoặc email trước khi khách hàng phàn nàn.
 
-#### **Các Layer AI Trên AWS**
+### Những Bài học Quan trọng
 
-AWS chia hệ sinh thái AI thành **3 tầng (layers)**, giúp người dùng lựa chọn mức độ quản lý phù hợp với năng lực và mục tiêu của mình:
+- **Tư duy Thiết kế & Vận hành**
+  - "Mọi thứ đều có thể bị lỗi vào mọi lúc, vì vậy hãy lập kế hoạch cho sự cố và sẽ không có gì thất bại" (Tiến sĩ Werner Vogels, CTO của Amazon).
+  - Chỉ riêng các chỉ số cơ sở hạ tầng khỏe mạnh không đồng nghĩa với một trải nghiệm người dùng tốt; việc giám sát phải tập trung vào hành trình khách hàng từ đầu đến cuối (end-to-end).
 
-**1. AI Services (Fully Managed Layer)**
+- **Kiến trúc Kỹ thuật**
+  - Các tác nhân AI bảo mật tự trị bổ trợ cho đội ngũ bảo mật con người bằng cách tự động hóa quá trình quét PR, kiểm tra tính tuân thủ của kiến trúc và xác minh lỗ hổng với chi phí chỉ bằng một phần nhỏ.
+  - Triển khai giám sát từ trên xuống (top-down) bằng cách theo dõi các chỉ số cấp ứng dụng và kết quả kinh doanh song song với tình trạng sức khỏe của máy chủ.
 
-> _Dành cho người dùng muốn ứng dụng AI mà không cần kiến thức chuyên sâu về Machine Learning._
+- **Chiến lược Thi & Học tập**
+  - Việc học cho các chứng chỉ nền tảng đòi hỏi phải hiểu các trường hợp sử dụng dịch vụ cốt lõi và loại trừ các câu trả lời gây nhiễu rõ ràng, thay vì phải ghi nhớ các cấu hình phức tạp.
+  - Nhận thức được các hạn chế của các công cụ bảo mật tự động, chẳng hạn như rào cản xác thực (MFA, mTLS) và bối cảnh logic nghiệp vụ phức tạp.
 
-- Các dịch vụ AI sẵn có, đã được huấn luyện bởi AWS.
-- Người dùng chỉ cần gọi API là có thể sử dụng ngay trong ứng dụng.
-- **Ví dụ:**
+### Ứng dụng vào Công việc
 
-  - **Amazon Comprehend:** Phân tích ngôn ngữ tự nhiên (NLP)
-  - **Amazon Translate:** Dịch máy học đa ngôn ngữ
-  - **Amazon Textract:** Trích xuất dữ liệu từ tài liệu, hóa đơn
-  - **Amazon Rekognition:** Nhận diện hình ảnh và video
-  - **Amazon Polly:** Chuyển văn bản thành giọng nói
-  - **Amazon Bedrock:** Truy cập các mô hình nền tảng (Foundation Models) như Claude, Titan, Mistral...
+- **Trong cơ sở hạ tầng & vận hành**:
+  - Chuyển đổi từ việc chỉ giám sát cơ sở hạ tầng thuần túy sang theo dõi các chỉ số lấy người dùng làm trung tâm (ví dụ: tỷ lệ đăng nhập thành công, hoàn tất thanh toán).
+  - Cấu hình các CloudWatch Alarms (Cảnh báo) tùy chỉnh kết nối với các chủ đề SNS để nhận thông báo chủ động qua Slack hoặc email khi xảy ra các điểm bất thường trong vận hành.
 
-👉 **Lợi ích:** Triển khai nhanh, không cần huấn luyện mô hình, chi phí linh hoạt theo nhu cầu sử dụng.
+- **Trong phát triển phần mềm & AI**:
+  - Tích hợp các đánh giá bảo mật mã nguồn tự động vào các pipeline CI/CD để phát hiện sớm các thông tin nhạy cảm (secrets) và lỗ hổng mã nguồn ngay từ các Pull Request.
+  - Sử dụng các tài nguyên miễn phí như AWS Skill Builder và AWS Free Tier để xây dựng kinh nghiệm thực hành song song với việc chuẩn bị lý thuyết cho chứng chỉ.
 
-**2. ML Services (Semi-managed Layer)**
+- **Trong bảo mật & tuân thủ**:
+  - Sử dụng các đánh giá bảo mật thiết kế tự động trên mã Terraform để đảm bảo cơ sở hạ tầng tuân thủ các tiêu chuẩn PCI DSS, NIST CSF và AWS Well-Architected.
+  - Áp dụng Mô hình Trách nhiệm Chia sẻ (Shared Responsibility Model) trong các công việc hàng ngày: AWS quản lý bảo mật *của* đám mây, trong khi các nhà phát triển chịu trách nhiệm bảo mật *trong* đám mây và sự hài lòng của khách hàng.
 
-> _Dành cho Data Scientist, ML Engineer muốn xây dựng, huấn luyện và triển khai mô hình ML một cách tùy chỉnh hơn._
+#### Hình ảnh Sự kiện
 
-- **Amazon SageMaker** là trung tâm của tầng này: cung cấp bộ công cụ đầy đủ để **build – train – deploy** mô hình Machine Learning.
-- Các tính năng nổi bật:
-
-  - **Data Wrangler:** Làm sạch và xử lý dữ liệu trực quan.
-  - **Feature Store:** Quản lý đặc trưng (features) dùng cho nhiều mô hình.
-  - **AutoML (SageMaker Autopilot):** Tự động huấn luyện mô hình.
-  - **Model Registry & Monitoring:** Theo dõi và quản lý mô hình sau khi deploy.
-
-👉 **Lợi ích:** Toàn quyền kiểm soát pipeline ML, có thể tùy chỉnh thuật toán, môi trường huấn luyện, và quy trình triển khai.
-
-**3. AI Infrastructure (Self-managed Layer)**
-
-> _Dành cho tổ chức hoặc chuyên gia muốn tự quản lý toàn bộ hạ tầng AI/ML để tối ưu chi phí hoặc hiệu năng._
-
-- Người dùng có thể xây dựng môi trường huấn luyện bằng cách kết hợp các dịch vụ hạ tầng cơ bản của AWS:
-
-  - **Amazon EC2 / EC2 GPU Instances (P5, G6, Inferentia):** Huấn luyện mô hình tùy chỉnh quy mô lớn.
-  - **Amazon EKS / ECS:** Chạy các workload ML trong container hoặc Kubernetes.
-  - **AWS Lambda:** Xử lý dữ liệu hoặc inference nhỏ gọn, serverless.
-  - **Amazon S3 / EFS:** Lưu trữ dữ liệu và mô hình.
-
-👉 **Lợi ích:** Linh hoạt tối đa, kiểm soát toàn bộ quá trình huấn luyện, nhưng yêu cầu kiến thức kỹ thuật cao hơn.
-
-#### Các Dịch Vụ AI Phổ Biến Của AWS Hỗ Trợ Sinh Viên Trong Quá Trình Train Model
-
-**1. Amazon SageMaker**
-
-- Môi trường phát triển tích hợp (SageMaker Studio) cho toàn bộ quy trình ML:
-
-  - Chuẩn bị dữ liệu
-  - Huấn luyện mô hình
-  - Theo dõi kết quả
-  - Triển khai endpoint phục vụ API inference
-
-- Hỗ trợ AutoML, GPU training, model monitoring và CI/CD cho mô hình AI.
-
-**2. Amazon Comprehend**
-
-- Dịch vụ NLP giúp phân tích, hiểu và phân loại ngôn ngữ tự nhiên.
-
-- **Chức năng chính:**
-
-  - Phân tích cảm xúc (Sentiment Analysis)
-  - Nhận dạng thực thể (Entity Recognition)
-  - Phân loại văn bản (Text Classification)
-  - Gắn nhãn dữ liệu tự động
-  - Phát hiện ngôn ngữ
-
-- **Trường hợp sử dụng thực tế:**
-
-  - Xử lý tài liệu thông minh
-  - Phân tích mail hàng loạt để phát hiện phản hồi tích cực/tiêu cực
-  - Phân tích cảm xúc và tâm lý khách hàng
-  - Hỗ trợ trung tâm liên lạc (Contact Center Analytics)
-  - Xác thực và trích xuất thông tin cá nhân
-
-**3. Amazon Translate**
-
-- Dịch vụ dịch máy học (Neural Machine Translation).
-- Hỗ trợ hơn 75 ngôn ngữ với độ chính xác cao và dễ tích hợp.
-- Ứng dụng:
-
-  - Làm website đa ngôn ngữ
-  - Dịch nội dung tự động trong ứng dụng
-  - Hỗ trợ chatbot và phân tích dữ liệu đa ngôn ngữ
-
-**4. Amazon Textract**
-
-- Tự động trích xuất văn bản và dữ liệu có cấu trúc từ hình ảnh, tài liệu, hoặc biểu mẫu.
-- Ứng dụng trong các quy trình như: số hóa hồ sơ, xử lý hóa đơn, tự động nhập dữ liệu vào hệ thống.
-
-#### Tổng Quan Data Science Pipeline Trên AWS
-
-1. **Thu thập & lưu trữ dữ liệu:** Amazon S3, AWS Data Exchange
-2. **Tiền xử lý dữ liệu:** AWS Glue, Lambda, Athena
-3. **Huấn luyện mô hình:** SageMaker (train, tune, evaluate)
-4. **Triển khai mô hình:** SageMaker Endpoint / Lambda + API Gateway
-5. **Giám sát & tối ưu:** CloudWatch, Model Monitor
-
-#### **Demo 1: Thiết kế Workflow AI Training bằng Giao Diện Kéo - Thả (No-Code/Low-Code)**
-
-- **Mục tiêu:** Giới thiệu cách xây dựng quy trình huấn luyện mô hình AI mà không cần viết nhiều code.
-- **Công cụ sử dụng:** Amazon SageMaker Studio / SageMaker Canvas
-- **Nội dung trình diễn:**
-
-  1. Chuẩn bị dataset và tải lên Amazon S3.
-  2. Dùng giao diện kéo-thả của SageMaker để:
-
-     - Chọn nguồn dữ liệu, thuật toán huấn luyện và tham số.
-     - Thiết kế toàn bộ pipeline gồm bước làm sạch dữ liệu, training, validation và deployment.
-
-  3. Quan sát trực quan tiến trình training và kết quả mô hình (accuracy, confusion matrix, metrics, v.v.).
-
-- **Thông điệp chính:** Sinh viên, nhà phát triển có thể nhanh chóng tạo workflow AI mà không cần viết code phức tạp — giúp rút ngắn thời gian nghiên cứu và thử nghiệm mô hình.
-
-#### **Demo 2: Triển khai AI Service và Truy Cập Qua API/Website**
-
-- **Mục tiêu:** Giới thiệu cách deploy mô hình AI để người dùng có thể truy cập và sử dụng thực tế.
-- **Công cụ sử dụng:** Amazon SageMaker Endpoint, API Gateway, và Lambda.
-- **Nội dung trình diễn:**
-
-  1. Deploy mô hình AI đã huấn luyện lên SageMaker Endpoint.
-  2. Tích hợp endpoint với API Gateway để tạo REST API công khai.
-  3. Tạo đường dẫn web hoặc API URL để người dùng có thể gửi yêu cầu (ví dụ: nhập câu văn để phân tích cảm xúc hoặc dịch ngôn ngữ).
-  4. Minh họa cách hiển thị kết quả trực quan (UI demo hoặc Postman/API test).
-
-- **Thông điệp chính:** Cho thấy cách AWS hỗ trợ triển khai mô hình AI từ giai đoạn nghiên cứu đến ứng dụng thực tế — dễ dàng chia sẻ, mở rộng, và thương mại hóa.
-
-#### Thảo Luận: Hiệu Năng & Chi Phí (Cloud vs. On-premise)
-
-| Tiêu chí                    | Cloud (AWS)                             | On-premise                     |
-| --------------------------- | --------------------------------------- | ------------------------------ |
-| **Khả năng mở rộng**        | Dễ dàng mở rộng tài nguyên theo nhu cầu | Giới hạn phần cứng cố định     |
-| **Chi phí**                 | Trả theo mức sử dụng (Pay-as-you-go)    | Chi phí đầu tư ban đầu cao     |
-| **Triển khai**              | Tự động, nhanh chóng                    | Thủ công, tốn thời gian        |
-| **Bảo trì**                 | AWS quản lý                             | Người dùng tự chịu trách nhiệm |
-| **Thích hợp cho sinh viên** | ✅ Có Free Tier, dễ học và thử nghiệm   | ❌ Khó tiếp cận, tốn kém       |
-
-#### Kết Luận
-
-- AWS cung cấp **hệ sinh thái AI toàn diện từ tầng hạ tầng đến tầng ứng dụng**, phù hợp với mọi đối tượng — từ sinh viên mới học AI đến doanh nghiệp triển khai quy mô lớn.
-
-### Trải nghiệm trong event
-
-Tham gia workshop **“AI Services on AWS for Data Science”** là một trải nghiệm rất bổ ích, giúp tôi hiểu rõ hơn về **vai trò của Cloud trong Data Science** và cách AWS hỗ trợ huấn luyện, triển khai, và truy cập mô hình AI.
-
-#### Học hỏi từ các diễn giả có chuyên môn cao
-
-- Diễn giả giới thiệu **tầm quan trọng của Cloud** trong xử lý dữ liệu và huấn luyện mô hình.
-- Hiểu rõ **3 layer AI trên AWS**: AI-managed services, ML services (SageMaker), và AI frameworks.
-
-#### Trải nghiệm kỹ thuật thực tế
-
-- **Demo 1:** Thiết kế workflow AI bằng cách **kéo thả trong SageMaker Canvas** để train model mà không cần code.
-- **Demo 2:** **Triển khai mô hình AI** thành service có thể truy cập qua **API hoặc liên kết** thực tế.
-
-#### Ứng dụng công cụ hiện đại
-
-- Tìm hiểu các dịch vụ AI nổi bật: **Amazon Comprehend**, **Translate**, và **Textract**.
-- Hiểu cách các dịch vụ này hỗ trợ **NLP, dịch tự động**, và **trích xuất dữ liệu thông minh** trong nhiều ngữ cảnh.
-
-#### Kết nối và trao đổi
-
-- Giao lưu với chuyên gia và sinh viên cùng quan tâm đến **AI & Cloud**.
-- Trao đổi về **chi phí, hiệu năng (Cloud vs On-premise)** và cách tối ưu sử dụng SageMaker.
-
-#### Bài học rút ra
-
-- Cloud là **nền tảng trọng yếu** trong quy trình Data Science hiện đại.
-- AWS cung cấp đầy đủ công cụ cho mọi cấp độ AI — từ không code đến tự triển khai.
-- Hiểu rõ hơn **cách đưa mô hình AI vào sản phẩm thực tế** qua các dịch vụ AWS.
-
-#### Một số hình ảnh khi tham gia sự kiện
+<img src="/images/4-EventParticipated/image_3.jpg" alt="Event 3" width="600"/>

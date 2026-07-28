@@ -1,170 +1,79 @@
 ---
 title: "Event 2"
-date: "2025-09-09"
-weight: 1
+date: "2026-07-28"
+weight: 2
 chapter: false
 pre: " <b> 4.2. </b> "
 ---
 
-# Report: “AI-Driven Development Lifecycle: Reimagining Software Engineering”
+# Report on “First Cloud AI Journey Meetup: Career, DevOps, and MNC Culture”
 
-### Event Objectives
+### Purpose of the Event
 
-- Understand how AI can automate and optimize stages of the Software Development Lifecycle (SDLC).
-- Embrace the philosophy of AI augmenting humans rather than replacing them in the software development process.
-- Observe how tools like Amazon Q and other AI assistants support developers from ideation and code generation to infrastructure deployment (IaC).
-- Learn about the emerging trend of “AI-first development,” where AI becomes a natural part of future dev workflows.
+- Understand the learning roadmap from a curious student to an AWS Partner.
+- Discover the reality of a DevOps Engineer's role, breaking down common myths versus actual responsibilities.
+- Explore the practical workflow of a Data Analytics Engineer and the standard recruitment process at Multinational Corporations (MNCs).
+- Learn the career development mindset and the philosophy required to build and operate tech products at a global standard.
 
 ### Speakers
 
-- **Toan Huynh**
-- **My Nguyen**
+- **Danh Hoàng Hiếu Nghị** – AI Engineer, AWS Community Builder, and AWS Student Builder Group Leader.
+- **Trong H. Truong** – DevOps Engineer at Endava Vietnam.
+- **Dat Pham** – Data Analytics Engineer.
+- **Cường Nguyễn** – Process Engineer.
 
-### Highlights
+### Key Highlights
 
-#### Challenges of programming with AI
+## Main Content
 
-The introduction covered the limitations and challenges of applying AI to programming:
+1. **From First Cloud AI Journey to AWS Partner**
+   - The career journey consists of 8 defined steps: Student Curiosity, First Cloud Journey, Workshop & Community, Hands-on Labs, School Projects, Portfolio, AWS Partner, and Share Back.
+   - Participating in communities like the AWS Student Builder Group and AWS Community Builder Program provides a strong environment to learn from others and build practical skills.
 
-- AI still struggles with projects that require deep domain knowledge and complex business logic.
-- Developers can have limited control over generated code when prompts and scope are not well-defined.
-- The quality of generated code depends heavily on the prompt and context provided to the model.
+2. **The Reality of DevOps Engineering**
+   - There is a significantly high hiring demand for roles such as AI/ML, Data, Cloud, Security, and DevOps Engineers in the Vietnam market.
+   - While people often think DevOps is simply about writing CI/CD pipelines or being the "Docker/Kubernetes person," the real scope heavily depends on company size, project size, team structure, and cloud maturity.
+   - Actual daily DevOps work includes 24/7 on-call rotation, incident handling, postmortem reviews, troubleshooting, access support, and cloud cost investigation.
+   - Before mastering complex tools, engineers must learn fundamentals: Linux, Networking basics, Programming (Python, Golang), Git, CI/CD, and Containers.
 
-This motivates the AI-DLC approach: creating a structured process to help AI and humans collaborate more effectively.
+3. **Data Analytics in Multinational Corporations (MNCs)**
+   - A Data Analytics Engineer's work varies by domain; for example, building dashboards to track Gross Merchandise Value (GMV), Fulfillment, and Last Mile Costs at Kamereo, or optimizing production costs at Colgate-Palmolive.
+   - Essential skills for the role go beyond technical ability to include Critical Thinking, Communication, Storytelling with data, and Problem-Solving.
+   - The standard MNC recruitment process includes ATS resume screening, capability tests (logic/algorithm), technical interviews using the STAR model, and a final cultural fit assessment with Leadership.
 
-#### How AI is changing software development
+4. **Career Development Mindset & Corporate Culture**
+   - MNC cultures highly value a "No-Blame Post-Mortem" approach, focusing on finding system root causes instead of blaming individuals, alongside fostering a "Caring & Inclusive" environment.
+   - Career progression follows a 5-stage model: Follower (executing tasks), Learner (active learning), Problem Solver (proposing solutions), System Thinker (optimizing the big picture), and Super Star (guiding vision and developing others).
+   - The session highlighted the "Đúng Việc" (Doing the right thing) philosophy encompassing three pillars: Human (Fulfillment), Professional (Purpose & Meaningful), and Citizen (Community & Legacy).
 
-This section analyzed how AI is transforming the software industry:
+### Key Learnings
 
-- AI assists code generation, technical documentation, API design, and automated testing.
-- Developers shift roles from “code writers” to “AI orchestrators” who guide, evaluate, and refine AI outputs.
-- Tools like Amazon Q, GitHub Copilot and ChatGPT for Developers become central parts of modern development workflows.
+- **Design & Operational Mindset**
+  - Focus on fundamentals because tools change, but core principles like Linux and Networking stay constant.
+  - Career growth should be measured by advancing through capability stages (from Follower to System Thinker) rather than just chasing specific job titles.
 
-#### 🔹 What is AI-DLC
+- **Technical Architecture**
+  - DevOps engineers must think in systems, not just tasks, working to automate boring, repeatable work while making environments clear for the team.
+  - Data professionals need to go beyond raw numbers to analyze trends, discover root causes, and tell meaningful stories that drive business operations.
 
-AI-Driven Development Lifecycle (AI-DLC) is an AI-augmented software development approach where each stage is designed to provide AI with specific context and goals to produce more accurate results.
+- **Data & AI Strategy**
+  - Building a real portfolio through practical, hands-on labs and school projects matters far more than simply collecting certifications.
+  - Embracing a "No-Blame Post-Mortem" culture is essential for building resilient engineering systems and high-performing teams.
 
-🟧 Inception
+### Application to Work
 
-1. Build Context on Existing Code – feed AI the current codebase so it understands project structure.
-2. Elaborate Intent with User Stories – developers describe requirements via user stories to clarify goals.
-3. Plan with Units of Work – break work into small units the AI can execute and generate code for.
+- **In infrastructure & operations**:
+  - Ensure you understand the "why" before the "how" when deploying infrastructure, and learn to correctly identify the real owner of a problem during incident handling.
+  - Apply system thinking to look at the broader picture, anticipating operational risks and optimizing the system long-term instead of just fixing minor bugs.
 
-🟦 Construction
+- **In software development & AI**:
+  - Utilize data analytics not just to report metrics, but to find the root causes of business fluctuations and propose actionable solutions.
+  - Leverage AI to enhance technical skills, but do not use it as a substitute for critical thinking and fundamental understanding.
 
-4. Domain Model (Component Model) – build domain models or architecture diagrams.
-5. Generate Code & Test – AI generates code and tests based on the plan.
-6. Add Architectural Components – add API layers, data layers, logging, and security components.
-7. Deploy with IaC & Tests – automate deployment using Infrastructure as Code and integration tests.
+- **In teamwork**:
+  - Participate actively in tech communities to learn from others and eventually "Share Back" to help build the next generation of engineers.
+  - Adopt the standard of "Làm đúng chuẩn" (Doing it to standard), pushing beyond merely making things work to meeting rigorous global requirements like ISO 27001 or GDPR.
 
-_🔁 Each stage provides richer context for the next, helping AI produce increasingly accurate outputs._
+#### Event Photos
 
-#### Core Concepts
-
-1. Context Awareness – AI needs clear context about code, requirements, and domain to work well.
-2. Collaborative Generation – humans and AI collaborate: AI generates code, humans direct and verify outputs.
-3. Continuous Refinement – iterative cycles to refine outputs and improve quality.
-
-#### Mob Elaboration
-
-Mob Elaboration is a collaborative method for elaborating intents:
-
-- Multiple participants contribute user stories, questions, and additional context for the AI.
-- It helps AI gain deeper understanding of domain, goals, and complex logic.
-- This approach reduces the risk of misunderstandings—especially in large or cross-domain teams.
-
-#### The 5-Stage Sequential Process of AI-DLC
-
-AI-DLC runs through 5 phases:
-
-1. Inception – understand requirements and analyze the system.
-2. Construction – create domain models and initial structure.
-3. Generation – automated code generation.
-4. Testing – automated unit and integration testing.
-5. Deployment – deploy applications with IaC and CI/CD pipelines.
-
-Each loop improves the AI's outputs through incremental learning and feedback.
-
-#### Demo 1 – Interactive AI-DLC experience with Amazon Q
-
-The demo showcased AI-DLC in practice with a small project:
-
-- Start from a simple idea and turn it into a user story describing business requirements.
-- AI helps split tasks into Units of Work and plans implementation details for each module.
-- Attendees interact with AI using questions, checkboxes, and logical conditions to clarify scope.
-- AI generates code, tests, project structure, and executes trial deployments.
-- The demo illustrated smooth collaboration between AI and humans: AI performs repetitive generation while humans steer and make decisions.
-
-#### Introducing Kiro
-
-Philosophy of Kiro
-
-The workshop introduced Kiro, an intelligent development environment built around the idea of “AI-native development” where AI is a core collaborator rather than just a tool.
-
-Kiro’s philosophy emphasizes three points:
-
-1. Deep integration with the development process – AI participates in planning, context management, and impact analysis.
-2. Comprehensive project context – Kiro maintains ongoing awareness of project structure so AI can interact with the whole project rather than single files.
-3. Intelligent control & collaboration – developers guide AI via contextual commands so each change has clear intent and consistency.
-
-This makes Kiro more than a code generator: it is an ecosystem for collaborative human–AI development.
-
-Project structure in Kiro
-
-Unlike traditional text editors like VSCode or JetBrains, Kiro is an AI-aware workspace with structural awareness.
-
-Its project model includes:
-
-- Context Layer – stores context, domain models, and relationships among modules.
-- Task Layer – manages Units of Work tracked and executed by AI.
-- AI Agent Layer – agents handle specific tasks (code, tests, refactor, deploy) enabling a multi-agent collaborative model.
-- Human-in-the-Loop Control – developers can confirm, modify, or reject AI outputs at any stage.
-
-Kiro therefore becomes an ecosystem for coordinated human–AI development rather than just a code editor.
-
-#### Demo 2: Kiro in practice
-
-In the demonstration, the presenters showed how Kiro implements AI-DLC:
-
-1. User provides a basic business requirement like “build an event management system.”
-2. Kiro analyzes intent, creates a domain model, and splits work into user stories.
-3. AI generates modules, components, and corresponding test cases.
-4. Developers interact with a checkbox-based task control to approve each unit of work.
-5. Kiro finally deploys the completed system using IaC and automated tests.
-
-The demo proved AI-DLC is practical: AI, human operators, and processes integrate into a single coherent workflow.
-
-### Event experience
-
-Attending the workshop “AI DLC x Kiro: Reinventing Developer Experience with AI” was highly valuable, clarifying how AI can be deeply embedded into the developer experience and how Kiro’s design offers a fresh approach for developers.
-
-#### Insights from expert speakers
-
-- Speakers presented AI-DLC as a platform that automates many SDLC tasks and supports software development using AI.
-- The Kiro introduction gave a perspective on designing an AI-native text editor rather than adding AI plugins to legacy editors.
-- I was particularly impressed by Kiro’s philosophy: minimalism, high performance, user-focused experience, and modular extensibility.
-
-#### Practical technical takeaways
-
-- The demo showed how AI-DLC and Kiro can create, refactor, and optimize code efficiently.
-- A small starter project was created and managed within Kiro, demonstrating auto-refactoring, test generation and logic analysis.
-- Compared to editors like VSCode and Sublime, Kiro stands out for its AI-first architecture and lightweight plugin model that preserves performance.
-
-#### Modern tooling and potential applications
-
-- Experiencing AI-DLC on Kiro highlighted the potential to automate development workflows—especially code generation, documentation, and debugging.
-- I saw opportunities to build personal learning and productivity tools that provide smart suggestions and accelerate development.
-- Kiro’s modular design inspires approaches to building flexible, maintainable systems.
-
-#### Networking and discussions
-
-- The workshop offered chances to connect with developers, AI researchers, and product designers, deepening my understanding of AI-augmented development.
-- Discussions helped me see AI as a creative collaborator, allowing developers to focus more on system logic and architecture.
-
-#### Key lessons
-
-- AI-DLC combined with Kiro is a model for next-generation development tools—AI-first IDEs that deeply integrate AI into the workflow.
-- Kiro’s “less is more” philosophy shows that simplicity and performance can deliver a stronger developer experience than overly complex systems.
-- I learned that successful AI adoption depends not only on technology but also on the design philosophy and integration approach used in tooling.
-
-#### Sample images from the event
+<img src="/images/4-EventParticipated/image_2.jpg" alt="Event 2" width="600"/>

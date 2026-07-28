@@ -1,43 +1,43 @@
 ---
-title: "Các events đã tham gia"
-date: "2025-09-09"
+title: "Các Sự kiện Đã Tham gia"
+date: "2026-07-28"
 weight: 4
 chapter: false
 pre: " <b> 4. </b> "
 ---
 
-Trong quá trình thực tập, em đã tham gia 6 events, với mỗi event là một trải nghiệm đáng nhớ với những kiến thức mới, hay và bổ ích, cùng với đó là nhứng món quà và những khoảnh khắc rất tuyệt vời.
+Trong suốt quá trình học tập, tôi đã tham gia ba sự kiện. Mỗi sự kiện đều là một trải nghiệm đáng nhớ, mang lại những kiến thức mới mẻ, thú vị và hữu ích, cùng với những món quà và những khoảnh khắc tuyệt vời.
 
-### [Event 1](4.1-Event1/)
+### [Sự kiện 1](4.1-Event1/)
 
-&emsp;**Tên sự kiện:** Vietnam Cloud Day 2025 - Ho Chi Minh City Connect Edition for Builders (Track 1: GenAI & Data)
+&emsp;**Tên sự kiện:** First Cloud Journey Community Day
 
-&emsp;**Thời gian:** 09:00 ngày 18/09/2025
+&emsp;**Thời gian:** 06/06/2026
 
-&emsp;**Địa điểm:** Tầng 26, tòa nhà Bitexco, số 02 đường Hải Triều, phường Sài Gòn, thành phố Hồ Chí Minh
+&emsp;**Địa điểm:** Tầng 26, Tháp Bitexco, 02 Hải Triều, Quận 1, TP. Hồ Chí Minh
 
-&emsp;**Vai trò trong sự kiện:** Người tham dự
-
----
-
-### [Event 2](4.2-Event2/)
-
-&emsp;**Tên sự kiện:** Vòng đời phát triển theo hướng AI: Tái định hình kỹ thuật phần mềm
-
-&emsp;**Thời gian:** 14:00 ngày 03/10/2025
-
-&emsp;**Địa điểm:** Tầng 26, tòa nhà Bitexco, số 02 đường Hải Triều, phường Sài Gòn, thành phố Hồ Chí Minh
-
-&emsp;**Vai trò trong sự kiện:** Người tham dự
+&emsp;**Vai trò:** Người tham dự
 
 ---
 
-### [Event 3](4.3-Event3/)
+### [Sự kiện 2](4.2-Event2/)
 
-&emsp;**Tên sự kiện:** WORKSHOP KHOA HỌC DỮ LIỆU TRÊN AWS
+&emsp;**Tên sự kiện:** First Cloud AI Journey Meetup: Sự nghiệp, DevOps và Văn hóa MNC
 
-&emsp;**Thời gian:** 09:30 ngày 16/10/2025
+&emsp;**Thời gian:** 13/06/2026
 
-&emsp;**Địa điểm:** Đại học FPT, Đường D1, Khu Công nghệ cao, Phường Tăng Nhơn Phú, TP. Hồ Chí Minh.
+&emsp;**Địa điểm:** Tầng 26, Tháp Bitexco, 02 Hải Triều, Quận 1, TP. Hồ Chí Minh
 
-&emsp;**Vai trò trong sự kiện:** Người tham dự
+&emsp;**Vai trò:** Người tham dự
+
+---
+
+### [Sự kiện 3](4.3-Event3/)
+
+&emsp;**Tên sự kiện:** First Cloud AI Journey: Bảo mật Ứng dụng, Chiến lược thi Cloud Practitioner và Giám sát SLA
+
+&emsp;**Thời gian:** 11/07/2026
+
+&emsp;**Địa điểm:** Tầng 26, Tháp Bitexco, 02 Hải Triều, Quận 1, TP. Hồ Chí Minh
+
+&emsp;**Vai trò:** Người tham dự

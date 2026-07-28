@@ -1,211 +1,76 @@
 ---
 title: "Event 3"
-date: "2025-09-09"
-weight: 1
+date: "2026-07-28"
+weight: 3
 chapter: false
 pre: " <b> 4.3. </b> "
 ---
 
-# Report: “WORKSHOP: DATA SCIENCE ON AWS”
+# Report on “First Cloud AI Journey: Application Security, Cloud Practitioner Strategy, and SLA Monitoring”
 
-### Event Objectives
+### Purpose of the Event
 
-- Share AWS AI services
-- Demonstrate deploying AI models using Amazon SageMaker
-- Show how to deploy models and access them via APIs
+- Explore how to secure web applications using autonomous AI agents with AWS Security Agent (Frontier Agent).
+- Learn a strategic roadmap and practical techniques to conquer the AWS Certified Cloud Practitioner (CLF-C02) exam.
+- Understand Service Level Agreements (SLAs) and how to transition from basic infrastructure monitoring to user-centric monitoring.
 
 ### Speakers
 
-- **Van Hoang Kha** - Cloud Solutions Architect, AWS User Group Leader
-- **Bach Doan Vuong** - Cloud Developer Engineer, AWS Community Builder
+- **Thinh Nguyen** – DevOps / DevSecOps / Cloud Engineer at Styl Solutions.
+- **Ngo Le Tan Huy** – Presenter on AWS Cloud Practitioner Exam Strategy.
+- **Nguyễn Huỳnh Sơn** – Infrastructure Support Engineer at Endava, Member of AWS Student Builder Group HUFLIT.
 
-### Highlights
+### Key Highlights
 
-#### **Introduction & the importance of Cloud in Data Science**
+## Main Content
 
-- Discussed the role of cloud computing in supporting data processing, training, and deploying AI models at scale.
-- Cloud vs. On-premise:
+1. **Securing Web Apps with AWS Security Agent**
+   - Traditional manual penetration testing is time-consuming, expensive ($5k–$20k per engagement), and inconsistent.
+   - AWS Security Agent (Frontier Agent) uses autonomous reasoning powered by Amazon Bedrock across the full application lifecycle: Design Review, Code Review, and Active Pentesting.
+   - **Design Review:** Analyzes architecture docs or Terraform code against frameworks like PCI DSS, NIST CSF, and AWS Well-Architected (Free Tier: 200 reviews/mo).
+   - **Code Review:** Integrates directly into GitHub/GitLab PRs to comment on vulnerabilities, detect secrets, and suggest automated PR fixes (Free Tier: 1,000 PR reviews/mo).
+   - **Automated Pentesting:** Executes multi-step exploit chains with verifiable proof, though limitations exist around MFA/biometrics and business-logic flaws.
 
-  - Cloud: flexible scalability, rapid deployment, lower operating costs, easy integration.
-  - On-premise: high upfront investment, harder to scale, complex maintenance.
+2. **Strategic Roadmap to AWS Cloud Practitioner (CLF-C02)**
+   - **Exam Overview:** 65 multiple-choice questions, 90 minutes (+30 minutes for non-native English speakers), passing score of 700/1000, valid for 3 years.
+   - **Domain Weighting:** Cloud Concepts (24%), Security and Compliance (30%), Cloud Technology and Services (34%), and Billing, Pricing, and Support (12%).
+   - **Preparation Strategy:** Map services with keywords (e.g., "Decouple" → SQS), review test mistakes thoroughly, and practice hands-on using the AWS Free Tier.
+   - **Tips & Tricks:** Use the elimination technique to remove fake or irrelevant services, avoid overthinking simple foundational questions, and flag uncertain questions for later review.
 
-- Cloud (especially **AWS**) provides a strong foundation for the Data Science pipeline — from collection, storage, and processing to training and deploying AI models.
+3. **From SLA to Monitoring What Really Matters**
+   - Service Level Agreements (SLAs) define expected service levels between providers and customers for accountability and risk management.
+   - **The Monitoring Gap:** A "green" infrastructure dashboard (low CPU, 200 OK health checks) does not guarantee a happy user experience if database connections fail during user login.
+   - **The Monitoring Pyramid:** Expand visibility across Cloud Provider → Infrastructure → Application → Business Metrics → Customer Experience.
+   - **Alerting Flow:** Track custom application metrics (e.g., login failure rate) in CloudWatch and send early alerts via Amazon SNS to Slack or email before customers complain.
 
-#### **AI Layers on AWS**
+### Key Learnings
 
-AWS organizes the AI ecosystem into **three layers**, helping users choose the right level of management based on skills and goals:
+- **Design & Operational Mindset**
+  - "Everything fails all the time, so plan for failure and nothing fails" (Dr. Werner Vogels, CTO of Amazon).
+  - Healthy infrastructure metrics alone do not mean a healthy user experience; monitoring must focus on end-to-end customer journeys.
 
-**1. AI Services (Fully Managed Layer)**
+- **Technical Architecture**
+  - Autonomous AI security agents complement human security teams by automating PR scans, architecture compliance checks, and exploit verification at a fraction of the cost.
+  - Implement top-down monitoring by tracking application-level metrics and business outcomes alongside server health.
 
-> _For users who want to apply AI without deep Machine Learning knowledge._
+- **Exam & Learning Strategy**
+  - Studying for foundational certifications requires understanding core service use cases and eliminating obvious distractor answers rather than memorizing complex configurations.
+  - Recognize the limitations of automated security tools, such as authentication blocks (MFA, mTLS) and complex business logic context.
 
-- Fully managed AI services that have been pre-trained by AWS.
-- Users can call APIs to use them directly in applications.
-- Examples:
+### Application to Work
 
-  - **Amazon Comprehend:** Natural language processing (NLP)
-  - **Amazon Translate:** Neural machine translation
-  - **Amazon Textract:** Extract data from documents and invoices
-  - **Amazon Rekognition:** Image and video recognition
-  - **Amazon Polly:** Text-to-speech
-  - **Amazon Bedrock:** Access to foundation models (e.g., Claude, Titan, Mistral)
+- **In infrastructure & operations**:
+  - Shift from pure infrastructure monitoring to user-centric metric tracking (e.g., login success rate, checkout completion).
+  - Configure custom CloudWatch Alarms connected to SNS topics to receive proactive Slack or email notifications during operational anomalies.
 
-👉 Benefits: Fast deployment, no model training needed, cost scales with usage.
+- **In software development & AI**:
+  - Integrate automated code security reviews into CI/CD pipelines to catch secrets and code vulnerabilities early in Pull Requests.
+  - Utilize free resources like AWS Skill Builder and AWS Free Tier to build hands-on experience alongside theoretical certification preparation.
 
-**2. ML Services (Semi-managed Layer)**
+- **In security & compliance**:
+  - Use automated design security reviews on Terraform code to ensure infrastructure compliance with PCI DSS, NIST CSF, and AWS Well-Architected standards.
+  - Apply the Shared Responsibility Model in daily tasks: AWS manages security *of* the cloud, while developers are responsible for security *in* the cloud and customer satisfaction.
 
-> _For Data Scientists and ML Engineers who want to build, train, and deploy ML models with more customization._
+#### Event Photos
 
-- **Amazon SageMaker** is at the center of this layer: it provides tools to build, train, and deploy ML models.
-- Key features:
-
-  - **Data Wrangler:** Visual data cleaning and processing.
-  - **Feature Store:** Manage features across models.
-  - **AutoML (SageMaker Autopilot):** Automated model training.
-  - **Model Registry & Monitoring:** Track and manage models after deployment.
-
-👉 Benefits: Full control over the ML pipeline, customizable algorithms, training environments, and deployment workflows.
-
-**3. AI Infrastructure (Self-managed Layer)**
-
-> _For organizations or experts who want to fully manage AI/ML infrastructure to optimize cost or performance._
-
-- Users can build training environments using core AWS infrastructure services:
-
-  - **Amazon EC2 / GPU Instances (P5, G6, Inferentia):** Train large custom models.
-  - **Amazon EKS / ECS:** Run ML workloads in containers or Kubernetes.
-  - **AWS Lambda:** Small-scale data processing or serverless inference.
-  - **Amazon S3 / EFS:** Store data and models.
-
-👉 Benefits: Maximum flexibility and control, but requires higher technical expertise.
-
-#### Popular AWS AI Services to Support Students During Model Training
-
-**1. Amazon SageMaker**
-
-- Integrated development environment (SageMaker Studio) for the full ML lifecycle:
-
-  - Data preparation
-  - Model training
-  - Result tracking
-  - Deploying endpoints for API inference
-
-- Supports AutoML, GPU training, model monitoring, and CI/CD for AI models.
-
-**2. Amazon Comprehend**
-
-- NLP service to analyze, understand, and classify natural language.
-
-- Main capabilities:
-
-  - Sentiment analysis
-  - Entity recognition
-  - Text classification
-  - Automated labeling
-  - Language detection
-
-- Use cases:
-
-  - Intelligent document processing
-  - Bulk email analysis to detect positive/negative responses
-  - Customer sentiment and behavioral analysis
-  - Contact center analytics
-  - Information extraction and validation
-
-**3. Amazon Translate**
-
-- Neural machine translation service.
-- Supports over 75 languages with high accuracy and easy integration.
-- Applications:
-
-  - Multilingual websites
-  - Automatic content translation in apps
-  - Multilingual chatbot support and analytics
-
-**4. Amazon Textract**
-
-- Automatically extract text and structured data from images, documents, and forms.
-- Used for processes like record digitization, invoice processing, and automatic data entry.
-
-#### AWS Data Science Pipeline Overview
-
-1. Data collection & storage: Amazon S3, AWS Data Exchange
-2. Data preprocessing: AWS Glue, Lambda, Athena
-3. Model training: SageMaker (train, tune, evaluate)
-4. Model deployment: SageMaker Endpoint / Lambda + API Gateway
-5. Monitoring & optimization: CloudWatch, Model Monitor
-
-#### **Demo 1: Designing an AI Training Workflow with a Drag-and-Drop Interface (No-Code/Low-Code)**
-
-- **Goal:** Show how to build an AI training pipeline without heavy coding.
-- **Tools:** Amazon SageMaker Studio / SageMaker Canvas
-- **Demo steps:**
-
-  1. Prepare the dataset and upload it to Amazon S3.
-  2. Use SageMaker's drag-and-drop interface to:
-
-     - Choose data sources, training algorithms, and parameters.
-     - Design a pipeline including data cleaning, training, validation, and deployment steps.
-
-  3. Visually monitor training progress and model results (accuracy, confusion matrix, metrics, etc.).
-
-- **Key message:** Students and developers can quickly create AI workflows without complex code, speeding up research and experimentation.
-
-#### **Demo 2: Deploying an AI Service and Accessing It Via API/Website**
-
-- **Goal:** Demonstrate how to deploy an AI model so users can access it in practice.
-- **Tools:** Amazon SageMaker Endpoint, API Gateway, and Lambda.
-- **Demo steps:**
-
-  1. Deploy the trained model to a SageMaker Endpoint.
-  2. Integrate the endpoint with API Gateway to create a public REST API.
-  3. Provide a web route or API URL for users to send requests (e.g., submit text for sentiment analysis or translation).
-  4. Show how to present results visually (UI demo or Postman/API test).
-
-- **Key message:** Demonstrates how AWS supports moving AI from research to production — easy to share, scale, and commercialize.
-
-#### Discussion: Performance & Cost (Cloud vs. On-premise)
-
-| Criteria                  | Cloud (AWS)                           | On-premise                  |
-| ------------------------- | ------------------------------------- | --------------------------- |
-| **Scalability**           | Easily scale resources as needed      | Limited by fixed hardware   |
-| **Cost**                  | Pay-as-you-go                         | High upfront investment     |
-| **Deployment**            | Automated, fast                       | Manual, time-consuming      |
-| **Maintenance**           | Managed by AWS                        | User is responsible         |
-| **Suitable for students** | ✅ Free Tier available, easy to learn | ❌ Harder to access, costly |
-
-#### Conclusion
-
-- AWS provides a comprehensive AI ecosystem from infrastructure to application layers, suitable for everyone — from students learning AI to enterprises deploying at scale.
-
-### Event Experience
-
-Attending the workshop “AI Services on AWS for Data Science” was very valuable. It helped me better understand the role of cloud in Data Science and how AWS supports training, deploying, and accessing AI models.
-
-#### Key takeaways from expert speakers
-
-- Speakers emphasized the importance of cloud in data processing and model training.
-- Gained a clear understanding of the three AI layers on AWS: AI-managed services, ML services (SageMaker), and AI frameworks.
-
-#### Hands-on technical experience
-
-- **Demo 1:** Designed an AI workflow using SageMaker Canvas drag-and-drop to train models without code.
-- **Demo 2:** Deployed an AI model as a service accessible via API or link.
-
-#### Using modern tools
-
-- Learned about key AI services: **Amazon Comprehend**, **Translate**, and **Textract**.
-- Understood how these services support NLP, machine translation, and intelligent data extraction.
-
-#### Networking and discussion
-
-- Interacted with experts and fellow students interested in AI & Cloud.
-- Discussed cost, performance (Cloud vs On-premise), and how to optimize SageMaker usage.
-
-#### Lessons learned
-
-- Cloud is a foundational platform for modern Data Science workflows.
-- AWS provides tools for every AI skill level — from no-code to fully managed deployments.
-- Gained clearer knowledge of how to bring AI models into real products using AWS services.
-
-#### Some photos from the event
+<img src="/images/4-EventParticipated/image_3.jpg" alt="Event 3" width="600"/>
