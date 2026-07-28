@@ -6,35 +6,60 @@ chapter: false
 pre: " <b> 5.1. </b> "
 ---
 
-# Workshop Overview
+## Context and problem
 
-## Problem and users
+Small rooms and laboratories often operate sensors and actuators independently. Readings are not retained centrally, users cannot review history, and a dashboard click does not prove that the physical actuator completed the action. This workshop addresses that gap for one sample room without presenting the prototype as a production building-management system.
 
-Room operators need one place to observe environmental conditions and control equipment remotely. Without a central system, readings are fragmented, history is difficult to inspect, and a UI click does not prove that a physical device executed the command.
+## Users and proposed solution
 
-The workshop serves facility operators, room managers, and learners who want practical experience with AWS, REST APIs, databases, frontend integration, and embedded IoT.
+The primary users are a workshop participant deploying the stack, an operator viewing the dashboard, and a maintainer investigating failures. YOLO UNO sends environmental telemetry through HTTP to FastAPI on EC2. FastAPI persists telemetry and command state in PostgreSQL. The dashboard reads latest/history data and creates commands; the device polls, executes, and acknowledges them.
 
-## Solution scope
+## Technical objectives
 
-The solution monitors `room_01` and supports:
+1. Ingest telemetry from physical YOLO UNO hardware.
+2. Retrieve the latest record and time-ordered history for `room_01`.
+3. Control operating mode, fan, light, and curtain using eight firmware-supported commands.
+4. Make command completion observable through `Pending` to `Executed` and ACK.
+5. Run the backend under `systemd` and monitor EC2, RDS, and logs.
+6. Leave a reproducible bilingual runbook and evidence checklist.
 
-- temperature, humidity, and light telemetry;
-- current and historical readings;
-- fan, light, and curtain control;
-- a `Pending` → `Executed` command lifecycle with device ACK; and
-- backend logs, infrastructure metrics, and alarms.
+## Scope
 
-![Final system architecture](/images/2-Proposal/IoT_Dashboard_Architecture.png)
+| In scope | Out of scope in the current implementation |
+| :--- | :--- |
+| One sample device: `room_01` | Enterprise BMS and multi-tenant operations |
+| DHT20 temperature/humidity | High Availability, Auto Scaling, or a Load Balancer |
+| Raw analog light sensor value | Calibrated Lux unless firmware proves the conversion |
+| Fan, light/relay, curtain servo | HTTPS and authentication |
+| FastAPI, RDS PostgreSQL, React/Vite | AWS IoT Core, Lambda, API Gateway, S3, SNS |
+| EC2/EBS, VPC/SG, IAM, CloudWatch | ECS/ECR, Cognito, CloudFront, DynamoDB |
 
-## Success criteria
+## Functional contract
 
-The workshop is complete when telemetry is stored in RDS and visible on the dashboard, every supported command can be traced from creation through physical execution and ACK, and CloudWatch contains the expected logs and datapoints.
+| Capability | Observable result |
+| :--- | :--- |
+| Telemetry ingestion | A valid request creates a PostgreSQL telemetry record |
+| Latest telemetry | The latest record for `room_01` is returned |
+| History | Ordered records for `room_01` are returned |
+| Fan control | `FAN_ON` and `FAN_OFF` are accepted and executed |
+| Light control | `LIGHT_ON` and `LIGHT_OFF` are accepted and executed |
+| Curtain control | `CURTAIN_OPEN` and `CURTAIN_CLOSE` are accepted and executed |
+| Operating mode | `MODE_AUTO` enables firmware threshold control; `MODE_MANUAL` disables it |
+| Command lifecycle | New command is `Pending`; successful ACK makes it `Executed` |
+| CloudWatch monitoring | Configured logs/metrics arrive and alarms evaluate thresholds |
 
-**Expected result:** The scope and acceptance criteria are clear before resources are created.
+The source contains two rule-based mechanisms, not an AI model: the frontend creates time/threshold recommendations, while firmware Auto mode directly controls the fan at `temperature >= 30°C`, the light at analog value `< 350`, and the curtain around the `< 700` threshold. Direct actuator commands switch firmware to Manual mode.
 
-## Troubleshooting
+## Success criteria and deliverables
 
-- If the architecture image is missing, confirm the file exists under `static/images/2-Proposal/`.
-- If requirements expand during implementation, record them as future improvements instead of silently changing the acceptance criteria.
+The workshop succeeds when telemetry reaches RDS, the dashboard reads it, each supported actuator command is executed once, ACK updates the stored state, CloudWatch receives the configured evidence, and another participant can reproduce the procedure without real credentials in the documentation.
+
+Deliverables are the AWS resources, deployed backend service, database records, configured firmware, local dashboard, test evidence, CloudWatch views, bilingual workshop, and handover checklist.
+
+<!-- TODO IMAGE: /images/5-Workshop/5.1-overview/end-to-end-system-overview.png — End-to-end view showing the dashboard, EC2 backend, RDS command state, and YOLO UNO hardware without credentials. -->
+
+## Troubleshooting checkpoint
+
+If the team cannot state which component owns a failure, trace one request across browser Network, FastAPI logs, PostgreSQL, device Serial Monitor, and ACK status. Do not label an unverified result as passed.
 
 Next: [prepare the required account, tools, and hardware](../5.2-Prerequisites/).
