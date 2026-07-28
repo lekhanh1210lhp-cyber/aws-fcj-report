@@ -1,19 +1,19 @@
 ---
-title: "Các bài blogs đã dịch"
+title: "Các Blog Đã Dịch"
 date: "2025-09-09"
 weight: 3
 chapter: false
 pre: " <b> 3. </b> "
 ---
 
-### [Blog 1 - Tăng tốc phát triển Generative AI với MLflow 3.0 được quản lý hoàn toàn trên Amazon SageMaker AI](3.1-Blog1/)
+### [Blog 1 - Cách PostNL xử lý hàng tỷ sự kiện IoT với Amazon Managed Service for Apache Flink](3.1-Blog1/)
 
-Bài viết giới thiệu **MLflow 3.0 được quản lý hoàn toàn trên Amazon SageMaker AI**, giúp tăng tốc phát triển **Generative AI** bằng cách hợp nhất theo dõi thí nghiệm, giám sát hành vi và quản lý vòng đời mô hình trong một công cụ duy nhất. Phiên bản mới bổ sung khả năng **tracing và version tracking**, cho phép ghi lại input, output, metadata của ứng dụng AI để dễ dàng truy vết lỗi và tối ưu hiệu năng. Với giao diện trực quan và tích hợp sâu với **Amazon Bedrock** cùng **SageMaker HyperPod**, MLflow 3.0 giúp nhóm phát triển cải thiện khả năng quan sát, gỡ lỗi và đưa mô hình AI vào sản xuất nhanh hơn, hiệu quả hơn.
+Bài blog này trình bày chi tiết cách **PostNL** hiện đại hóa nền tảng xử lý luồng dữ liệu IoT của mình bằng cách chuyển đổi sang **Amazon Managed Service for Apache Flink** để xử lý hàng tỷ sự kiện IoT từ các tài sản được theo dõi. Nó nêu bật những thách thức của dữ liệu IoT theo thời gian thực ở quy mô lớn, đặc biệt là việc xử lý các sự kiện đến muộn và ngữ nghĩa thời gian sự kiện (event time semantics). Bằng cách tận dụng **ProcessFunction API** của Flink để kiểm soát ở cấp độ chi tiết, PostNL đã xây dựng thành công một giải pháp xử lý luồng có khả năng mở rộng, mạnh mẽ và tiết kiệm chi phí cho các hoạt động hậu cần của mình.
 
-### [Blog 2 - Ánh xạ Cơ sở hạ tầng Dưới lòng đất được Cải tiến bằng AI trên AWS](3.2-Blog2/)
+### [Blog 2 - Tối ưu hóa phân tích dữ liệu IoT công nghiệp với Amazon Data Firehose và Amazon S3 Tables cùng Apache Iceberg](3.2-Blog2/)
 
-Bài viết giới thiệu cách **S2 Labs**, **Empact AI**, và **Kraken Robotics** ứng dụng **AI kết hợp vật lý** trên **AWS HPC** để cải thiện bản đồ hạ tầng ngầm. Phương pháp này dùng **magnetic imaging** và **deep learning** (mô hình **U-Net**) để tái tạo hình ảnh chính xác các đường ống, bồn chứa dưới lòng đất hoặc đáy biển. Nhờ sức mạnh xử lý song song của **AWS Batch**, **EC2**, và **S3**, hệ thống đạt độ chính xác cao trong phát hiện cấu trúc ngầm sâu đến 40 m, vượt trội hơn các phương pháp truyền thống.
+Bài blog này trình bày cách xây dựng một khuôn khổ thu thập dữ liệu (data ingestion framework) từ biên lên đám mây (edge-to-cloud) dạng low-code, có khả năng mở rộng cho các phân tích **IoT công nghiệp (IIoT)**. Nó giải thích cách thu thập dữ liệu cảm biến thời gian thực bằng cách sử dụng **AWS IoT Greengrass** tại biên, truyền dữ liệu qua **Amazon Data Firehose**, và tối ưu hóa việc lưu trữ bằng cách sử dụng **Amazon S3 Tables** với định dạng **Apache Iceberg**. Kiến trúc này cho phép truy vấn và phân tích hiệu quả, hiệu suất cao và tiết kiệm chi phí thông qua **Amazon Athena** mà không yêu cầu thiết lập cơ sở hạ tầng phức tạp.
 
-### [Blog 3 - Khai mở toàn bộ tiềm năng của Amazon Connect](3.3-Blog3/)
+### [Blog 3 - Xử lý hàng triệu sự kiện observability với Apache Flink và ghi trực tiếp vào Prometheus](3.3-Blog3/)
 
-Bài viết chia sẻ cách khai thác tối đa tiềm năng của **Amazon Connect**, nền tảng trung tâm liên hệ dựa trên **AI và AWS**. Tác giả nhấn mạnh tầm quan trọng của việc quản trị thay đổi: xác định đúng **bên liên quan**, có **nhà tài trợ cấp lãnh đạo**, xây dựng **đại sứ thay đổi**, và đo lường **chỉ số hiệu quả thực tế**. Thành công đến từ việc hiểu rõ nhu cầu kinh doanh, đào tạo đúng đối tượng và truyền thông nội bộ tốt. Nếu được triển khai đúng cách, **Amazon Connect** giúp tối ưu vận hành, tự động hóa và nâng cao trải nghiệm khách hàng.
+Bài blog này giới thiệu một **trình kết nối (connector) Apache Flink mới cho Prometheus**, cho phép các ứng dụng Flink ghi trực tiếp dữ liệu chuỗi thời gian đã được tiền xử lý vào **Amazon Managed Service for Prometheus**. Nó khám phá cách việc tiền xử lý các sự kiện observability thô từ các tài sản phân tán cao độ (như thiết bị IoT và ô tô được kết nối) bằng **Amazon Managed Service for Apache Flink** giúp giảm độ đa dạng (cardinality) và tần suất của dữ liệu. Phương pháp này cho phép các tổ chức xây dựng các bảng điều khiển (dashboards) và cảnh báo thời gian thực hiệu quả và có khả năng mở rộng hơn trong **Amazon Managed Grafana**.

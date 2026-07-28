@@ -1,137 +1,235 @@
 ---
 title: "Blog 2"
-date: "2025-09-09"
-weight: 1
+date: "2025-07-25"
+weight: 2
 chapter: false
 pre: " <b> 3.2. </b> "
 ---
 
-# **Ánh xạ Cơ sở hạ tầng Dưới lòng đất được Cải tiến bằng AI trên AWS**
+# **Tối ưu hóa phân tích dữ liệu IoT công nghiệp với Amazon Data Firehose và Amazon S3 Tables cùng Apache Iceberg**
 
-_Bởi: Santi Adavani, Jacques Guigne, Ryan Qi, Souvik Mukherjee, Srinivas Tadepalli, và Vidyasagar Ananthan, 13/05/2025, [AWS Batch](https://aws.amazon.com/blogs/hpc/category/compute/aws-batch/), [AWS ParallelCluster](https://aws.amazon.com/blogs/hpc/category/compute/aws-parallel-cluster/), [Customer Solutions](https://aws.amazon.com/blogs/hpc/category/post-types/customer-solutions/), [High Performance Computing](https://aws.amazon.com/blogs/hpc/category/high-performance-computing/), [Thought Leadership](https://aws.amazon.com/blogs/hpc/category/post-types/thought-leadership/)_
+_bởi Ashok Padmanabhan, Joyson Neville Lewis, và Anil Vure vào ngày 25 THÁNG 7 NĂM 2025 trong Amazon Data Firehose, Amazon S3 Tables, Analytics, AWS IoT Greengrass, Internet of Things, Technical How-to_
 
-Subsurface infrastructure mapping là quá trình xác định và trực quan hóa các cấu trúc bị chôn vùi như đường ống, cáp, bồn chứa, và nền móng tồn tại bên dưới bề mặt mà không cần khai quật. Công nghệ này rất quan trọng trong quy hoạch đô thị, bảo trì tiện ích, vận hành dầu khí, an toàn xây dựng và bảo vệ môi trường. Không có bản đồ hạ tầng ngầm chính xác, các dự án xây dựng có nguy cơ bị trì hoãn tốn kém, va chạm nguy hiểm với tiện ích, và gây hại môi trường. Ví dụ, khi bão Ivan làm hỏng một giàn khoan dầu ngoài khơi năm 2004, nó để lại hạ tầng quan trọng bị chôn dưới 35–45 mét trầm tích, tạo ra mối nguy vô hình mà các kỹ thuật bản đồ truyền thống không thể phát hiện đầy đủ.
+Các tổ chức sản xuất đang chạy đua để số hóa hoạt động của họ thông qua các sáng kiến Công nghiệp 4.0. Một thách thức chính mà họ phải đối mặt là việc thu thập, xử lý và phân tích dữ liệu thời gian thực từ các thiết bị công nghiệp để cho phép ra quyết định dựa trên dữ liệu.
 
-Nhờ sự hợp tác giữa **S2 Labs, Empact AI và Kraken Robotics**, một bước đột phá trong subsurface infrastructure mapping đã xuất hiện trên AWS. Cách tiếp cận này kết hợp magnetic imaging tiên tiến với physics-informed AI, mang lại hình ảnh rõ nét chưa từng có về các cấu trúc ngầm – đặc biệt trong điều kiện mà phương pháp truyền thống thất bại. Sự kết hợp sức mạnh cloud computing và AI đang thay đổi cách ngành công nghiệp hình dung và hiểu về hạ tầng ngầm quan trọng.
+Các cơ sở sản xuất hiện đại tạo ra lượng dữ liệu thời gian thực khổng lồ từ các dây chuyền sản xuất của họ. Việc thu thập dữ liệu giá trị này đòi hỏi một kiến trúc hai tầng: đầu tiên, một thiết bị biên (edge device) hiểu các giao thức công nghiệp sẽ thu thập dữ liệu trực tiếp từ các cảm biến trên sàn nhà máy. Sau đó, các cổng biên (edge gateway) này sẽ đệm (buffer) và truyền dữ liệu một cách an toàn đến AWS Cloud, đảm bảo độ tin cậy trong các trường hợp gián đoạn mạng.
 
-## **Phương pháp phát hiện dưới bề mặt và những hạn chế**
+Trong bài viết này, chúng tôi sẽ trình bày cách sử dụng các tích hợp dịch vụ của AWS để giảm thiểu mã tùy chỉnh (custom code) trong khi vẫn cung cấp một nền tảng mạnh mẽ cho việc thu thập, xử lý và phân tích dữ liệu công nghiệp. Bằng cách sử dụng Amazon S3 Tables và các tối ưu hóa được tích hợp sẵn của nó, bạn có thể tối đa hóa hiệu suất truy vấn và giảm thiểu chi phí mà không cần thiết lập thêm cơ sở hạ tầng. Ngoài ra, AWS IoT Greengrass hỗ trợ VPC endpoints, giúp bạn có thể giao tiếp an toàn giữa cổng biên (được lưu trữ tại chỗ) và AWS.
 
-Hình ảnh dưới bề mặt truyền thống sử dụng nhiều kỹ thuật địa vật lý khác nhau, mỗi kỹ thuật phù hợp với những loại vật liệu và điều kiện cụ thể. Ví dụ, **electromagnetic methods** phát hiện các đường ống kim loại và cáp thông qua độ dẫn điện của chúng, trong khi **magnetometers** đo sự biến thiên của từ trường Trái Đất để xác định các vật liệu có từ tính như ống thép. **Ground-penetrating radar (GPR)** đặc biệt hiệu quả trong việc tạo ảnh các công trình bê tông và các cấu trúc địa chất, và các tần số chuyên dụng có thể phát hiện các đường ống nhựa hoặc tài sản chứa nước nhờ vào đặc tính điện môi của chúng.
+## **Tổng quan giải pháp**
+Hãy xem xét một dây chuyền sản xuất có các cảm biến thiết bị ghi lại tốc độ dòng chảy, nhiệt độ và áp suất. Để thực hiện phân tích trên dữ liệu này, bạn thu thập dữ liệu truyền phát (streaming data) theo thời gian thực từ các cảm biến này vào môi trường AWS bằng cách sử dụng một cổng biên. Sau khi dữ liệu được đưa vào AWS, bạn có thể sử dụng các dịch vụ phân tích khác nhau để thu thập thông tin chi tiết.
 
-Việc diễn giải thủ công dữ liệu hình ảnh thường chỉ bao gồm phân tích tín hiệu địa vật lý 2D và tính toán độ sâu cơ bản – nhanh nhưng chỉ mang tính xấp xỉ. Có hai thách thức chính: Thứ nhất, đôi khi những cách sắp xếp khác nhau của các vật thể ngầm có thể tạo ra kết quả giống hệt nhau trên các công cụ phát hiện, khiến chúng ta không thể biết được cấu hình nào đúng nếu không có dữ liệu bổ sung. Thứ hai, môi trường thực tế có nhiều loại đất, mức độ ẩm và mật độ vật liệu thay đổi trong phạm vi ngắn, tạo ra các tín hiệu phức tạp mà các thuật toán truyền thống khó xử lý chính xác.
+Để minh họa luồng dữ liệu từ biên lên đám mây (cloud), chúng tôi có các tài sản, máy móc và công cụ xuất bản (publish) dữ liệu bằng MQTT. Theo tùy chọn, chúng tôi sử dụng một thiết bị biên mô phỏng để xuất bản dữ liệu đến một MQTT endpoint cục bộ. Chúng tôi sử dụng cổng biên với môi trường runtime AWS IoT Greengrass V2 edge để truyền dữ liệu qua Amazon Data Firehose trên đám mây đến S3 Tables.
 
-Quan sát kết quả khảo sát từ tính, chúng ta thấy các phép đo bề mặt cho thấy cường độ từ trường thay đổi trong một khu vực rộng 50 mét, như minh họa trong Hình 1(a). Khi xử lý dữ liệu này bằng phương pháp truyền thống, chúng ta thu được hình ảnh sơ bộ về một cấu trúc giống như đường ống kéo dài xuống khoảng 5 mét, nhưng hình ảnh mờ và thiếu chi tiết (Hình 1(b)). Đây chính là nơi phương pháp dựa trên **AI** cho thấy ưu thế – nó mang lại hình ảnh rõ ràng hơn nhiều, hiển thị một cấu trúc giống đường ống nằm ở độ sâu từ 1 đến 1,5 mét dưới bề mặt (Hình 1(c)). Nhờ vậy, phương pháp AI xác định vị trí chính xác hơn nhiều, đồng thời vẫn duy trì tính nhất quán với các phép đo từ tính ban đầu.
+Biểu đồ sau đây minh họa kiến trúc của giải pháp.
 
-## ![](/images/3-BlogsTranslated/3.2-Blog2/image1.png)
+## ![](/images/3-BlogsTranslated/3.2-Blog2/image_1.jpg) 
 
-_Hình 1\. (a) Chế độ xem bản đồ trên một phần khảo sát rộng 50m. (b) Phương pháp đảo ngược bình phương nhỏ thông thường. (c) Phương pháp đảo ngược dựa trên học sâu._
+Luồng công việc bao gồm các bước sau:
 
-## **Giải pháp deep learning dựa trên vật lý**
+1. Thu thập dữ liệu từ các cảm biến Internet of Things (IoT) và truyền dữ liệu thời gian thực từ các thiết bị biên đến AWS Cloud bằng AWS IoT Greengrass.
+2. Thu thập, chuyển đổi và lưu trữ dữ liệu trong thời gian gần thực (near real-time) bằng cách sử dụng Data Firehose, với thành phần Firehose trên AWS IoT Greengrass, và tích hợp S3 Tables.
+3. Lưu trữ và sắp xếp dữ liệu dạng bảng bằng cách sử dụng S3 Tables, cung cấp bộ lưu trữ được xây dựng chuyên biệt cho định dạng Apache Iceberg với giải pháp truy vấn đơn giản, hiệu suất cao và tiết kiệm chi phí.
+4. Truy vấn và phân tích dữ liệu dạng bảng bằng cách sử dụng Amazon Athena.
 
-**S2 Labs** ứng dụng **physics-informed AI** và **AWS high performance computing (HPC)** để giải quyết các bài toán kỹ thuật phức tạp trong các lĩnh vực dầu khí, sản xuất, chăm sóc sức khỏe và công nghệ sinh học, mang lại các giải pháp vừa đảm bảo tính chính xác khoa học vừa rút ngắn thời gian tính toán. **S2 Labs** đã hợp tác với hai đối tác chuyên biệt: **Empact AI**, cung cấp bản đồ đường ống ngầm 3D, và **Kraken Robotics**, đóng góp hình ảnh dưới nước độ phân giải cao thông qua hệ thống **Synthetic Aperture Sonar**. Sự hợp tác này tích hợp công nghệ sonar tiên tiến, phân tích dưới bề mặt 3D và nhận dạng mẫu dựa trên AI thông qua **AWS Cloud** để xác định và định vị nguồn rò rỉ đường ống với độ chính xác và tốc độ cao hơn.
+Luồng dữ liệu tại biên bao gồm các thành phần chính sau:
 
-Phương pháp **AI** của chúng tôi kết hợp vật lý của từ trường với **deep learning** để hiểu rõ hơn những gì nằm dưới lòng đất. Bằng cách huấn luyện **AI** với dữ liệu mô phỏng dựa trên các cấu trúc thực tế như bồn chứa và đường ống, chúng tôi có thể dạy nó “đọc” các phép đo từ trường như đọc một bản đồ. Sử dụng một loại **neural network** đặc biệt gọi là **U-Net**, AI học cách chuyển đổi các tín hiệu từ trường này thành hình ảnh rõ nét của các cấu trúc ngầm, cho chúng ta biết không chỉ vị trí mà còn cả thành phần và hình dạng của chúng. Nếu bạn quan tâm đến chi tiết kỹ thuật, hãy xem bài [báo khoa học](https://www.researchgate.net/profile/Souvik-Mukherjee-3/publication/361686292_High-resolution_imaging_of_subsurface_infrastructure_using_deep_learning_artificial_intelligence_on_drone_magnetometry/links/62d2e42c66bd1654d66a1fa6/High-resolution-imaging-of-subsurface-infrastructure-using-deep-learning-artificial-intelligence-on-drone-magnetometry.pdf) gần đây do **S2 Labs** công bố.
+*   **Thiết bị IoT đến MQTT broker cục bộ** – Một thiết bị mô phỏng được sử dụng để tạo dữ liệu cho mục đích của bài viết này. Trong một triển khai thực tế điển hình, đây sẽ là thiết bị hoặc cổng của bạn có hỗ trợ MQTT. Các thiết bị IoT có thể xuất bản tin nhắn đến một MQTT broker cục bộ (Moquette) đang chạy trên AWS IoT Greengrass.
+*   **Cầu nối MQTT (MQTT bridge)** – Thành phần MQTT bridge chuyển tiếp tin nhắn giữa MQTT broker (nơi các thiết bị máy khách giao tiếp) và publish/subscribe (IPC) cục bộ của AWS IoT Greengrass.
+*   **Thành phần PubSub cục bộ (tùy chỉnh)** – Thành phần này đăng ký (subscribe) các tin nhắn IPC cục bộ, chuyển tiếp tin nhắn đến chủ đề (topic) `kinesisfirehose/message`, và sử dụng giao diện IPC để đăng ký nhận tin nhắn.
+*   **Thành phần Firehose** – Thành phần Firehose đăng ký vào chủ đề `kinesisfirehose/message`. Sau đó, thành phần này sẽ truyền dữ liệu đến Data Firehose trên đám mây. Nó sử dụng QoS 1 để đảm bảo việc gửi tin nhắn đáng tin cậy.
 
-## **Model training**
+Bạn có thể mở rộng giải pháp này ra nhiều vị trí biên, giúp bạn có được cái nhìn liền mạch về dữ liệu trên nhiều vị trí của khu vực sản xuất, hoạt động như một giải pháp low-code. 
 
-Mô hình **physics-informed deep learning** được huấn luyện trên **AWS** bằng cách kết hợp các tài nguyên **high performance computing**, hệ thống lưu trữ dữ liệu, và các dịch vụ xử lý song song, như minh họa trong sơ đồ kiến trúc ở Hình 2\.
+Trong các phần tiếp theo, chúng tôi sẽ hướng dẫn các bước để cấu hình luồng thu thập dữ liệu đám mây:
 
-Sử dụng [**Amazon EC2 instances**](https://aws.amazon.com/ec2/instance-types/c5/), chúng tôi đã tạo ra 202.000 mô hình 3D susceptibility (mỗi mô hình gồm 226.000 cells) đại diện cho nhiều kịch bản dưới lòng đất khác nhau – bao gồm đường ống với nhiều hướng khác nhau, các cấu hình nhiều đường ống, và bồn chứa.
+1. Tạo một S3 Tables bucket và kích hoạt tích hợp với các dịch vụ phân tích của AWS.
+2. Tạo một không gian tên (namespace) trong table bucket bằng AWS Command Line Interface (AWS CLI).
+3. Tạo một bảng (table) trong table bucket với schema đã định nghĩa bằng AWS CLI.
+4. Tạo một vai trò AWS Identity and Access Management (IAM) cho Data Firehose với các quyền cần thiết.
+5. Cấu hình các quyền của AWS Lake Formation bằng cách cấp quyền Super trên các bảng cụ thể cho vai trò Data Firehose.
+6. Thiết lập luồng Data Firehose bằng cách chọn Direct PUT làm nguồn và Iceberg tables làm đích. Cấu hình cài đặt đích với tên cơ sở dữ liệu và bảng, chỉ định một Amazon Simple Storage Service (Amazon S3) bucket cho đầu ra lỗi (error output), và liên kết với vai trò IAM đã tạo trước đó.
+7. Xác minh và truy vấn dữ liệu bằng Athena bằng cách cấp quyền Lake Formation để Athena truy cập và truy vấn bảng để xác minh việc thu thập dữ liệu.
 
-Các mô hình sau đó được tham số hóa dựa trên kiến thức chuyên ngành và lưu trữ dưới dạng file **NumPy** trong [**Amazon S3**](https://aws.amazon.com/s3/) **buckets**. Ứng dụng **magnetostatic solver** độc quyền của **S2 Labs** được container hóa và lưu trữ trong [**Amazon ECR**](https://aws.amazon.com/ecr/) để triển khai đồng nhất trên các tài nguyên tính toán. Solver này xử lý tuần tự các mô hình từ **S3**, rồi lưu kết quả phản hồi trở lại **S3**.
+## **Điều kiện tiên quyết**
+Bạn phải đáp ứng các điều kiện tiên quyết sau:
+*   Một tài khoản AWS
+*   Các đặc quyền IAM cần thiết để khởi chạy AWS IoT Greengrass trên cổng biên (hoặc một thiết bị được hỗ trợ khác)
+*   Một phiên bản Amazon Elastic Compute Cloud (Amazon EC2) với hệ điều hành được hỗ trợ để thực hiện proof of concept (bằng chứng khái niệm)
 
-Chúng tôi cũng triển khai **distributed computing** bằng [**AWS Batch**](https://aws.amazon.com/batch/) để sinh dữ liệu, sử dụng [**Spot Instances**](https://aws.amazon.com/ec2/spot/?gclid=Cj0KCQjwhYS_BhD2ARIsAJTMMQa9Sc6yPFqEXZxaC3abEhueNkk1qFM4qaB-yWG02QRugH5RtwK47OUaAobDEALw_wcB&cards.sort-by=item.additionalFields.startDateTime&cards.sort-order=asc&trk=46b0eefc-8c98-474e-8590-b407d7fe3181&sc_channel=ps&ef_id=Cj0KCQjwhYS_BhD2ARIsAJTMMQa9Sc6yPFqEXZxaC3abEhueNkk1qFM4qaB-yWG02QRugH5RtwK47OUaAobDEALw_wcB:G:s&s_kwcid=AL!4422!3!651751059279!e!!g!!ec2%20spot%20instances!19852662173!145019250457) nhằm tối ưu chi phí. Chúng tôi dùng **P4d instances**, mỗi instance cung cấp tám **NVIDIA A100 GPUs** để tính toán phản hồi từ trường tại 1.800 điểm đo với khoảng cách 2 mét. Pipeline đồng bộ dữ liệu giữa **Amazon S3** và bộ nhớ cục bộ, huấn luyện kiến trúc **2D U-Net** (500 triệu tham số) trong 110 **epochs**, đạt **training loss** 0.0018 và **validation loss** 0.0019. Toàn bộ tính toán yêu cầu 100.000 **CPU hours**.
+## **Cài đặt AWS IoT Greengrass trên cổng biên**
+Để biết hướng dẫn cài đặt AWS IoT Greengrass, hãy tham khảo Cài đặt phần mềm AWS IoT Greengrass Core. Sau khi hoàn tất cài đặt, bạn sẽ có một thiết bị core được cấp phép, như hiển thị trong ảnh chụp màn hình sau. Trạng thái của thiết bị là Healthy (Khỏe mạnh), có nghĩa là tài khoản của bạn có thể giao tiếp thành công với thiết bị.
 
-## ![](/images/3-BlogsTranslated/3.2-Blog2/image2.png)
+Đối với proof of concept, bạn có thể sử dụng phiên bản EC2 chạy Ubuntu làm cổng biên của mình.
 
-_Hình 2\. Sơ đồ kiến ​​trúc để tạo dữ liệu tổng hợp và đào tạo mô hình trên AWS._
+## ![](/images/3-BlogsTranslated/3.2-Blog2/image_2.jpg) 
 
-## **Quy trình làm việc để suy luận các cuộc khảo sát từ trường quy mô lớn**
+## **Cấp phép luồng Data Firehose**
+Để biết các bước chi tiết về cách thiết lập Data Firehose gửi dữ liệu đến các bảng Iceberg, hãy tham khảo Gửi dữ liệu đến Apache Iceberg Tables bằng Amazon Data Firehose. Để tích hợp S3 Tables, hãy tham khảo Xây dựng data lake cho dữ liệu truyền phát với Amazon S3 Tables và Amazon Data Firehose.
 
-Pipeline xử lý khảo sát từ tính của chúng tôi áp dụng một **quy trình bốn giai đoạn có hệ thống** để xử lý các khảo sát quy mô lớn một cách hiệu quả, đồng thời vẫn duy trì khả năng tái tạo chất lượng cao các cấu trúc hạ tầng ngầm, minh họa trong Hình 3\.
+Bởi vì bạn đang sử dụng AWS IoT Greengrass để truyền dữ liệu, bạn có thể bỏ qua các bước Kinesis Data Generator được đề cập trong các hướng dẫn này. Thay vào đó, dữ liệu sẽ chảy từ các thiết bị biên của bạn qua các thành phần Greengrass đến Data Firehose. 
 
-**Stage 1 – Data Acquisition:** Việc thu thập dữ liệu hiện trường bắt đầu bằng các hệ thống **magnetometer** được tùy chỉnh theo môi trường khảo sát – gắn trên drone cho khảo sát trên không, hệ thống mặt đất cho khảo sát trên đất liền, hoặc hệ thống dưới nước cho ứng dụng biển. Các khảo sát tuân theo lưới mẫu có hệ thống với độ cao cảm biến và khoảng cách đường khảo sát nhất quán để đảm bảo vùng mục tiêu được bao phủ đồng đều.
+Sau khi hoàn thành các bước này, bạn sẽ có một luồng Firehose và S3 Tables bucket, như hiển thị trong ảnh chụp màn hình sau. Lưu ý Amazon Resource Name (ARN) của luồng Firehose để sử dụng trong các bước tiếp theo.
 
-**Stage 2 – Survey Domain Preparation:** Thay vì xử lý toàn bộ khu vực khảo sát cùng lúc, chúng tôi áp dụng phương pháp mô-đun bằng cách chia miền khảo sát thành các ô nhỏ hơn, phù hợp với kích thước huấn luyện của mô hình AI. Các ô liền kề có vùng chồng lấn, rất quan trọng để đảm bảo sự chuyển tiếp mượt mà trong tái tạo cuối cùng và tránh hiện tượng nhiễu ở rìa.
+## ![](/images/3-BlogsTranslated/3.2-Blog2/image_3.jpg) 
 
-**Stage 3 – Parallel Processing Architecture:** Quy trình tận dụng **parallel computing** để xử lý đồng thời nhiều ô, từ đó giảm đáng kể thời gian tính toán trong khi vẫn đảm bảo tính nhất quán với các tham số của mô hình đã huấn luyện. Cách tiếp cận phân tán này giúp sử dụng hiệu quả tài nguyên tính toán thông qua xử lý ô độc lập. Ví dụ, triển khai của chúng tôi có thể xử lý dữ liệu khảo sát kích thước **400 m x 400 m x 60 m** trong chưa đến **5 giây**.
+## **Triển khai các thành phần Greengrass**
+Hoàn thành các bước sau để cấu hình và triển khai các thành phần Greengrass. Để biết thêm chi tiết, hãy tham khảo Tạo các triển khai.
 
-**Stage 4 – AI-Based Inference:** Mô hình AI đã huấn luyện thực hiện **inference** trên từng ô một cách độc lập, tái tạo phân bố **magnetic susceptibility** dưới bề mặt từ các phép đo từ trường. Các bản tái tạo sau đó được kết hợp liền mạch bằng phương pháp **weighted blending** tại các vùng chồng lấn, đảm bảo sự chuyển tiếp mượt mà giữa các ô liền kề để tạo ra kết quả cuối cùng thống nhất. Quy trình mô-đun này cho phép khả năng mở rộng cho khảo sát ở mọi kích thước, đồng thời duy trì độ phân giải nhất quán và tối ưu hóa việc sử dụng bộ nhớ nhờ xử lý song song hiệu quả, khiến nó trở nên khả thi trong các ứng dụng thực tế từ bản đồ hạ tầng ngầm đến khảo sát địa chất.
+Sử dụng cấu hình sau để kích hoạt định tuyến tin nhắn từ MQTT cục bộ đến thành phần AWS IoT Greengrass PubSub. Lưu ý chủ đề (topic) trong đoạn mã. Đây là chủ đề MQTT mà các thiết bị sẽ gửi dữ liệu đến.
 
-## ![](/images/3-BlogsTranslated/3.2-Blog2/image3.png)
+```json
+{
+  "reset": [""],
+  "merge": {
+    "mqttTopicMapping": {
+      "HelloWorldIotCoreMapping": {
+        "topic": "clients/#",
+        "source": "LocalMqtt",
+        "target": "Pubsub"
+      }
+    }
+  }
+}
+```
+Sử dụng cấu hình sau để triển khai thành phần Firehose. Sử dụng ARN của luồng Firehose mà bạn đã lưu ý trước đó.
 
-_Hình 3\. Quy trình xử lý mô-đun cho các cuộc khảo sát từ tính quy mô lớn._
+```json
+{
+  "reset": [""],
+  "merge": {
+    "lambdaExecutionParameters": {
+      "EnvironmentVariables": {
+        "DEFAULT_DELIVERY_STREAM_ARN": "arn:aws:firehose:us-east-1:<<account-id>>:deliverystream/<<stream name>>"
+      }
+    },
+    "containerMode": "NoContainer"
+  }
+}
+```
+Sử dụng cấu hình sau để triển khai thành phần bộ định tuyến đăng ký cũ (Lưu ý rằng đây là thành phần phụ thuộc của thành phần Firehose):
 
-## **Nghiên cứu điển hình: phát hiện đường ống dẫn dầu khí dưới nước ở Vịnh Mexico**
+```json
+{
+  "reset": [""],
+  "merge": {
+    "subscriptions": {
+      "aws-greengrass-kinesisfirehose": {
+        "id": "aws-greengrass-kinesisfirehose",
+        "source": "component:aws.greengrass.KinesisFirehose",
+        "subject": "kinesisfirehose/message/status",
+        "target": "cloud"
+      }
+    }
+  }
+}
+```
+Tạo và triển khai một thành phần PubSub tùy chỉnh. Bạn có thể sử dụng đoạn mã mẫu sau bằng ngôn ngữ ưa thích của mình để triển khai như một thành phần Greengrass. Bạn có thể sử dụng gdk để tạo các thành phần tùy chỉnh.
 
-Cơn bão **Hurricane Ivan (2004)** đã làm hư hại một giàn khoan dầu ngoài khơi ở Vịnh Mexico, chôn vùi các **well conductors** dưới lớp trầm tích dày 35–45 mét. Hình ảnh **acoustic imaging** ban đầu vào năm 2022, dù có phần thành công, nhưng vẫn bị hạn chế do trầm tích chứa khí che khuất các khu vực quan trọng. Một mảng **magnetometer** độ phân giải cao được triển khai cách đáy biển 3,5 mét để phát hiện các conductors giàu sắt xuyên qua lớp trầm tích bão hòa hydrocarbon.
+```json
+{
+  "reset": [""],
+  "merge": {
+    "subscriptions": {
+      "aws-greengrass-kinesisfirehose": {
+        "id": "aws-greengrass-kinesisfirehose",
+        "source": "component:aws.greengrass.KinesisFirehose",
+        "subject": "kinesisfirehose/message/status",
+        "target": "cloud"
+      }
+    }
+  }
+}
+```
+Sau khi triển khai các thành phần, bạn sẽ thấy chúng trên tab Components (Các thành phần) của thiết bị core.
 
-Mô hình mà chúng tôi đã mô tả ở các phần trước đã lập bản đồ thành công các conductors bị chôn vùi ở độ sâu 35–45 mét, hé lộ một bó conductor chính và một đoạn mảnh vỡ thứ cấp nằm cách **well bay** 40 mét về phía đông bắc (như minh họa trong Hình 4). Kết quả cho thấy khả năng phân biệt vượt trội các **magnetic signatures** trong trường hợp có nhiều mảnh vỡ phức tạp, được xác minh qua các điểm khoan và hình ảnh acoustic khi có thể. Điều này chứng minh hiệu quả của **deep learning** trong những trường hợp mà các phương pháp acoustic truyền thống thất bại.
+## **Thu thập dữ liệu**
+Trong bước này, bạn thu thập dữ liệu từ thiết bị của mình lên AWS IoT Greengrass, sau đó dữ liệu này sẽ được đưa vào Data Firehose. Hoàn thành các bước sau:
 
-## ![](/images/3-BlogsTranslated/3.2-Blog2/image4.png)
+1. Từ thiết bị biên có hỗ trợ MQTT hoặc cổng biên của bạn, xuất bản dữ liệu đến chủ đề đã xác định trước đó (client/#). Ví dụ: chúng tôi xuất bản dữ liệu đến chủ đề MQTT client/devices/telemetry.
 
-_Hình 4\. Hình chiếu bằng (a) và hình chiếu xiên (b) của phân bố độ nhạy tương đối._
+2. Nếu bạn muốn thực hiện việc này như một proof of concept, hãy tham khảo Tạo thiết bị ảo với Amazon EC2 để tạo một thiết bị IoT mẫu.
+
+Đoạn mã sau là payload mẫu cho ví dụ của chúng tôi:
+
+```json
+PAYLOAD="{
+\"device_id\": \"$DEVICE_ID\",
+\"timestamp\": \"$TIMESTAMP\",
+\"temperature\": $TEMPERATURE,
+\"pressure\": $PRESSURE,
+\"flow_rate\": $FLOW_RATE,
+\"vibration\": $VIBRATION,
+\"motor_speed\": $MOTOR_SPEED,
+\"status\": \"$STATUS\",
+\"battery\": $((RANDOM % 30 + 70 )),}"
+```
+
+Để biết thêm chi tiết về cách xuất bản tin nhắn từ một thiết bị mẫu, hãy tham khảo Cấp phép tức thời.
+
+Thành phần MQTT bridge sẽ định tuyến payload từ chủ đề MQTT (client/devices/telemetry) đến một chủ đề IPC có cùng tên. Thành phần tùy chỉnh mà bạn đã triển khai trước đó sẽ lắng nghe chủ đề IPC client/devices/telemetry và xuất bản đến chủ đề IPC kinesisfirehose/message. Tin nhắn phải tuân theo cấu trúc được mô tả trong Dữ liệu đầu vào.
+
+## **Xác minh dữ liệu trong Athena**
+
+Giờ đây, bạn có thể truy vấn dữ liệu được xuất bản từ thiết bị IoT biên bằng Athena. Trên bảng điều khiển Athena, tìm danh mục (catalog) và cơ sở dữ liệu mà bạn đã thiết lập và chạy truy vấn sau:
+
+```json
+SELECT * FROM <<database>>."device_telemetry" limit 10;
+```
+
+Bạn sẽ thấy dữ liệu được hiển thị như trong ảnh chụp màn hình sau. Lưu ý tên cơ sở dữ liệu và bảng mà bạn đã xác định trong bước "Cấp phép luồng Data Firehose".
+
+## **Mở rộng giải pháp**
+Trong các phần trước, chúng tôi đã chỉ ra cách nhiều thiết bị có thể đưa dữ liệu lên đám mây bằng cách sử dụng một cổng biên Greengrass duy nhất. Vì các vị trí sản xuất thường phân tán trong kịch bản thế giới thực, bạn có thể thiết lập các thiết bị Greengrass tại các địa điểm khác và xuất bản dữ liệu đến cùng một luồng Firehose. Điều này đảm bảo dữ liệu từ các địa điểm khác nhau sẽ được đưa vào một S3 bucket duy nhất, được phân vùng một cách phù hợp (trong ví dụ của chúng tôi là Device_Id), và có thể được truy vấn một cách liền mạch.
+
+## **Dọn dẹp**
+Sau khi xác minh kết quả, bạn có thể xóa các tài nguyên sau để tránh phát sinh thêm chi phí:
+
+Xóa phiên bản EC2 Ubuntu mà bạn đã tạo cho proof of concept.
+
+Xóa luồng phân phối Firehose và các tài nguyên liên quan.
+
+Xóa (Drop) các bảng Athena đã tạo để truy vấn dữ liệu.
+
+Xóa S3 Tables bucket mà bạn đã cấp phép.
 
 ## **Kết luận**
+Trong bài viết này, chúng tôi đã hướng dẫn cách thiết lập một khuôn khổ thu thập dữ liệu gần thời gian thực từ biên lên đám mây có khả năng mở rộng bằng AWS IoT Greengrass và bắt đầu thực hiện phân tích dữ liệu trong các dịch vụ AWS bằng phương pháp low-code. Chúng tôi đã trình bày cách tối ưu hóa lưu trữ dữ liệu sang định dạng Iceberg với S3 Tables và chuyển đổi dữ liệu truyền phát trước khi nó được đưa vào lớp lưu trữ bằng Data Firehose. Chúng tôi cũng đã thảo luận về cách bạn có thể mở rộng giải pháp này theo chiều ngang qua nhiều địa điểm sản xuất (nhà máy hoặc khu vực) để tạo ra một giải pháp low-code nhằm phân tích dữ liệu theo thời gian gần thực.
 
-Công trình của chúng tôi cho thấy cách **AI-enhanced magnetic imaging** đang thay đổi lĩnh vực **subsurface infrastructure mapping** trên nhiều ngành, từ các tiện ích nông trên đất liền đến các **offshore well conductors** sâu dưới biển. Mô hình **physics-informed deep learning** được huấn luyện trên **AWS** bằng cách kết hợp các tài nguyên **high performance computing**, hệ thống lưu trữ dữ liệu và các dịch vụ xử lý song song.
+Để tìm hiểu thêm, hãy tham khảo các tài nguyên sau:
 
-Thông qua các **case study** thực tế, chúng tôi đã chứng minh rằng **deep learning** có thể vượt qua những hạn chế của việc diễn giải dữ liệu từ tính truyền thống, lập bản đồ thành công các cấu trúc ở độ sâu 40 mét dưới đáy biển – những cấu trúc vốn đã “vô hình” với phương pháp acoustic suốt 18 năm.
+Hướng dẫn dành cho nhà phát triển Amazon Data Firehose
 
-Tác động của công nghệ này trải dài từ **oil & gas decommissioning**, **urban utility mapping**, **environmental protection** cho đến **marine operations**. Dù kết quả rất hứa hẹn, vẫn còn nhiều cơ hội phát triển, bao gồm **multi-physics integration**, xử lý dữ liệu **real-time**, và nâng cao khả năng phân giải.
+Làm việc với Amazon S3 Tables và table buckets
 
-Để hợp tác hoặc tìm hiểu thêm về việc triển khai, vui lòng liên hệ với chúng tôi qua email: [**santi@s2labs.co**](mailto:santi@s2labs.co) hoặc [**ryanqi@amazon.com**](mailto:ryanqi@amazon.com).
+Xây dựng data lake cho dữ liệu truyền phát bằng Amazon S3 Tables và Amazon Data Firehose
 
-## **Thông tin về các tác giả**
+## **Về các tác giả**
 
 <div style="display:flex; flex-direction:column; gap:1rem;">
 
-<div style="display:flex; align-items:flex-start; gap:1rem;">
-	<img src="/images/3-BlogsTranslated/3.2-Blog2/image5.png" alt="Santi Adavani" style="width:120px; height:120px; object-fit:cover; border-radius:8px;" />
-	<div>
-		<strong>Santi Adavani</strong><br/>
-		Tiến sĩ Santi Adavani là người sáng lập và CEO của <strong>S2 Labs</strong>, một startup công nghệ chuyên sâu (deep tech) xây dựng các sản phẩm <strong>AI</strong> nhằm thúc đẩy khám phá khoa học. Trước <strong>S2 Labs</strong>, Santi là người sáng lập và CTO của <strong>RocketML</strong>, nơi ông đã xây dựng một nền tảng <strong>MLOps</strong> được hỗ trợ bởi <strong>HPC</strong> (Điện toán Hiệu năng Cao). Ông cũng từng là Trưởng bộ phận Sản phẩm và AI tại <strong>PostgresML</strong>, nơi ông lãnh đạo phát triển một cơ sở dữ liệu vector trong bộ nhớ dựa trên Postgres, và trước đó là Giám đốc Sản phẩm Cấp cao tại <strong>Intel</strong>. Santi có bằng <strong>Tiến sĩ</strong> về Khoa học và Kỹ thuật Tính toán từ <strong>Đại học Pennsylvania</strong>.
-	</div>
-</div>
+  <div style="display:flex; align-items:flex-start; gap:1rem;">
+    <img src="/images/3-BlogsTranslated/3.2-Blog2/image_6.jpg" alt="Joyson Neville Lewis" style="width:120px; height:120px; object-fit:cover; border-radius:8px;" />
+    <div>
+      <strong>Joyson Neville Lewis</strong><br/>
+      Joyson Neville Lewis là Kiến trúc sư Trí tuệ nhân tạo Đàm thoại (Conversational AI Architect) cấp cao tại AWS Professional Services. Joyson từng làm Kỹ sư Phần mềm/Dữ liệu trước khi lấn sân sang lĩnh vực AI Đàm thoại và IoT Công nghiệp. Anh hỗ trợ các khách hàng của AWS hiện thực hóa tầm nhìn AI của họ bằng cách sử dụng Trợ lý giọng nói/Chatbot và các giải pháp IoT.
+    </div>
+  </div>
 
-<div style="display:flex; align-items:flex-start; gap:1rem;">
-	<img src="/images/3-BlogsTranslated/3.2-Blog2/image6.png" alt="Jacques Guigné" style="width:120px; height:120px; object-fit:cover; border-radius:8px;" />
-	<div>
-		<strong>Jacques Guigné</strong><br/>
-		Giáo sư Jacques Yves Guigné là Cố vấn Cấp cao cho <strong>Kraken Robotics</strong> ở Newfoundland, Canada. Ông giữ chức vụ Giám đốc Khoa học (CSO) của <strong>Subsea Micropiles Ltd.</strong>, công ty hoạt động tại Ireland và Vương quốc Anh. Ông cũng là Giám đốc Điều hành của <strong>Acoustic Zoom Inc.</strong>, một công ty nghiên cứu địa vật lý hàng đầu. Jacques mang đến kinh nghiệm phong phú về hình ảnh âm học và đã đóng góp đáng kể vào việc lập bản đồ đáy biển phức tạp. Những thành tựu khoa học của ông bao gồm hơn 80 bằng sáng chế và 70 ấn phẩm đã nhận được số lượng trích dẫn ấn tượng trên ResearchGate. Ông đã được vinh danh trong lĩnh vực vật lý với các <strong>Huy chương Deryck Chesterman và Rayleigh</strong>, phản ánh những đóng góp của ông cho địa vật lý, minh chứng bằng bằng <strong>DSc</strong> và <strong>Tiến sĩ</strong> của mình. Ngoài ra, ông còn được công nhận là <strong>Thành viên của Geoscience Canada</strong> và là Giám đốc của <strong>PEGNL</strong> (Kỹ sư Chuyên nghiệp và Nhà Khoa học Địa chất Newfoundland và Labrador).
-	</div>
-</div>
+  <div style="display:flex; align-items:flex-start; gap:1rem;">
+    <img src="/images/3-BlogsTranslated/3.2-Blog2/image_7.jpg" alt="Anil Vure" style="width:120px; height:120px; object-fit:cover; border-radius:8px;" />
+    <div>
+      <strong>Anil Vure</strong><br/>
+      Anil Vure là Kiến trúc sư Dữ liệu IoT cấp cao tại AWS Professional services. Anil có nhiều kinh nghiệm trong việc xây dựng các nền tảng dữ liệu quy mô lớn và làm việc với các khách hàng trong ngành sản xuất để thiết kế các hệ thống thu thập dữ liệu tốc độ cao.
+    </div>
+  </div>
 
-<div style="display:flex; align-items:flex-start; gap:1rem;">
-	<img src="/images/3-BlogsTranslated/3.2-Blog2/image7.png" alt="Ryan Qi" style="width:120px; height:120px; object-fit:cover; border-radius:8px;" />
-	<div>
-		<strong>Ryan Qi</strong><br/>
-		Ryan có 19 năm kinh nghiệm trong lĩnh vực mô hình hóa và mô phỏng <strong>Đa Vật lý (Multiphysics)</strong>, chiến lược và phát triển kinh doanh trên cả mảng công nghiệp và kỹ thuật số. Tại AWS, Ryan là <strong>Trưởng nhóm BD/GTM Toàn cầu Chính (Principal Worldwide BD/GTM Leader)</strong>, tập trung vào các công nghệ mô phỏng và hệ thống tự hành.
-	</div>
-</div>
-
-<div style="display:flex; align-items:flex-start; gap:1rem;">
-	<img src="/images/3-BlogsTranslated/3.2-Blog2/image8.png" alt="Souvik Mukherjee" style="width:120px; height:120px; object-fit:cover; border-radius:8px;" />
-	<div>
-		<strong>Souvik Mukherjee</strong><br/>
-		Tiến sĩ Souvik Mukherjee là thành viên sáng lập của <strong>EmPact-AI</strong> và là Cố vấn Kỹ thuật Chính. Sự nghiệp hơn 15 năm của ông trải dài qua nhiều lĩnh vực trong ngành năng lượng và công nghệ với vai trò là một nhà địa vật lý, nhà khoa học dữ liệu và người dẫn dắt sản phẩm nổi tiếng. Ông đã được công nhận với nhiều giải thưởng uy tín trong ngành như <strong>giải thưởng Shell GameChanger (2015)</strong>, giải <strong>bài báo xuất sắc nhất và đổi mới URTeC 2019</strong>, cùng nhiều giải thưởng khác. Ông cũng được công nhận về khả năng quản lý, thực hiện và cung cấp thành công nhiều dự án có giá trị hàng triệu đô la, bao gồm việc thương mại hóa thành công công nghệ phân định vết nứt thủy lực có chống đỡ từng đoạt giải thưởng, <strong>QUANTUM</strong> cho <strong>Carbo Ceramics</strong>, và việc thực hiện <strong>Nghiên cứu Thăm dò Tiên phong Shell (Shell Frontier Exploration Study)</strong>, điều phối một đội ngũ gồm 15 chuyên gia kỹ thuật thuộc nhiều chuyên môn và phòng ban, vốn đã có tác động tích cực mạnh mẽ đến chiến lược mua lại hợp đồng thuê trị giá <strong>100 triệu đô la</strong> của Shell.
-	</div>
-</div>
-
-<div style="display:flex; align-items:flex-start; gap:1rem;">
-	<img src="/images/3-BlogsTranslated/3.2-Blog2/image9.png" alt="Srinivas Tadepalli" style="width:120px; height:120px; object-fit:cover; border-radius:8px;" />
-	<div>
-		<strong>Srinivas Tadepalli</strong><br/>
-		Srinivas là <strong>trưởng bộ phận đưa HPC ra thị trường (go-to-market) toàn cầu tại AWS</strong>, chịu trách nhiệm xây dựng một chiến lược GTM toàn diện cho nhiều khối lượng công việc <strong>HPC</strong> và <strong>điện toán tăng tốc (Accelerated computing)</strong> cho cả khách hàng thương mại và công khu vực công. Trước đây, ông làm việc tại <strong>Dassault Systems</strong> và có bằng <strong>Tiến sĩ</strong> về kỹ thuật y sinh.
-	</div>
-</div>
-
-<div style="display:flex; align-items:flex-start; gap:1rem;">
-	<img src="/images/3-BlogsTranslated/3.2-Blog2/image10.png" alt="Vidyasagar Ananthan" style="width:120px; height:120px; object-fit:cover; border-radius:8px;" />
-	<div>
-		<strong>Vidyasagar Ananthan</strong><br/>
-		Vidyasagar chuyên sâu về <strong>điện toán hiệu năng cao (high performance computing)</strong>, <strong>mô phỏng số (numerical simulations)</strong>, <strong>kỹ thuật tối ưu hóa</strong> và <strong>phát triển phần mềm</strong> trong cả môi trường công nghiệp và học thuật. Tại AWS, Vidyasagar là <strong>Kiến trúc sư Giải pháp Cấp cao (Senior Solutions Architect)</strong>, phát triển các mô hình dự đoán và công nghệ mô phỏng.
-	</div>
-</div>
-
+  <div style="display:flex; align-items:flex-start; gap:1rem;">
+    <img src="/images/3-BlogsTranslated/3.2-Blog2/image_8.jpg" alt="Ashok Padmanabhan" style="width:120px; height:120px; object-fit:cover; border-radius:8px;" />
+    <div>
+      <strong>Ashok Padmanabhan</strong><br/>
+      Ashok Padmanabhan là Kiến trúc sư Dữ liệu IoT cấp cao tại AWS Professional Services. Ashok chủ yếu làm việc với các khách hàng trong ngành sản xuất và ô tô để thiết kế và xây dựng các giải pháp Công nghiệp 4.0.
+    </div>
+  </div>
+  
 </div>
