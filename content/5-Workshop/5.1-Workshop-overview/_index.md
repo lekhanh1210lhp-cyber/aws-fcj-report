@@ -1,26 +1,40 @@
 ---
-title: "Introduction"
-date: "2026-06-15"
+title: "Workshop Overview"
+date: "2026-07-28"
 weight: 1
 chapter: false
 pre: " <b> 5.1. </b> "
 ---
 
-### Overview
+# Workshop Overview
 
-In this project, we will focus on building an Enterprise IoT Cloud Dashboard on AWS for centralized smart building management (BMS).
+## Problem and users
 
-The main objective is to establish a 5-layer architecture utilizing React (Frontend), FastAPI on AWS EC2 (Backend), PostgreSQL RDS (Database), CloudWatch (Monitoring), and a Python Simulator (IoT Devices). The workflow consists of the following steps:
+Room operators need one place to observe environmental conditions and control equipment remotely. Without a central system, readings are fragmented, history is difficult to inspect, and a UI click does not prove that a physical device executed the command.
 
-1.  **Infrastructure & Database:** Provisioning foundational AWS resources (VPC, EC2) and deploying a PostgreSQL RDS instance.
-2.  **API & IoT Simulation:** Building telemetry ingestion API endpoints and developing a Python script to simulate YOLO Uno/ESP32 edge devices.
-3.  **Frontend & Integration:** Building a React dashboard for historical data visualization and remote device control, ensuring full bi-directional communication.
+The workshop serves facility operators, room managers, and learners who want practical experience with AWS, REST APIs, databases, frontend integration, and embedded IoT.
 
-> 💡 **Highlight:** This solution allows administrators to **view trends and send commands directly from the UI**, ensuring flawless data flow from the Simulator to the Dashboard and back.
+## Solution scope
 
-![overview](/images/5-Workshop/5.1-Workshop-overview/overview_diagram.png)
+The solution monitors `room_01` and supports:
 
-#### Implementation Steps
+- temperature, humidity, and light telemetry;
+- current and historical readings;
+- fan, light, and curtain control;
+- a `Pending` → `Executed` command lifecycle with device ACK; and
+- backend logs, infrastructure metrics, and alarms.
 
-1. [System Architecture & Cloud Infrastructure Foundation](5.1.1-Architecture/)
-2. [Database Design & REST API Implementation](5.1.2-Backend/)
+![Final system architecture](/images/2-Proposal/IoT_Dashboard_Architecture.png)
+
+## Success criteria
+
+The workshop is complete when telemetry is stored in RDS and visible on the dashboard, every supported command can be traced from creation through physical execution and ACK, and CloudWatch contains the expected logs and datapoints.
+
+**Expected result:** The scope and acceptance criteria are clear before resources are created.
+
+## Troubleshooting
+
+- If the architecture image is missing, confirm the file exists under `static/images/2-Proposal/`.
+- If requirements expand during implementation, record them as future improvements instead of silently changing the acceptance criteria.
+
+Next: [prepare the required account, tools, and hardware](../5.2-Prerequisites/).

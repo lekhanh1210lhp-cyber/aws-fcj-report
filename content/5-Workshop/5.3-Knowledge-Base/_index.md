@@ -8,23 +8,32 @@ pre: " <b> 5.3. </b> "
 
 #### Objectives
 
-After completing the cloud infrastructure foundation, the next step is to set up the core backend and database components of the IoT architecture. In this section, we will provision PostgreSQL on AWS RDS and initialize the FastAPI backend structure.
+After preparing the AWS cloud environment, the next step is to establish the data layer and backend foundation of the IoT dashboard. This section focuses on building the database and API backbone that will later receive telemetry data from simulated devices and serve it to the frontend.
 
-We will accomplish 3 key technical objectives:
+We will complete three main technical objectives:
 
-1.  **Initialize Database:** Deploy a PostgreSQL RDS instance in a private subnet and configure inbound rules to exclusively accept traffic from the EC2 instance.
-2.  **FastAPI Initialization:** Initialize the FastAPI project and configure SQLAlchemy alongside Pydantic schemas.
-3.  **Database Migration:** Set up Alembic for schema migrations and execute the first migration to RDS to create relational tables for Buildings, Telemetry History, and Commands.
+1. **Provision the database layer** using Amazon RDS for PostgreSQL in a private subnet.
+2. **Initialize the FastAPI backend** and define the core request/response models.
+3. **Apply database migrations** so the system can store buildings, telemetry records, and commands in a structured way.
 
-#### Key Components
+#### What we will build
 
-During this configuration process, we will interact with and connect the following services and tools:
+In this section, the project will rely on the following services and tools:
 
-- **AWS RDS (PostgreSQL):** The managed relational database service used to securely store structured data, including Buildings, Telemetry History, and Commands.
-- **FastAPI (Python):** The modern backend framework actively running on the EC2 instance, responsible for handling API logic and validating data.
-- **Alembic & SQLAlchemy:** The database toolkit and migration tools used to set up relational schemas and execute deployments directly to the RDS instance.
+- **AWS RDS (PostgreSQL):** A managed relational database used to store structured IoT data such as building information, telemetry history, and command logs.
+- **FastAPI (Python):** A modern backend framework that handles API requests, validates payloads, and connects to the database.
+- **SQLAlchemy and Alembic:** Tools for defining database models and applying schema changes safely.
 
-#### Implementation Steps
+#### Implementation workflow
 
-1. [AWS RDS Setup](5.3.1-RDS-Setup/)
-2. [FastAPI Init & Database Migration](5.3.2-FastAPI-Migration/)
+1. Create the PostgreSQL database instance in AWS RDS and make sure it is reachable only from the EC2 backend.
+2. Configure the FastAPI service so it can connect to the database using environment variables and secure credentials.
+3. Create the initial database schema and apply the first migration.
+4. Verify that the tables are available and ready for telemetry ingestion.
+
+<!-- Insert screenshot: AWS RDS instance created in a private subnet -->
+> Placeholder for screenshot: AWS RDS PostgreSQL instance and security configuration.
+
+#### Expected result
+
+By the end of this section, the system should have a stable database and backend foundation ready to support API testing and frontend integration.

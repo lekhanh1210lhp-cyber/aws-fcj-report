@@ -6,75 +6,63 @@ chapter: false
 pre: " <b> 5.6. </b> "
 ---
 
-#### Target
+#### Objectives
 
-One of the biggest challenges for an Enterprise IoT Cloud Dashboard is handling high-frequency telemetry data securely. Before finalizing the project, we must harden the cloud infrastructure and ensure the backend can handle enterprise loads. 
+One of the biggest challenges for the Enterprise IoT Cloud Dashboard is handling high-frequency telemetry data safely. Before finalizing the project, we must harden the infrastructure and ensure the backend remains stable under enterprise-level traffic.
 
-In this section, we will simulate the following scenario:
+In this section, we will simulate the following scenarios:
 
-1.  Implement basic rate limiting in FastAPI to prevent DDoS or spam telemetry.
-2.  Configure the IoT Simulator to send high-frequency data to the EC2 backend.
-3.  Monitor the EC2 CPU and CloudWatch logs to verify system stability under heavy load.
+1. Apply basic API rate limiting to reduce abuse and DDoS-like traffic.
+2. Increase the frequency of telemetry requests to test the backend under load.
+3. Monitor EC2 metrics and CloudWatch logs to confirm the service remains healthy.
 
-#### Implementation Steps
+#### Step 1: Apply rate limiting
 
-**Step 1: Implement API Rate Limiting**
+We will configure the FastAPI application so that it rejects excessive requests from a single source.
 
-We need to confirm that our FastAPI backend can defend against request spamming.
+1. Open the backend source code and add middleware or dependency-based rate limiting.
+2. Set a practical threshold such as `100 requests/minute` per IP.
+3. Restart the FastAPI service so the rules take effect.
 
-1.  Access your EC2 instance or local backend source code.
-2.  Configure the rate limiting logic in your FastAPI application.
-    - _Example:_ Limit incoming telemetry data to `100 requests per minute` per IP.
-3.  Restart the `systemctl` backend service to apply the new security rules.
+<!-- Insert screenshot: rate limiting logic in backend service -->
+> Placeholder for screenshot: FastAPI rate limiting configuration.
 
-![API Rate Limiting Setup](/images/5-Workshop/5.6-Stress-Testing/01_Rate_Limit.png)
+#### Step 2: Generate high-frequency traffic
 
-**Step 2: Configure IoT Simulator for Stress Testing**
+A simple Python simulator can be used to create sustained traffic.
 
-We will modify the Python script to act as a stress-testing tool.
+```python
+import time
 
-1.  On your computer, open the Python Simulator project.
-2.  Adjust the threading and delay configurations in the script to generate high-frequency data.
-    ```python
-    # Example snippet for high-frequency test
-    import threading
-    import time
+while True:
+    post_telemetry()
+    time.sleep(0.01)
+```
 
-    def send_spam_telemetry():
-        while True:
-            # Send POST request rapidly
-            post_telemetry()
-            time.sleep(0.01) # Very short delay for stress testing
-    ```
-3.  Save the changes to the simulator script.
+This allows the team to observe how the API behaves when request volume increases sharply.
 
-**Step 3: Execute the Stress Test**
+#### Step 3: Execute the stress test
 
-Now, we will bombard the backend with high-frequency data to see how it reacts.
+Run the updated simulator and observe the system response.
 
-1.  Run the updated Python Simulator from your Terminal.
-2.  **Observe the result in the console:**
-    - Initially, requests will return `200 OK`.
-    - Once the rate limit is exceeded, the backend should automatically reject the spam telemetry, returning `429 Too Many Requests` or dropping the connections gracefully.
+1. Start the simulator from the terminal.
+2. Watch whether requests return `200 OK` at first and then `429 Too Many Requests` after the threshold is exceeded.
+3. Confirm the application remains available and logs the events properly.
 
-![Stress Testing Execution](/images/5-Workshop/5.6-Stress-Testing/02_Stress_Test.png)
+<!-- Insert screenshot: terminal output or Postman results during stress test -->
+> Placeholder for screenshot: stress-test output from the simulator.
 
-**Step 4: Monitor EC2 CPU & CloudWatch (The Verification)**
+#### Step 4: Observe AWS monitoring metrics
 
-The system must remain stable despite the high-frequency data attack.
+The final validation step is to inspect the monitoring layer.
 
-1.  Access the **AWS Console**, navigate to **EC2**, and select your backend instance.
-2.  Go to the **Monitoring** tab and review the **CPU Utilization** graph.
-    - Ensure the CPU spikes but does not crash the instance (properly sized at t2.micro/t3.micro).
-3.  Switch to the **CloudWatch Console** -> Select **Log groups**.
-4.  Verify that CloudWatch logs accurately capture all API successes (200) and gracefully handled errors (429/500).
+1. Open the EC2 instance in the AWS Console.
+2. Review the **Monitoring** tab for CPU utilization and network activity.
+3. Open CloudWatch and check that logs reflect both successful requests and handled overload events.
 
-![CloudWatch CPU Monitoring](/images/5-Workshop/5.6-Stress-Testing/03_CloudWatch_CPU.png)
+<!-- Insert screenshot: CloudWatch dashboard or EC2 monitoring chart -->
+> Placeholder for screenshot: CloudWatch metrics for CPU and API errors.
 
 #### Conclusion
 
-You have successfully stress-tested and secured the IoT Dashboard!
-
-- **Infrastructure Secured:** The backend is protected against basic DDoS vulnerabilities and spam telemetry.
-- **Enterprise Load Ready:** The system handled the high-frequency data efficiently.
-- **Code Freeze:** With stability verified, you are now ready for the final Code Freeze and project hand-off.
+This step demonstrates the system's resilience under stress and confirms that the backend and monitoring stack are ready for practical deployment.

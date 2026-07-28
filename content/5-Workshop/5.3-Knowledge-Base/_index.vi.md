@@ -8,23 +8,32 @@ pre: " <b> 5.3. </b> "
 
 #### Mục tiêu
 
-Sau khi hoàn thành việc chuẩn bị nền tảng hạ tầng đám mây, bước tiếp theo là thiết lập các thành phần cơ sở dữ liệu và backend cốt lõi của kiến trúc IoT. Trong phần này, chúng ta sẽ cung cấp PostgreSQL trên AWS RDS và khởi tạo cấu trúc backend FastAPI.
+Sau khi hoàn tất việc chuẩn bị môi trường AWS, bước tiếp theo là xây dựng lớp dữ liệu và nền tảng backend cho dashboard IoT. Phần này tập trung vào việc thiết lập cơ sở dữ liệu và API backbone để sau này có thể nhận dữ liệu viễn trắc từ các thiết bị mô phỏng và cung cấp cho frontend.
 
-Chúng ta sẽ thực hiện 3 mục tiêu kỹ thuật chính:
+Chúng ta sẽ hoàn thành ba mục tiêu kỹ thuật chính:
 
-1.  **Khởi tạo Cơ sở dữ liệu:** Triển khai một instance PostgreSQL RDS trong mạng con dùng riêng (private subnet) và cấu hình các quy tắc đầu vào (inbound rules) chỉ cho phép kết nối từ EC2.
-2.  **Khởi tạo FastAPI:** Khởi tạo dự án FastAPI từ đầu, tiến hành cấu hình SQLAlchemy và các Pydantic schemas.
-3.  **Database Migration:** Thiết lập Alembic cho việc di chuyển (migration) cấu trúc dữ liệu và thực thi bản migration đầu tiên lên RDS để tạo các bảng quan hệ cho Buildings, Telemetry History, và Commands.
+1. **Cấp phát tầng dữ liệu** bằng Amazon RDS cho PostgreSQL trong subnet riêng.
+2. **Khởi tạo backend FastAPI** và định nghĩa các model đầu vào, đầu ra cho hệ thống.
+3. **Áp dụng migration database** để lưu trữ dữ liệu về tòa nhà, lịch sử viễn trắc và lệnh điều khiển.
 
-#### Các Thành phần Chính
+#### Thành phần chính
 
-Trong quá trình cấu hình này, chúng ta sẽ tương tác và kết nối các dịch vụ cũng như công cụ sau:
+Trong phần này, chúng ta sẽ làm việc với các dịch vụ và công cụ sau:
 
-- **AWS RDS (PostgreSQL):** Dịch vụ cơ sở dữ liệu quan hệ được quản lý, dùng để lưu trữ an toàn các dữ liệu có cấu trúc bao gồm Buildings, Telemetry History, và Commands.
-- **FastAPI (Python):** Framework backend hiện đại đang hoạt động tích cực trên EC2 instance, chịu trách nhiệm xử lý logic API và xác thực dữ liệu.
-- **Alembic & SQLAlchemy:** Bộ công cụ cơ sở dữ liệu và công cụ di chuyển (migration) được sử dụng để thiết lập các lược đồ quan hệ và thực thi triển khai trực tiếp lên RDS instance.
+- **AWS RDS (PostgreSQL):** Dịch vụ cơ sở dữ liệu quan hệ được quản lý, dùng để lưu trữ dữ liệu IoT có cấu trúc như thông tin tòa nhà, lịch sử telemetry và nhật ký lệnh.
+- **FastAPI (Python):** Framework backend hiện đại dùng để xử lý yêu cầu API, xác thực payload và kết nối với database.
+- **SQLAlchemy và Alembic:** Công cụ để định nghĩa mô hình dữ liệu và triển khai thay đổi schema một cách an toàn.
 
-#### Các Bước Thực hiện
+#### Quy trình thực hiện
 
-1. [Thiết lập AWS RDS](5.3.1-RDS-Setup/)
-2. [Khởi tạo FastAPI & Database Migration](5.3.2-FastAPI-Migration/)
+1. Tạo instance PostgreSQL trên AWS RDS và đảm bảo chỉ có backend EC2 mới có thể kết nối.
+2. Cấu hình FastAPI để kết nối tới database bằng biến môi trường và thông tin xác thực bảo mật.
+3. Tạo schema ban đầu và áp dụng migration đầu tiên.
+4. Kiểm tra các bảng dữ liệu đã sẵn sàng để nhận dữ liệu viễn trắc.
+
+<!-- Chèn ảnh: giao diện AWS RDS khi tạo instance PostgreSQL -->
+> Chỗ dành cho ảnh: màn hình AWS RDS và cấu hình security group.
+
+#### Kết quả mong đợi
+
+Sau khi hoàn thành phần này, hệ thống sẽ có tầng dữ liệu và backend nền tảng ổn định để phục vụ cho việc kiểm thử API và tích hợp frontend.

@@ -1,42 +1,41 @@
 ---
-title: "Hướng dẫn Dự án"
-date: "2026-06-15"
+title: "Workshop AWS IoT Dashboard"
+date: "2026-07-28"
 weight: 5
 chapter: false
 pre: " <b> 5. </b> "
 ---
 
-# Hướng dẫn Triển khai Dự án Enterprise IoT Cloud Dashboard
+# AWS IoT Monitoring and Control Dashboard
 
-#### Tổng quan
+Workshop này xây dựng hệ thống giám sát môi trường và điều khiển thiết bị hoàn chỉnh cho `room_01`. YOLO UNO đọc nhiệt độ, độ ẩm và ánh sáng; FastAPI trên Amazon EC2 lưu telemetry vào Amazon RDS for PostgreSQL; React dashboard hiển thị dữ liệu hiện tại và lịch sử; Amazon CloudWatch cung cấp log, metric và alarm.
 
-**Enterprise IoT Cloud Dashboard** là một giải pháp quản lý tòa nhà thông minh (BMS) tập trung được xây dựng trên nền tảng AWS. Hệ thống tích hợp giao diện React frontend, FastAPI backend chạy trên AWS EC2, cơ sở dữ liệu PostgreSQL RDS, giám sát bằng CloudWatch và Python Simulator đóng vai trò các thiết bị IoT.
+Luồng điều khiển có thể kiểm chứng rõ ràng: dashboard tạo command ở trạng thái `Pending`, thiết bị polling và thực thi lệnh, sau đó gửi xác nhận (ACK) để chuyển trạng thái sang `Executed`.
 
-> Giải pháp được thiết kế xung quanh 5 lớp cốt lõi nhằm đảm bảo quá trình thu thập dữ liệu viễn trắc thông suốt, thực thi lệnh điều khiển hai chiều đáng tin cậy và trực quan hóa thời gian thực trên nhiều địa điểm tòa nhà (Hà Nội, Đà Nẵng và TP. Hồ Chí Minh).
+## Kết quả học tập
 
-Trong hướng dẫn này, chúng ta sẽ xem xét toàn bộ vòng đời của dự án—từ việc thiết lập hạ tầng đám mây ban đầu và cấp phát cơ sở dữ liệu, triển khai REST API, mô phỏng thiết bị đa tòa nhà, giao tiếp hai chiều, phát triển bảng điều khiển frontend, tích hợp hệ thống, kiểm thử bảo mật chịu tải cho đến hoàn thiện tài liệu bàn giao dự án.
+Sau khi hoàn thành workshop, bạn có thể:
 
-Chúng ta sẽ sử dụng các thành phần chính để thiết lập một giải pháp đám mây IoT hoàn chỉnh:
+- triển khai FastAPI trên EC2 và kết nối an toàn tới RDS;
+- gửi telemetry từ YOLO UNO và lưu dữ liệu trong PostgreSQL;
+- điều khiển quạt, đèn và rèm từ React dashboard;
+- kiểm thử toàn bộ vòng đời command và ACK;
+- thu thập bằng chứng vận hành bằng CloudWatch; và
+- ước tính chi phí, áp dụng bảo mật cơ bản và xóa tài nguyên tính phí.
 
-- **Frontend (React & TailwindCSS)** - Đóng vai trò là giao diện người dùng để giám sát viễn trắc thời gian thực, trực quan hóa dữ liệu lịch sử (qua Chart.js/Recharts) và điều khiển thiết bị từ xa (Quạt, Đèn, Rèm).
-- **Backend & Database (FastAPI trên EC2 & PostgreSQL RDS)** - Xử lý xác thực dữ liệu thu thập qua Pydantic, quản lý lược đồ dữ liệu quan hệ bằng SQLAlchemy/Alembic và xếp hàng các lệnh điều khiển từ xa một cách an toàn.
-- **IoT Simulation & Monitoring (Python Simulator & CloudWatch)** - Mô phỏng lưu lượng đa tòa nhà đồng thời bằng luồng (threading), xử lý các ngoại lệ mạng và giám sát tỷ lệ lỗi API cùng dấu vết kiểm toán.
+## Nội dung workshop
 
-#### Kết quả đạt được
+1. [Tổng quan Workshop](5.1-Workshop-Overview/)
+2. [Điều kiện tiên quyết](5.2-Prerequisites/)
+3. [Kiến trúc và Thiết kế Dịch vụ](5.3-Architecture-and-Service-Design/)
+4. [Thiết lập Hạ tầng AWS](5.4-AWS-Infrastructure-Setup/)
+5. [Triển khai Backend và Tích hợp Cơ sở dữ liệu](5.5-Backend-and-Database/)
+6. [Tích hợp Phần cứng](5.6-Hardware-Integration/)
+7. [Tích hợp Frontend](5.7-Frontend-Integration/)
+8. [Kiểm thử và Xác thực End-to-End](5.8-End-to-End-Testing/)
+9. [Giám sát bằng CloudWatch](5.9-CloudWatch-Monitoring/)
+10. [Chi phí, Bảo mật và Dọn dẹp](5.10-Cost-Security-Cleanup/)
+11. [Kết quả, Thách thức và Hướng phát triển](5.11-Results-Challenges-Future/)
+12. [Bàn giao Dự án](5.12-Project-Handover/)
 
-Khi hoàn thành hướng dẫn dự án này, bạn sẽ có một giải pháp Enterprise IoT Cloud hoạt động đầy đủ với các tính năng sau:
-
-- Quản lý tòa nhà thông minh tập trung trên nhiều vùng miền.
-- Thu thập dữ liệu viễn trắc thời gian thực và bảng điều khiển phân tích lịch sử.
-- Giao tiếp hai chiều hỗ trợ thực thi lệnh từ xa và polling thiết bị.
-- Hạ tầng đám mây được bảo mật với tính năng giới hạn tốc độ API, cô lập security group và kiểm thử độ ổn định dưới tải nặng.
-
-#### Nội dung
-
-1. [Kiến trúc Hệ thống & Nền tảng Hạ tầng Đám mây](5.1-Workshop-overview/)
-2. [Thiết kế Cơ sở dữ liệu & Nền tảng Backend](5.2-Prerequiste/)
-3. [Triển khai REST API (Thu thập Dữ liệu)](5.3-Knowledge-Base/)
-4. [Mô phỏng Thiết bị IoT](5.4-Test-Chatbot/)
-5. [Thực thi Lệnh & Giao tiếp Hai chiều](5.5-Client-Integration/)
-6. [Giao diện Frontend Dashboard & Bảng điều khiển](5.6-Cleanup/)
-7. [Tích hợp Toàn trình, Bảo mật & Bàn giao](5.7-Cleanup/)
+> Sử dụng nhất quán Region Singapore (`ap-southeast-1`). Thay mọi giá trị `<PLACEHOLDER>` bằng thông tin của bạn và không công khai mật khẩu, token, thông tin Wi-Fi hoặc private key.

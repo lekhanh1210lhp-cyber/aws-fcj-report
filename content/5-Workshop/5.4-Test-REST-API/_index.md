@@ -6,79 +6,68 @@ chapter: false
 pre: " <b> 5.4. </b> "
 ---
 
-#### Target
+#### Objectives
 
-After successfully deploying the FastAPI backend and connecting it to PostgreSQL, it is time to verify the data flow. In this section, you will act as the IoT simulator, sending manual telemetry payloads using Postman directly to the EC2 backend to observe how the data ingestion API operates.
+Once the FastAPI backend is connected to PostgreSQL, it is essential to verify that real requests can be accepted, validated, and stored correctly. This section simulates the role of IoT devices sending telemetry data to the API.
 
-We will focus on 2 factors:
+We will focus on two main aspects:
 
-1.  **Data Ingestion:** Does the backend successfully receive and store telemetry data in PostgreSQL?
-2.  **Data Validation:** Does the system correctly apply Pydantic validators to reject malformed JSON payloads?
+1. **Data ingestion:** Confirm that valid requests are accepted and saved to the database.
+2. **Data validation:** Ensure malformed or incomplete payloads are rejected with clear error messages.
 
-#### Implementation Steps
+#### Preparation
 
-**Step 1: Configure Postman Workspace**
+Before testing, make sure the backend service is running on the EC2 instance and that the database connection is working. The API endpoint should be accessible from your local machine.
 
-To start testing, we need to set up the request environment targeting your FastAPI EC2 instance.
+<!-- Insert screenshot: Postman request setup pointing to EC2 public IP -->
+> Placeholder for screenshot: Postman request configured for the telemetry endpoint.
 
-1.  Open the Postman application on your local machine.
-2.  Create a new Request by clicking the **"+"** button or **New > HTTP Request**.
-3.  Set the HTTP method to **POST**.
-4.  Enter the Request URL pointing to your EC2 public IP or Elastic IP (e.g., `http://<EC2-Elastic-IP>:8000/telemetry`).
+#### Step 1: Send a valid payload
 
-![Open Postman Workspace](/images/5-Workshop/5.4-Test-REST-API/01_Postman_Setup.jpg)
+Use Postman to submit a sample telemetry request.
 
-**Step 2: Send Telemetry Payload (Success Case)**
+1. Open Postman and create a new request.
+2. Set the method to **POST**.
+3. Enter the EC2 endpoint, for example `http://<EC2-Elastic-IP>:8000/telemetry`.
+4. In the body tab, select **raw** and **JSON**, then send the following payload:
 
-Now, try sending a valid JSON payload simulating temperature, humidity, and light data.
+```json
+{
+  "building_id": "HN_01",
+  "temperature": 25.4,
+  "humidity": 60,
+  "light": 450,
+  "device_status": "active"
+}
+```
 
-1.  In the Postman request, go to the **Body** tab.
-2.  Select **raw** and ensure the format is set to **JSON**.
-3.  Enter the valid JSON data payload:
-    ```json
-    {
-      "building_id": "HN_01",
-      "temperature": 25.4,
-      "humidity": 60,
-      "light": 450,
-      "device_status": "active"
-    }
-    ```
-4.  Click **Send**.
-5.  **Observe the result:**
-    - The backend will process and validate the data using Pydantic.
-    - It should return a `200 OK` or `201 Created` status with a success message confirming storage in PostgreSQL.
+Expected result: the backend should respond with `200 OK` or `201 Created`, and the record should be stored in the database.
 
-![Successful Payload Test](/images/5-Workshop/5.4-Test-REST-API/02_Valid_Payload.jpg)
+#### Step 2: Send an invalid payload
 
-**Step 3: Test Data Validation (Malformed Case)**
+To verify validation, send a request with an invalid field type.
 
-This is a critical feature to ensure system stability: rejecting incorrect payloads before they reach the database.
+```json
+{
+  "building_id": "HN_01",
+  "temperature": "too_hot",
+  "humidity": 60
+}
+```
 
-1.  Modify your JSON payload to include invalid data types or missing required fields. For example, pass a string for temperature:
-    ```json
-    {
-      "building_id": "HN_01",
-      "temperature": "too_hot",
-      "humidity": 60
-    }
-    ```
-2.  Click **Send**.
-3.  **Observe the result:**
-    - The Pydantic validator will intercept the request.
-    - The system should return a `422 Unprocessable Entity` error.
-    - You will see a detailed error message indicating which specific fields failed validation.
+Expected result: the service should reject the request with `422 Unprocessable Entity` and return a validation error.
 
-![Malformed Payload Test](/images/5-Workshop/5.4-Test-REST-API/03_Malformed_Payload.jpg)
+#### Step 3: Verify through CloudWatch
 
-**Step 4: Verify via CloudWatch Logs**
+After sending both requests, inspect the backend logs in CloudWatch.
 
-To ensure comprehensive system auditing, we verify the backend logs.
+1. Open the AWS Console and navigate to **CloudWatch**.
+2. Open the log group for the EC2 backend.
+3. Confirm that successful requests and validation failures are being recorded.
 
-1.  Access the AWS Console and navigate to **CloudWatch**.
-2.  Find the Log Group associated with your EC2 backend service.
-3.  **Expected Result:**
-    - You should see logs confirming the successful API calls and the error rates generated by the malformed requests.
-    - This ensures full visibility into the API error rates as per the project requirements.
+<!-- Insert screenshot: CloudWatch logs showing successful and rejected API requests -->
+> Placeholder for screenshot: CloudWatch log view for telemetry requests.
 
-![CloudWatch Verification](/images/5-Workshop/5.4-Test-REST-API/04_CloudWatch_Verify.jpg)
+#### Conclusion
+
+This step validates the core behavior of the IoT API: it should accept correct telemetry data, reject invalid input, and leave a clear trace in the monitoring system.
