@@ -126,7 +126,7 @@ These services may be considered in future versions if the project requires a di
 
 ## 4. Solution Architecture
 
-![AWS IoT Monitoring and Control Dashboard Architecture](/images/2-Proposal/Iot_Dashboard_Architecture.png)
+![AWS IoT Monitoring and Control Dashboard Architecture](/images/2-Proposal/IoT_Dashboard_Architecture.png)
 
 ### 4.1 Architecture Components
 
