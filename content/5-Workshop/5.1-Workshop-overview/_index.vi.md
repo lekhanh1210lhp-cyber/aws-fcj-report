@@ -14,23 +14,23 @@ Các phòng nhỏ và phòng thí nghiệm thường vận hành cảm biến v�
 
 | Đối tượng sử dụng | Nhu cầu | Giá trị từ Workshop |
 | :--- | :--- | :--- |
-| Người học Workshop / điện toán đám mây | Triển khai và xác minh một hệ thống AWS đầu cuối | Quy trình có thể tái tạo từ hạ tầng AWS đến ứng dụng, phần cứng, giám sát và bằng chứng |
+| Người học về AWS và điện toán đám mây | Triển khai và xác minh một hệ thống AWS đầu cuối | Quy trình có thể lặp lại, bao quát từ hạ tầng AWS đến ứng dụng, phần cứng, giám sát và bằng chứng |
 | Người vận hành phòng | Xem dữ liệu hiện tại, lịch sử và yêu cầu thay đổi trạng thái thiết bị chấp hành | Một dashboard để theo dõi telemetry và gửi lệnh điều khiển chế độ, quạt, đèn, rèm |
-| Người bảo trì / lập trình viên | Theo dấu lỗi qua phần mềm, cơ sở dữ liệu, mạng và phần cứng | Chuỗi bằng chứng liên kết giữa API, SQL, `systemd`, Serial Monitor và CloudWatch |
+| Người bảo trì / lập trình viên | Lần theo lỗi qua phần mềm, cơ sở dữ liệu, mạng và phần cứng | Chuỗi bằng chứng liên kết API, SQL, `systemd`, Serial Monitor và CloudWatch |
 | Người đánh giá dự án / mentor FCAJ | Đánh giá mức độ phù hợp với AWS, chiều sâu triển khai và đóng góp cá nhân | Quyết định kiến trúc, tiêu chí kiểm thử đo được, các đánh đổi và liên kết bàn giao rõ ràng |
 
 YOLO UNO gửi telemetry môi trường qua HTTP tới FastAPI trên EC2. FastAPI lưu telemetry và trạng thái lệnh trong PostgreSQL. Dashboard đọc dữ liệu mới nhất, dữ liệu lịch sử và tạo lệnh; thiết bị định kỳ kiểm tra lệnh, thực thi rồi gửi ACK.
 
 ## Mức độ phù hợp với FCAJ và AWS
 
-Workshop phù hợp với mục tiêu học tập của FCAJ vì kết hợp kiến trúc đám mây, vận hành Linux, mạng, bảo mật, tích hợp cơ sở dữ liệu, phát triển full-stack, IoT vật lý, kiểm thử, giám sát, viết tài liệu và bàn giao trong một dự án có thể truy vết. AWS không chỉ đóng vai trò nơi lưu trú ứng dụng: EC2, EBS, RDS, VPC, Security Group, IAM Role, CloudWatch và CloudWatch Alarms đều có trách nhiệm cụ thể, cách kiểm tra vận hành, yếu tố chi phí và đánh đổi kiến trúc riêng.
+Workshop phù hợp với mục tiêu học tập của FCAJ vì kết hợp kiến trúc đám mây, vận hành Linux, mạng, bảo mật, cơ sở dữ liệu, phát triển full-stack, IoT vật lý, kiểm thử, giám sát, viết tài liệu và bàn giao trong một dự án có thể truy vết. AWS không chỉ là nơi chạy ứng dụng: EC2, EBS, RDS, VPC, Security Group, IAM Role, CloudWatch và CloudWatch Alarms đều đảm nhiệm một vai trò cụ thể, có cách kiểm tra vận hành, chi phí và đánh đổi kiến trúc riêng.
 
-Phạm vi dự án cũng thể hiện quyết định kỹ thuật có cân nhắc: nhóm tiếp tục sử dụng thiết kế FastAPI/PostgreSQL/HTTP đã triển khai, không tuyên bố sử dụng các dịch vụ serverless hoặc IoT được quản lý khi chúng chưa tồn tại. Những điểm còn thiếu để đưa vào môi trường thực tế được ghi rõ thành hướng cải tiến sau này.
+Phạm vi dự án phản ánh một lựa chọn kỹ thuật có cân nhắc: nhóm tiếp tục dùng thiết kế FastAPI/PostgreSQL/HTTP đã triển khai và không tuyên bố sử dụng các dịch vụ serverless hoặc IoT được quản lý khi chúng chưa có trong hệ thống. Những thành phần còn thiếu để vận hành thực tế được nêu rõ trong phần cải tiến tương lai.
 
 ## Mục tiêu kỹ thuật
 
 1. Nhận telemetry từ phần cứng YOLO UNO thật.
-2. Lấy bản ghi mới nhất và lịch sử theo thời gian của `room_01`.
+2. Lấy bản ghi mới nhất và lịch sử theo thứ tự thời gian của `room_01`.
 3. Điều khiển chế độ, quạt, đèn và rèm bằng tám lệnh mà firmware hỗ trợ.
 4. Theo dõi quá trình hoàn tất lệnh qua trạng thái `Pending` → `Executed` và ACK.
 5. Chạy backend bằng `systemd`, giám sát EC2, RDS và log.
@@ -72,7 +72,7 @@ Mã nguồn có hai cơ chế dựa trên luật, không phải mô hình AI: fr
 | Dữ liệu PostgreSQL | Bằng chứng về bảng và câu truy vấn cho `devices`, `telemetry_logs`, `commands` |
 | YOLO UNO đã tích hợp | Sơ đồ nối dây/GPIO, kết quả biên dịch PlatformIO, telemetry, quá trình thực thi lệnh và ACK trên cổng nối tiếp |
 | Dashboard cục bộ | Dữ liệu mới nhất/lịch sử, yêu cầu điều khiển, ID/trạng thái lệnh trả về và nguồn dữ liệu thật/mô phỏng được phân biệt rõ |
-| Giám sát | Luồng log backend/lỗi, metric EC2/RDS và sáu cấu hình alarm đã được tài liệu hóa |
+| Giám sát | Log truy cập backend, metric EC2/RDS và năm cấu hình alarm đã được ghi nhận |
 | Gói kiểm thử | Ma trận T01-T15 có trạng thái Pass/Fail/Not Run, liên kết bằng chứng, người phụ trách và kết quả chạy lại |
 | Gói bàn giao | Workshop song ngữ, hạn chế đã biết, mã commit của nguồn/phiên bản triển khai và danh sách bàn giao có xác nhận |
 
@@ -86,15 +86,15 @@ Mã nguồn có hai cơ chế dựa trên luật, không phải mô hình AI: fr
 | S04 | Điều khiển vật lý | Sáu lệnh điều khiển trực tiếp đều được kiểm thử một lần, kèm ID lệnh và bằng chứng vật lý |
 | S05 | Điều khiển chế độ | `MODE_AUTO` và `MODE_MANUAL` được xác minh qua hành vi firmware hoặc dữ liệu Serial Monitor |
 | S06 | Hoàn tất lệnh | Cùng một ID lệnh được ghi nhận trước ở `Pending`, sau đó ở `Executed` sau ACK |
-| S07 | Giám sát | Hai log group của backend, các metric EC2/RDS cần thiết và sáu cấu hình alarm đều hiển thị |
+| S07 | Giám sát | Log truy cập backend, các metric EC2/RDS cần thiết và năm cấu hình alarm đều hiển thị |
 | S08 | Khả năng tái tạo và an toàn | Người khác có thể làm theo tài liệu mà không thấy thông tin xác thực; mọi dòng T01-T15 đều có trạng thái |
 
-Các tiêu chí trên xác định điều kiện nghiệm thu; không được kết luận kiểm thử đạt cho đến khi đính kèm đầy đủ bằng chứng tương ứng.
+Các tiêu chí trên là điều kiện nghiệm thu. Chỉ kết luận một phép kiểm thử đạt khi đã đính kèm đầy đủ bằng chứng tương ứng.
 
 <!-- TODO IMAGE: /images/5-Workshop/5.1-overview/end-to-end-system-overview.png — Toàn cảnh đầu cuối gồm dashboard, backend trên EC2, trạng thái lệnh trong RDS và phần cứng YOLO UNO; không để lộ thông tin xác thực. -->
 
-## Điểm kiểm tra sự cố
+## Gợi ý xử lý sự cố
 
-Nếu chưa xác định được thành phần gây lỗi, hãy theo dấu một yêu cầu qua thẻ Network của trình duyệt, log FastAPI, PostgreSQL, Serial Monitor và trạng thái ACK. Không đánh dấu đạt cho kết quả chưa được xác minh.
+Nếu chưa xác định được thành phần gây lỗi, hãy lần theo một yêu cầu qua thẻ Network của trình duyệt, log FastAPI, PostgreSQL, Serial Monitor và trạng thái ACK. Không đánh dấu đạt khi kết quả chưa được xác minh.
 
 Tiếp theo: [chuẩn bị tài khoản, công cụ và phần cứng](../5.2-Prerequisites/).

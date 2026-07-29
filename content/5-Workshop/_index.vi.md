@@ -6,7 +6,7 @@ chapter: false
 pre: " <b> 5. </b> "
 ---
 
-Workshop thực hành này xây dựng quy trình đầu cuối cho thiết bị vật lý `room_01`: YOLO UNO đọc cảm biến DHT20 và cảm biến ánh sáng analog; FastAPI lưu dữ liệu đo (telemetry) và lệnh điều khiển trong Amazon RDS for PostgreSQL; React hiển thị dữ liệu và gửi lệnh; sau khi điều khiển quạt, đèn hoặc rèm, thiết bị gửi ACK để xác nhận đã thực thi.
+Workshop này hướng dẫn xây dựng một quy trình đầu cuối cho thiết bị có mã `room_01`: YOLO UNO đọc dữ liệu từ DHT20 và cảm biến ánh sáng analog; FastAPI lưu telemetry cùng lệnh điều khiển vào Amazon RDS for PostgreSQL; React hiển thị dữ liệu và gửi lệnh; sau khi điều khiển quạt, đèn hoặc rèm, thiết bị gửi ACK để xác nhận đã thực thi.
 
 ## Mục tiêu và kết quả cuối
 
@@ -19,9 +19,9 @@ Sau Workshop, bạn có thể:
 - xác minh lệnh chuyển từ `Pending` sang `Executed`; và
 - thu thập bằng chứng vận hành của EC2, RDS và backend trên CloudWatch.
 
-Kết quả mong đợi là một mô hình thử nghiệm có thể tái tạo cho `room_01`, không phải hệ thống quản lý tòa nhà ở quy mô doanh nghiệp. Dự kiến cần **8-12 giờ tập trung** sau khi đã chuẩn bị mã nguồn ứng dụng và tài khoản AWS.
+Kết quả cuối cùng là một mô hình thử nghiệm có thể tái tạo cho `room_01`, không phải hệ thống quản lý tòa nhà ở quy mô doanh nghiệp. Sau khi chuẩn bị sẵn mã nguồn và tài khoản AWS, người học dự kiến cần khoảng **8–12 giờ** để hoàn thành.
 
-## Bản đồ Workshop
+## Nội dung Workshop
 
 1. [5.1 Tổng quan Workshop](5.1-Workshop-overview/)
 2. [5.2 Điều kiện tiên quyết](5.2-Prerequisites/)
@@ -40,8 +40,8 @@ Kết quả mong đợi là một mô hình thử nghiệm có thể tái tạo 
 
 ![Kiến trúc AWS IoT Monitoring and Control Dashboard](/images/5-Workshop/5.3-architecture/aws-iot-dashboard-architecture.png)
 
-*Hình 5-1. Sơ đồ lấy từ kho mã nguồn ứng dụng: người dùng dashboard, React frontend chạy cục bộ và YOLO UNO nằm ngoài AWS; EC2 và RDS nằm trong VPC; IAM và CloudWatch là các dịch vụ cấp tài khoản hoặc khu vực, nằm ngoài ranh giới VPC.*
+*Hình 5-1. Sơ đồ kiến trúc từ kho mã nguồn ứng dụng: người dùng dashboard, React frontend chạy cục bộ và YOLO UNO nằm ngoài AWS; EC2 và RDS nằm trong VPC; IAM và CloudWatch hoạt động ở cấp tài khoản hoặc khu vực nên không nằm trong ranh giới VPC.*
 
-Các dịch vụ AWS đã dùng gồm **Amazon EC2, Amazon EBS, Amazon RDS for PostgreSQL, Amazon VPC, subnet, Security Group, AWS IAM Role, Amazon CloudWatch và CloudWatch Alarms**. AWS IoT Core, Lambda, API Gateway, S3, SNS, ECS/ECR, Cognito, CloudFront và DynamoDB không thuộc kiến trúc hiện tại.
+Kiến trúc hiện sử dụng **Amazon EC2, Amazon EBS, Amazon RDS for PostgreSQL, Amazon VPC, subnet, Security Group, AWS IAM Role, Amazon CloudWatch và CloudWatch Alarms**. AWS IoT Core, Lambda, API Gateway, S3, SNS, ECS/ECR, Cognito, CloudFront và DynamoDB chưa được sử dụng.
 
 Bắt đầu tại [Tổng quan Workshop](5.1-Workshop-overview/).

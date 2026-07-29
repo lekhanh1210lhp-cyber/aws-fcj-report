@@ -8,7 +8,7 @@ pre: " <b> 5.5. </b> "
 
 ## Tổng quan và mục tiêu
 
-Cài ứng dụng Python trên EC2 Amazon Linux, kết nối với cơ sở dữ liệu riêng `iot_dashboard`, xác minh API theo mã nguồn và duy trì Uvicorn bằng dịch vụ `aws-iot-backend`. Tài liệu vận hành của ứng dụng dùng tài khoản `ec2-user`, thư mục backend `/home/ec2-user/aws-iot-dashboard/backend`, môi trường ảo `venv` và điểm vào `main:app`.
+Triển khai ứng dụng Python trên EC2 Amazon Linux, kết nối tới cơ sở dữ liệu riêng `iot_dashboard`, đối chiếu API với mã nguồn và chạy Uvicorn ổn định bằng dịch vụ `aws-iot-backend`. Quy trình vận hành sử dụng tài khoản `ec2-user`, thư mục backend `/home/ec2-user/aws-iot-dashboard/backend`, môi trường ảo `venv` và điểm vào `main:app`.
 
 ## Bước 1 - Kết nối và cài công cụ
 
@@ -40,7 +40,7 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Mã nguồn đã kiểm tra có file `backend/main.py` và xuất đối tượng `app`; vì vậy điểm vào của Uvicorn là `main:app`.
+Qua kiểm tra, file `backend/main.py` có xuất đối tượng `app`; vì vậy điểm vào Uvicorn là `main:app`.
 
 ## Bước 3 - Tạo file biến môi trường
 
@@ -56,7 +56,7 @@ Nếu backend dùng `sslmode=verify-full`, hãy tải gói chứng chỉ CA hi�
 DATABASE_URL=postgresql://<DB_USER>:<DB_PASSWORD>@<RDS_ENDPOINT>:5432/iot_dashboard?sslmode=verify-full&sslrootcert=<ABSOLUTE_CA_PATH>/global-bundle.pem
 ```
 
-Mã hóa URL các ký tự đặc biệt trong `<DB_PASSWORD>`. Không commit file `.env` hoặc mật khẩu thật.
+Nếu `<DB_PASSWORD>` chứa ký tự đặc biệt, hãy mã hóa các ký tự đó theo chuẩn URL. Không commit file `.env` hoặc mật khẩu thật.
 
 ## Bước 4 - Kiểm tra PostgreSQL
 
@@ -73,13 +73,13 @@ SELECT current_database(), current_user;
 \dt
 ```
 
-Khởi tạo schema SQLAlchemy bằng lệnh được định nghĩa trong mã nguồn:
+Khởi tạo lược đồ SQLAlchemy bằng lệnh được định nghĩa trong mã nguồn:
 
 ```bash
 python -m app.database.init_db
 ```
 
-Lệnh này gọi `Base.metadata.create_all` và dự kiến tạo ba bảng `devices`, `telemetry_logs`, `commands`. Xác nhận bằng `\dt` và `\d <table_name>`; dự án hiện không có quy trình migration bằng Alembic.
+Lệnh này gọi `Base.metadata.create_all` để tạo ba bảng `devices`, `telemetry_logs`, `commands`. Hãy xác nhận bằng `\dt` và `\d <table_name>`; dự án hiện chưa có quy trình migration bằng Alembic.
 
 ## Bước 5 - Chạy Uvicorn thủ công
 
@@ -97,7 +97,7 @@ curl -i http://127.0.0.1:8000/api/health
 curl -s http://127.0.0.1:8000/openapi.json
 ```
 
-Xác nhận tám route đã nêu ở mục 5.3 và xem schema yêu cầu do Pydantic sinh ra trước khi tạo dữ liệu telemetry hoặc lệnh mẫu.
+Đối chiếu tám route đã nêu ở mục 5.3 và xem lược đồ yêu cầu do Pydantic tạo ra trước khi gửi telemetry hoặc lệnh mẫu.
 
 ## Bước 6 - Tạo `aws-iot-backend.service`
 
@@ -151,7 +151,7 @@ sudo systemctl restart aws-iot-backend
 curl -i http://127.0.0.1:8000/api/health
 ```
 
-Chỉ lấy thay đổi từ nhánh đã được duyệt. Khi mô hình dữ liệu thay đổi, chạy lại `python -m app.database.init_db` và rà soát tính tương thích của lược đồ trước khi khởi động lại. Không dùng `git reset --hard` làm lối tắt triển khai.
+Chỉ cập nhật từ nhánh đã được duyệt. Khi mô hình dữ liệu thay đổi, hãy chạy lại `python -m app.database.init_db` và kiểm tra tính tương thích của lược đồ trước khi khởi động lại dịch vụ. Không dùng `git reset --hard` như một cách triển khai nhanh.
 
 ## Kết quả mong đợi
 
@@ -164,13 +164,13 @@ Dịch vụ `aws-iot-backend` ở trạng thái `active (running)`, `GET /api/he
 
 | Hiện tượng | Chẩn đoán và khắc phục |
 | :--- | :--- |
-| Bị từ chối kết nối | Xác nhận RDS/đúng cổng hoặc Uvicorn đang chạy và lắng nghe |
-| Hết thời gian chờ | Kiểm tra nguồn của RDS SG là `iot-ec2-sg`, subnet, endpoint và khu vực |
+| Bị từ chối kết nối | Xác nhận đúng RDS và cổng kết nối; nếu gọi API, kiểm tra Uvicorn đang chạy và lắng nghe |
+| Hết thời gian chờ | Kiểm tra nguồn của RDS SG là `ec2-rds-1`, subnet, endpoint và khu vực |
 | Sai `DATABASE_URL` | Kiểm tra tên cơ sở dữ liệu, người dùng, cách mã hóa; nạp đúng `.env` mà `systemd` sử dụng |
 | curl cục bộ thành công, truy cập từ xa thất bại | Bind `0.0.0.0`, kiểm tra cổng 8000 trong EC2 SG và IP công khai |
 | `systemd` không khởi động được | Xem `systemctl status`, `journalctl`; kiểm tra tài khoản, đường dẫn, module và quyền |
 | Cổng đã được sử dụng | Chạy `sudo ss -ltnp | grep :8000` và dừng tiến trình ngoài dự kiến |
 | Xác minh SSL thất bại | Dùng đúng CA bundle, đường dẫn tuyệt đối, quyền file và tên máy chủ endpoint |
-| Thiếu bảng | Chạy lệnh khởi tạo/migration do mã nguồn định nghĩa; không tự tạo schema khác |
+| Thiếu bảng | Chạy lệnh khởi tạo hoặc migration do mã nguồn định nghĩa; không tự tạo một lược đồ khác |
 
 Tiếp theo: [tích hợp phần cứng YOLO UNO](../5.6-Hardware-Integration/).

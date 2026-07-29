@@ -8,15 +8,15 @@ pre: " <b> 5.2. </b> "
 
 ## Mục tiêu
 
-Chuẩn bị tài khoản AWS, công cụ trên máy cục bộ, phần cứng, thông tin truy cập và kiến thức nền trước khi tạo tài nguyên có tính phí. Workshop lấy khu vực **Asia Pacific (Singapore), `ap-southeast-1`** làm mốc; hãy xác nhận khu vực triển khai thực tế và đặt EC2, RDS, VPC, CloudWatch trong cùng khu vực đó.
+Chuẩn bị tài khoản AWS, công cụ trên máy cục bộ, phần cứng, thông tin truy cập và kiến thức nền trước khi tạo tài nguyên có tính phí. Workshop dùng **Asia Pacific (Singapore), `ap-southeast-1`** làm khu vực mặc định; trước khi bắt đầu, hãy xác nhận khu vực triển khai thực tế và bảo đảm EC2, RDS, VPC, CloudWatch đều nằm trong khu vực đó.
 
 ## Bước 1 - Xác minh quyền truy cập AWS
 
 - Tài khoản AWS có quyền xem thông tin thanh toán và đã bật MFA.
 - Quyền truy cập theo nguyên tắc đặc quyền tối thiểu cho EC2, EBS, RDS, VPC, Security Group, thao tác gắn IAM Role, CloudWatch và CloudWatch Alarms.
-- Quyền chuyển IAM Role đã được phê duyệt cho EC2 (`iam:PassRole`). Workshop không yêu cầu `AdministratorAccess`.
+- Có quyền gán IAM Role đã được phê duyệt cho EC2 (`iam:PassRole`). Workshop không yêu cầu `AdministratorAccess`.
 - Cặp khóa EC2 được lưu trên máy cục bộ; tuyệt đối không commit file `.pem` hoặc `.key`.
-- Biết public IP của quản trị viên để tạo rule SSH: `<ADMIN_IP>/32`.
+- Biết địa chỉ IP công khai của quản trị viên để tạo rule SSH: `<ADMIN_IP>/32`.
 
 Trước khi cấp phát, hãy ghi lại khu vực, CIDR của VPC, CIDR của public subnet, hai DB subnet thuộc hai Availability Zone, tiền tố đặt tên tài nguyên và người chịu trách nhiệm dọn dẹp.
 
@@ -56,7 +56,7 @@ Không cấp nguồn trực tiếp cho động cơ hoặc tải relay từ GPIO.
 
 Mã nguồn ứng dụng nằm trong kho riêng `aws-iot-dashboard`. Kho mã nguồn có `requirements.txt` của backend, `package.json` của frontend, `platformio.ini`, `boards/yolo_uno.json` và `include/secrets.example.h`. File `.gitignore` đã loại trừ `.env`, `.pem`, môi trường ảo, đầu ra biên dịch và `node_modules`; trước khi chia sẻ, cần xác nhận `hardware/include/secrets.h` vẫn chưa được Git theo dõi.
 
-Mã nguồn đã được rà soát xác nhận điểm vào Uvicorn là `main:app`, tài khoản Amazon Linux là `ec2-user`, môi trường ảo là `venv`, các bảng gồm `devices`, `telemetry_logs`, `commands`, còn sơ đồ GPIO được ghi tại mục 5.6.
+Qua rà soát mã nguồn, đã xác nhận điểm vào Uvicorn là `main:app`, tài khoản Amazon Linux là `ec2-user`, môi trường ảo là `venv`, ba bảng dữ liệu gồm `devices`, `telemetry_logs`, `commands`; sơ đồ GPIO được trình bày tại mục 5.6.
 
 ## Bước 5 - Xác nhận kiến thức tiên quyết
 
@@ -73,11 +73,11 @@ Người học nên hiểu các phương thức và mã trạng thái REST, truy
 | Terraform | Không | Mã nguồn đã rà soát không có cấu hình hoặc state Terraform |
 | CloudFormation | Không | Workshop không tạo stack CloudFormation |
 
-Trong tương lai, người học có thể bổ sung Infrastructure as Code sau khi được phê duyệt; khi đó phải tài liệu hóa riêng các tài nguyên và quy trình dọn dẹp. Việc chưa cài AWS CLI, SAM, CDK hoặc Terraform không phải điều kiện chặn Workshop hiện tại.
+Sau này, người học có thể bổ sung Infrastructure as Code khi được phê duyệt; khi đó cần tài liệu hóa riêng danh sách tài nguyên và quy trình dọn dẹp. Ở phiên bản hiện tại, việc chưa cài AWS CLI, SAM, CDK hoặc Terraform không cản trở quá trình thực hành.
 
-## Bước 7 - Hoàn tất cổng sẵn sàng
+## Bước 7 - Kiểm tra mức độ sẵn sàng
 
-- [ ] Đã thống nhất Khu vực AWS và quy tắc đặt tên.
+- [ ] Đã thống nhất khu vực AWS và quy tắc đặt tên.
 - [ ] Quyền AWS theo nguyên tắc đặc quyền tối thiểu hoạt động.
 - [ ] Biết `<ADMIN_IP>` và vị trí EC2 key.
 - [ ] Hoàn tất mọi lệnh kiểm tra version.
@@ -89,7 +89,7 @@ Trong tương lai, người học có thể bổ sung Infrastructure as Code sau
 
 ## Kết quả mong đợi
 
-Chỉ tiếp tục khi mọi điều kiện bắt buộc ở trên đã hoàn tất. Nếu thiếu kho mã nguồn hoặc sơ đồ chân firmware chính xác, hãy ghi đây là vướng mắc trong bàn giao; không tự suy đoán giá trị và không cấp nguồn cho mạch.
+Chỉ tiếp tục khi mọi điều kiện bắt buộc ở trên đã hoàn tất. Nếu thiếu kho mã nguồn hoặc sơ đồ chân firmware chính xác, hãy ghi nhận đây là vướng mắc trong bàn giao; không tự điền giá trị theo suy đoán và không cấp nguồn cho mạch.
 
 ## Xử lý sự cố
 

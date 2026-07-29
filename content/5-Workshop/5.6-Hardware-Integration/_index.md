@@ -10,19 +10,54 @@ pre: " <b> 5.6. </b> "
 
 YOLO UNO is the primary device for this workshop. It reads DHT20 temperature/humidity and a raw analog light value, controls fan, light/relay, and curtain servo outputs, sends telemetry, polls a pending command, executes it once, and sends ACK.
 
+## Introduction to YOLO UNO
+
+YOLO UNO is a development board designed with the form factor and pin layout of the traditional Arduino Uno while using the **ESP32-S3** microcontroller from Espressif. The board provides **16 MB of Flash memory** and up to **8 MB of PSRAM**, making it suitable for embedded, IoT, and on-device data-processing applications.
+
+In addition to its Arduino Uno-compatible size and pin layout, YOLO UNO includes **12 integrated Grove ports**. These connectors simplify the process of attaching sensors and actuators without requiring a breadboard or multiple individual jumper wires.
+
+In the **AWS IoT Monitoring and Control Dashboard** project, YOLO UNO:
+
+- reads temperature and humidity from the DHT20 sensor;
+- reads raw ADC values from the analog light sensor;
+- controls the two-pin fan module;
+- controls the LED or relay light module;
+- controls the curtain servo;
+- displays system status on an LCD 1602 I2C;
+- connects to Wi-Fi and sends telemetry to the FastAPI backend; and
+- polls the backend for commands, executes them, and sends acknowledgements.
+
+Most sensors and actuators are connected through the Grove ports in the center of the board. The curtain servo uses the three-pin **D11 GVS port**, which is mapped to **GPIO38** in the firmware.
+
+The physical prototype below shows the YOLO UNO and the connected display, sensors, fan, and curtain-control servo used by the project.
+
+![YOLO UNO hardware prototype with sensors and actuators](/images/5-Workshop/5.6-hardware/yolo-uno-hardware-setup.png)
+*Figure 10. The physical hardware prototype consisting of YOLO UNO, an LCD display, temperature and humidity sensing, a light sensor, a fan, and a curtain-control servo.*
+
+> **Note:** This image was extracted from a video, so some details may appear slightly blurred. See the [full demonstration video on Google Drive](https://drive.google.com/file/d/1T97dUY58hbT2ppxvg7ESR12Jg9BA828W/view?usp=sharing) for a clearer view.
+
 ## Step 1 - Wire the source-defined hardware
 
 The active `hardware/src/main.cpp` defines this map; it takes precedence over stale prose elsewhere in the source repository:
 
-| Component/signal | Firmware definition | YOLO UNO connection/behavior |
-| :--- | :--- | :--- |
-| Analog light sensor | `LIGHT_SENSOR_PIN` | GPIO 1, Grove A1-A0/A0 |
-| DHT20 and LCD1602 I2C | `I2C_SDA`, `I2C_SCL` | SDA GPIO 11, SCL GPIO 12 |
-| Fan | `PIN_FAN`, `PIN_FAN_CONTROL` | GPIO 10 and GPIO 17; GPIO 10 HIGH with GPIO 17 LOW runs the fan |
-| Light/relay | `PIN_LIGHT` | GPIO 6 |
-| Curtain servo | `PIN_SERVO` | GPIO 38; close 0°, open 90° |
+The YOLO UNO pinout image has not yet been provided. Do not treat a pinout as a complete wiring diagram; use the verified table below together with the firmware definitions.
 
-The firmware auto-detects LCD1602 I2C addresses `0x21`, `0x27`, and `0x3F`. Do not add ultrasonic or presence sensors. Use a suitable actuator supply and a common ground; never draw fan or servo current directly from a GPIO.
+<!-- TODO: Add yolo-uno-pinout-gpio-mapping.png -->
+
+### Hardware Port Mapping
+
+| Device | YOLO UNO Physical Port | Firmware Pin |
+| :--- | :--- | :--- |
+| Analog light sensor | Grove `A1-A0` | `A0 / GPIO1` |
+| Two-control-pin fan | Grove `D8-D7` | `D8 / GPIO17`, `D7 / GPIO10` |
+| LED or relay light | Grove `D4-D3` | `D3 / GPIO6` |
+| Curtain servo | `D11` GVS port | `D11 / GPIO38` |
+| DHT20 | Grove `I2C1` | `SDA / GPIO11`, `SCL / GPIO12` |
+| LCD 1602 I2C | Grove `I2C2` | `SDA / GPIO11`, `SCL / GPIO12` |
+
+DHT20 is connected to Grove `I2C1`, while LCD 1602 uses Grove `I2C2`. Both ports share SDA/GPIO11 and SCL/GPIO12 on the same I2C bus. DHT20 uses address `0x38`; the firmware auto-detects the LCD at `0x21`, `0x27`, or `0x3F`. If the LCD requires 5 V, use a bidirectional logic-level converter and never connect a 5 V pull-up directly to an ESP32-S3 GPIO. The modules share the I2C bus; they are not wired directly to each other.
+
+The firmware does not include PIR, ultrasonic sensors, buzzers, or MQTT. Use a suitable actuator supply and a common ground; never draw fan or servo current directly from a GPIO.
 
 ## Step 2 - Prepare PlatformIO
 
@@ -31,7 +66,7 @@ Open the hardware project in VS Code. Confirm:
 - the YOLO UNO / ESP32-S3 board JSON exists and is referenced correctly;
 - `platformio.ini` selects the intended environment and libraries;
 - Serial Monitor baud is `115200`;
-- the environment is `yolo_uno` on ESP32-S3 with the source-defined 8 MB board configuration;
+- the environment is `yolo_uno` on ESP32-S3;
 - ArduinoJson, ESP32Servo, DHT20, and LiquidCrystal_I2C dependencies resolve;
 - `include/secrets.example.h` is committed; and
 - `include/secrets.h` is local and ignored.
@@ -52,7 +87,7 @@ Never publish the real Wi-Fi password. If EC2 is stopped and started, re-check `
 
 1. Initialize I2C and confirm the DHT20 responds.
 2. Read temperature and humidity; reject invalid/NaN readings.
-3. Read the light ADC value. Call it **analog light value**, not Lux, until the source contains a calibrated conversion.
+3. Read and report the **raw analog light value** until the source contains a calibrated conversion.
 4. Initialize fan and light outputs to a safe state.
 5. Attach the servo and test close at 0° and open at 90°.
 6. Confirm the LCD is detected at one of the three supported addresses.
@@ -76,7 +111,7 @@ The firmware serializes the exact camelCase aliases accepted by the backend:
 }
 ```
 
-`lightIntensity` is a raw analog value, not calibrated Lux. The source sends telemetry every 5000 ms, polls commands every 2000 ms, updates the LCD every 2000 ms, retries Wi-Fi every 10000 ms with a 20000 ms connection timeout, and uses a 7000 ms HTTP timeout.
+`lightIntensity` is a raw analog value. The source sends telemetry every 5000 ms, polls commands every 2000 ms, updates the LCD every 2000 ms, retries Wi-Fi every 10000 ms with a 20000 ms connection timeout, and uses a 7000 ms HTTP timeout.
 
 ```text
 YOLO UNO read → JSON serialize → POST /api/telemetry → check HTTP status → wait configured interval
@@ -116,13 +151,29 @@ If ACK fails after the actuator succeeds, retry the ACK without applying the act
 
 In a PlatformIO terminal:
 
-```bash
-pio run
+```powershell
+pio run -e yolo_uno
+```
+
+Building the firmware does not require the board to be connected through USB. A successful build produces `firmware.bin` and ends with:
+
+```text
+SUCCESS
+```
+
+The screenshot below shows that the firmware compiled successfully.
+
+![Successful YOLO UNO firmware build with PlatformIO](/images/5-Workshop/5.6-hardware/platformio-firmware-build.png)
+*Figure 12. The YOLO UNO firmware was successfully compiled with PlatformIO using the `yolo_uno` environment, producing `firmware.bin` with a `SUCCESS` result.*
+
+Firmware upload and Serial Monitor access require the YOLO UNO board to be connected to the computer:
+
+```powershell
 pio run --target upload
 pio device monitor --baud 115200
 ```
 
-Expected Serial Monitor sequence, without fabricated fixed sensor values:
+When the board is connected and running, an expected Serial Monitor sequence is:
 
 ```text
 [wifi] connected
@@ -134,11 +185,7 @@ Expected Serial Monitor sequence, without fabricated fixed sensor values:
 
 ## Expected Result
 
-YOLO UNO reads DHT20 and the analog light sensor, updates LCD1602, posts the exact telemetry schema every configured interval, receives each supported command once, applies safe actuator state, and changes the matching backend command from `Pending` to `Executed` through ACK. Serial evidence contains no Wi-Fi password or unredacted public endpoint.
-
-<!-- TODO IMAGE: /images/5-Workshop/5.6-hardware/yolo-uno-hardware-setup.png — Full YOLO UNO setup with DHT20, analog light sensor, LCD1602, fan, light/relay, and curtain servo; do not expose Wi-Fi credentials. -->
-<!-- TODO IMAGE: /images/5-Workshop/5.6-hardware/hardware-wiring-gpio-mapping.png — Annotated wiring close-up showing GPIO 1, 6, 10, 11, 12, 17, and 38 plus safe power/common ground. -->
-<!-- TODO IMAGE: /images/5-Workshop/5.6-hardware/platformio-serial-monitor.png — PlatformIO Serial Monitor showing Wi-Fi, telemetry, one command execution, and ACK; redact IPs and credentials. -->
+PlatformIO compiles the `yolo_uno` environment successfully and creates `firmware.bin`. With the board connected and the remaining integration checks completed, YOLO UNO reads DHT20 and the analog light sensor, updates LCD1602, posts the exact telemetry schema, executes each supported command once, and changes the matching backend command from `Pending` to `Executed` through ACK. Serial evidence must not contain a Wi-Fi password or an unredacted public endpoint.
 
 ## Troubleshooting
 

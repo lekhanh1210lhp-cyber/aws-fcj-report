@@ -10,7 +10,7 @@ pre: " <b> 5.3. </b> "
 
 ![Kiến trúc AWS IoT Monitoring and Control Dashboard](/images/5-Workshop/5.3-architecture/aws-iot-dashboard-architecture.png)
 
-*Hình 5-2. Sơ đồ được sao chép từ kho mã nguồn ứng dụng, thể hiện ranh giới dịch vụ, kết nối EC2-RDS, các đường giao tiếp HTTP của thiết bị và luồng giám sát CloudWatch.*
+*Hình 5-2. Sơ đồ kiến trúc từ kho mã nguồn ứng dụng, thể hiện ranh giới dịch vụ, kết nối EC2–RDS, giao tiếp HTTP của thiết bị và luồng giám sát qua CloudWatch.*
 
 Người dùng dashboard, React + Vite frontend chạy trên máy cục bộ và YOLO UNO nằm ngoài AWS. Trong AWS Cloud, VPC chứa public subnet dành cho EC2 và DB Subnet Group dành cho RDS. EBS là ổ đĩa gốc của EC2. Hai Security Group của EC2 và RDS kiểm soát lưu lượng mạng. IAM Role thuộc phạm vi tài khoản AWS, còn CloudWatch là dịch vụ theo khu vực; cả hai đều không nằm bên trong VPC.
 
@@ -23,7 +23,7 @@ Người dùng dashboard, React + Vite frontend chạy trên máy cục bộ và
 | Amazon EBS | Ổ đĩa gốc lưu trữ bền vững, gắn với EC2 |
 | Amazon RDS for PostgreSQL | Lưu telemetry và trạng thái lệnh theo mô hình quan hệ |
 | Amazon VPC và subnet | Ranh giới mạng cho EC2 và DB Subnet Group |
-| Security Group | Các quy tắc có trạng thái cho SSH/API và lưu lượng từ EC2 tới RDS |
+| Security Group | Tường lửa có trạng thái cho SSH/API và lưu lượng từ EC2 tới RDS |
 | AWS IAM Role | Cấp quyền tạm thời để EC2 gửi dữ liệu giám sát |
 | CloudWatch Agent | Phần mềm trên EC2 thu thập metric của hệ điều hành khách và file log |
 | Amazon CloudWatch/Alarms | Lưu metric/log và đánh giá các ngưỡng |
@@ -40,7 +40,7 @@ Dự án lựa chọn các dịch vụ AWS dựa trên bốn tiêu chí chính:
 3. Có thể giám sát, kiểm thử và vận hành trực tiếp.
 4. Có chi phí hợp lý cho môi trường học tập và trình diễn.
 
-Không phải dịch vụ serverless nào cũng cần thiết cho trường hợp sử dụng này. Hệ thống hiện tại chạy FastAPI liên tục, kết nối PostgreSQL và giao tiếp với YOLO UNO qua REST API sử dụng HTTP. Vì vậy, nhóm chọn Amazon EC2 và Amazon RDS thay vì thiết kế lại toàn bộ hệ thống theo Lambda, API Gateway và DynamoDB.
+Không phải dịch vụ serverless nào cũng cần thiết cho bài toán này. Hệ thống hiện chạy FastAPI liên tục, kết nối PostgreSQL và giao tiếp với YOLO UNO qua REST API trên HTTP. Vì vậy, nhóm chọn Amazon EC2 và Amazon RDS thay vì thiết kế lại toàn bộ hệ thống theo Lambda, API Gateway và DynamoDB.
 
 ### Các dịch vụ được lựa chọn
 
@@ -114,7 +114,7 @@ Nhờ đó, nhóm có thể chứng minh hệ thống không chỉ hoạt độn
 | **AWS IoT Core** | YOLO UNO hiện giao tiếp trực tiếp với FastAPI bằng REST API qua HTTP. MQTT và chứng chỉ thiết bị là các lựa chọn có thể xem xét sau này |
 | **Amazon SQS** | Luồng lệnh hiện dùng bản ghi `Pending` trong PostgreSQL và cơ chế thăm dò của thiết bị; chưa triển khai hàng đợi, bên gửi hoặc bên nhận SQS |
 
-Việc không sử dụng các dịch vụ trên không có nghĩa chúng không phù hợp với IoT. Đây là quyết định giới hạn phạm vi để nhóm tập trung vào luồng end-to-end giữa phần cứng, REST API, PostgreSQL, dashboard và CloudWatch.
+Việc chưa sử dụng các dịch vụ trên không có nghĩa chúng không phù hợp với IoT. Đây là quyết định giới hạn phạm vi, giúp nhóm tập trung vào luồng đầu cuối giữa phần cứng, REST API, PostgreSQL, dashboard và CloudWatch.
 
 ### Đánh giá về chi phí và độ đơn giản
 
@@ -126,9 +126,9 @@ Kiến trúc hiện tại ưu tiên khả năng quan sát và triển khai trự
 - **Giá trị học tập:** Người học có thể thực hành Linux, `systemd`, REST API, PostgreSQL, IAM, Security Group và CloudWatch trong cùng một dự án.
 - **Khả năng mở rộng:** Kiến trúc có thể phục vụ thêm một số thiết bị, nhưng khi mở rộng cần bổ sung xác thực, HTTPS, cân bằng tải hoặc kiến trúc hướng sự kiện.
 
-## Đặc tả API đã được xác minh
+## Đặc tả API đã được đối chiếu
 
-Mã nguồn FastAPI trong `backend/main.py` và `backend/app/api/` xác nhận các route sau:
+Qua đối chiếu `backend/main.py` và `backend/app/api/`, FastAPI cung cấp các route sau:
 
 | Method | Route | Thành phần gọi |
 | :--- | :--- | :--- |
@@ -145,8 +145,8 @@ Firmware hỗ trợ `MODE_AUTO`, `MODE_MANUAL`, `FAN_ON`, `FAN_OFF`, `LIGHT_ON`,
 
 ## Luồng dữ liệu
 
-1. **Telemetry:** YOLO UNO gửi các trường camelCase → alias Pydantic ánh xạ sang snake_case → SQLAlchemy ghi vào `telemetry_logs` trên RDS → API mới nhất/lịch sử → dashboard.
-2. **Lệnh:** dashboard tạo lệnh → backend ghi `commands.state = "Pending"` → route `commands/latest` thực tế trả lệnh chờ cũ nhất trước (FIFO) → phần cứng thực thi.
+1. **Telemetry:** YOLO UNO gửi các trường camelCase → alias của Pydantic ánh xạ sang snake_case → SQLAlchemy ghi vào `telemetry_logs` trên RDS → API trả dữ liệu mới nhất/lịch sử → dashboard hiển thị.
+2. **Lệnh:** dashboard tạo lệnh → backend ghi `commands.state = "Pending"` → route `commands/latest` hiện trả lệnh chờ cũ nhất trước theo FIFO → phần cứng thực thi.
 3. **ACK:** thiết bị gửi ID lệnh → backend chuyển lệnh đó sang `Executed` → telemetry tiếp theo phản ánh trạng thái thiết bị chấp hành. Dịch vụ ACK hiện chỉ tìm theo ID lệnh; kiểm tra lệnh có thuộc đúng thiết bị hay không vẫn là điểm cần gia cố.
 4. **Giám sát:** metric mặc định của EC2 cùng metric/log do agent thu thập được gửi tới CloudWatch; RDS cung cấp metric dịch vụ; alarm đánh giá các ngưỡng đã cấu hình.
 
@@ -165,7 +165,7 @@ Các mô hình cơ sở dữ liệu định nghĩa ba bảng `devices`, `telemet
 | EC2 Security Group | RDS Security Group | 5432 | Chỉ PostgreSQL |
 | EC2/RDS | CloudWatch | HTTPS | Luồng outbound giám sát |
 
-RDS không được đặt ở chế độ công khai. Thông tin bí mật nằm trong các file cục bộ đã được loại khỏi Git; EC2 dùng IAM Role thay cho AWS key viết trực tiếp trong mã nguồn. Thiết kế hiện tại chưa có HTTPS, xác thực, HA, bằng chứng Multi-AZ, cân bằng tải hoặc giới hạn tần suất.
+RDS được đặt trong mạng riêng, không công khai ra Internet. Thông tin bí mật chỉ nằm trong các file cục bộ đã được loại khỏi Git; EC2 dùng IAM Role thay vì ghi AWS key trực tiếp trong mã nguồn. Thiết kế hiện tại chưa có HTTPS, xác thực, HA, bằng chứng Multi-AZ, cân bằng tải hoặc giới hạn tần suất.
 
 ### Bảng bảo mật và IAM
 
@@ -186,21 +186,21 @@ Chỉ cấp các hành động cần thiết cho từng danh tính, giới hạn
 
 - Một EC2 Amazon Linux chạy FastAPI/Uvicorn liên tục dưới dịch vụ `aws-iot-backend` của `systemd`.
 - Một ổ đĩa gốc EBS lưu hệ điều hành, mã nguồn, môi trường ảo và các file log cục bộ.
-- Một RDS for PostgreSQL private lưu thiết bị, telemetry và trạng thái lệnh.
+- Một RDS for PostgreSQL trong mạng riêng lưu thông tin thiết bị, telemetry và trạng thái lệnh.
 - Dashboard React/Vite chạy cục bộ và một YOLO UNO gọi REST API trên EC2 theo cơ chế thăm dò HTTP định kỳ.
-- CloudWatch Agent gửi metric của hệ điều hành khách và hai file log backend; metric gốc của EC2/RDS cùng sáu alarm đã tài liệu hóa hỗ trợ vận hành.
+- CloudWatch Agent gửi metric của hệ điều hành khách và đọc hai file log backend; metric gốc của EC2/RDS cùng năm alarm đã cấu hình hỗ trợ việc theo dõi vận hành.
 - Việc triển khai, quyết định mở rộng, khôi phục và dọn dẹp hiện được thực hiện thủ công theo tài liệu hướng dẫn.
 
 ## Lựa chọn mở rộng tương lai và hạn chế hiện tại
 
 Cấu trúc API route theo `device_id` và lược đồ quan hệ có thể hỗ trợ thêm phòng, nhưng phạm vi nghiệm thu hiện tại chỉ là `room_01`. Một endpoint EC2 kết hợp với cơ chế thăm dò HTTP định kỳ giúp mô hình đơn giản, nhưng có rủi ro địa chỉ IP công khai thay đổi, độ trễ do chu kỳ thăm dò và điểm lỗi đơn tại tầng tính toán.
 
-Các lựa chọn trong tương lai có thể gồm DNS/HTTPS ổn định, xác thực và phân quyền theo thiết bị, Load Balancer với nhiều backend không lưu trạng thái, Auto Scaling, MQTT được quản lý qua AWS IoT Core, xử lý qua hàng đợi như SQS, bộ nhớ đệm, bản sao chỉ đọc, cơ sở dữ liệu Multi-AZ, container và Infrastructure as Code. Mỗi lựa chọn đều cần kiến trúc mới, rà soát chi phí/bảo mật, triển khai và kiểm thử.
+Trong tương lai, nhóm có thể cân nhắc DNS/HTTPS ổn định, xác thực và phân quyền theo thiết bị, Load Balancer với nhiều backend không lưu trạng thái, Auto Scaling, MQTT được quản lý qua AWS IoT Core, hàng đợi như SQS, bộ nhớ đệm, read replica, cơ sở dữ liệu Multi-AZ, container và Infrastructure as Code. Mỗi lựa chọn đều cần được thiết kế, đánh giá chi phí và bảo mật, triển khai rồi kiểm thử riêng.
 
 **Auto Scaling, Amazon SQS và kiến trúc hướng sự kiện chưa được triển khai trong dự án hiện tại.** Đây chỉ là các lựa chọn mở rộng trong tương lai.
 
 ## Kết quả mong đợi và xử lý sự cố
 
-Mỗi mũi tên trong kiến trúc phải tương ứng với một lời gọi API, quy tắc mạng, thao tác cơ sở dữ liệu hoặc đường đi của metric/log. Nếu một kết nối chưa rõ, hãy xác định nguồn, đích, cổng, danh tính và bằng chứng mong đợi trước khi cấp phát tài nguyên.
+Mỗi mũi tên trong sơ đồ kiến trúc phải tương ứng với một lời gọi API, quy tắc mạng, thao tác cơ sở dữ liệu hoặc đường đi của metric/log. Nếu chưa rõ một kết nối, hãy xác định nguồn, đích, cổng, danh tính và bằng chứng cần thu thập trước khi cấp phát tài nguyên.
 
 Tiếp theo: [xây dựng hạ tầng AWS](../5.4-AWS-Infrastructure-Setup/).

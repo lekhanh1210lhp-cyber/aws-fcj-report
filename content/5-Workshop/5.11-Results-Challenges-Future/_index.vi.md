@@ -1,5 +1,5 @@
 ---
-title: "Kết quả, thách thức và cải tiến tương lai"
+title: "Kết quả, thách thức và hướng cải tiến"
 date: "2026-07-28"
 weight: 11
 chapter: false
@@ -8,7 +8,7 @@ pre: " <b> 5.11. </b> "
 
 ## Tổng quan
 
-Mục này phân biệt rõ phần đã xác minh bằng mã nguồn với phần vẫn cần bằng chứng thực thi. Mã nguồn ứng dụng tại `F:\aws-iot-dashboard` đã được rà soát, nhưng kho báo cáo chưa có dữ liệu xuất từ môi trường triển khai, ảnh CloudWatch, ảnh chụp cơ sở dữ liệu hoặc kết quả kiểm thử phần cứng. Vì vậy, các mục dưới đây là điều kiện nghiệm thu cần xác nhận theo mục 5.8, không phải kết quả kiểm thử đã đạt.
+Phần này tách rõ những nội dung đã được đối chiếu với mã nguồn và những nội dung vẫn cần bằng chứng từ môi trường chạy thực tế. Mã nguồn ứng dụng tại `F:\aws-iot-dashboard` đã được rà soát, nhưng kho báo cáo vẫn chưa có đầy đủ dữ liệu xuất từ môi trường triển khai, ảnh CloudWatch, ảnh cơ sở dữ liệu và kết quả kiểm thử phần cứng. Vì vậy, các mục dưới đây là điều kiện nghiệm thu cần xác nhận theo mục 5.8, không phải kết quả đã đạt.
 
 ## Kết quả cần xác nhận
 
@@ -16,28 +16,28 @@ Mục này phân biệt rõ phần đã xác minh bằng mã nguồn với phầ
 | :--- | :--- |
 | Telemetry đầu cuối | Yêu cầu từ YOLO UNO, phản hồi/log FastAPI, bản ghi RDS và màn hình dữ liệu mới nhất trên dashboard |
 | Dashboard và lịch sử | Thẻ dữ liệu mới nhất, lịch sử/biểu đồ đúng thứ tự, trạng thái tải và lỗi |
-| Khả năng lưu dữ liệu bền vững bằng PostgreSQL | Truy vấn telemetry và lệnh trước/sau khi làm mới hoặc khởi động lại API |
+| Khả năng lưu trữ bền vững bằng PostgreSQL | Truy vấn telemetry và lệnh trước và sau khi làm mới hoặc khởi động lại API |
 | Điều khiển quạt/đèn/rèm | ID lệnh đi kèm bằng chứng hoạt động của thiết bị vật lý |
 | `Pending` → `Executed` | Phản hồi tạo lệnh và truy vấn sau đó cho cùng một ID lệnh |
 | ACK của lệnh | Dòng log nối tiếp của thiết bị, log backend và trạng thái cuối đã lưu |
 | Giám sát CloudWatch | Log backend mới, các metric EC2/RDS và cấu hình cảnh báo |
 
-Chỉ đánh dấu hoàn tất khi đã đính kèm bằng chứng. Mô hình hiện tại không chứng minh HA, độ trễ dưới 50 ms, khả năng “không thể lỗi”, HTTPS, xác thực hoặc điều khiển bằng AI.
+Chỉ đánh dấu hoàn tất khi đã đính kèm bằng chứng tương ứng. Mô hình hiện tại chưa chứng minh HA, độ trễ dưới 50 ms, khả năng “không thể lỗi”, HTTPS, xác thực hoặc điều khiển bằng AI.
 
 ## Phát hiện khi rà soát mã nguồn
 
 - Backend chưa kiểm tra lệnh có thuộc danh sách được hỗ trợ hay không; giá trị không hợp lệ vẫn có thể được lưu ở trạng thái `Pending`.
 - Cơ chế thăm dò trả bản ghi đang chờ cũ nhất theo FIFO, dù route có tên `commands/latest`.
 - Xử lý ACK tìm theo ID lệnh nhưng chưa xác minh ID thiết bị trong route hoặc trạng thái trước đó.
-- Thiết lập `DEVICE_API_KEY` có giá trị mặc định nhưng chưa được các route thực thi.
+- `DEVICE_API_KEY` có giá trị mặc định trong cấu hình nhưng các route chưa thực sự kiểm tra giá trị này.
 - Khi lấy dữ liệu thất bại, frontend có thể chuyển sang dữ liệu `SIMULATED`; một lệnh lỗi vẫn có thể bị hiển thị như trạng thái mô phỏng thành công.
 - Chế độ trên frontend chỉ là trạng thái cục bộ, chưa được API xác nhận; các nhãn “AI” và “FAIL-PROOF” mô tả quá mức hành vi dựa trên luật của bản demo.
-- Frontend gọi giá trị ADC ánh sáng thô là Lux và viết cứng địa chỉ EC2 trong cấu hình Vite.
+- Frontend đang gọi giá trị ADC ánh sáng thô là Lux và ghi trực tiếp địa chỉ EC2 trong cấu hình Vite.
 - Một phần tài liệu phần cứng trong kho mã nguồn ghi servo ở GPIO 8 và không nhắc LCD, trong khi firmware đang hoạt động dùng GPIO 38 và có LCD1602. Workshop lấy mã đang chạy làm chuẩn.
 
 ## Các điều chỉnh riêng của dự án (Project Customizations)
 
-Dự án không phải bản sao nguyên trạng của một bài hướng dẫn. Những điểm đã được điều chỉnh và xác minh gồm:
+Dự án không sao chép nguyên trạng một bài hướng dẫn có sẵn. Nhóm đã điều chỉnh và đối chiếu các nội dung sau:
 
 - mô hình `room_01` kết nối telemetry vật lý, lịch sử trên dashboard và trạng thái thiết bị chấp hành;
 - vòng đời lệnh FastAPI/PostgreSQL lưu `Pending`, `Executed` và ACK từ thiết bị;
@@ -45,21 +45,21 @@ Dự án không phải bản sao nguyên trạng của một bài hướng dẫn
 - các ngưỡng điều khiển, sơ đồ GPIO, LCD1602, thời gian kết nối lại và cơ chế khôi phục ACK bằng ESP32 Preferences;
 - dashboard React/Vite có biểu đồ telemetry, bảng điều khiển, đề xuất dựa trên luật và cách phân biệt nguồn dữ liệu thật/mô phỏng;
 - kết nối RDS riêng thông qua tham chiếu Security Group, không mở cơ sở dữ liệu công khai;
-- namespace CloudWatch riêng, hai log group của backend và sáu cảnh báo đã được tài liệu hóa; và
+- namespace CloudWatch riêng, cấu hình thu thập log backend và năm alarm đã được ghi nhận; và
 - Workshop song ngữ ưu tiên bằng chứng, phân biệt rõ hành vi xác minh từ mã nguồn với kết quả còn cần ảnh chụp hoặc kiểm thử.
 
-Các lựa chọn trên điều chỉnh kiến trúc theo mã nguồn thực tế và phần cứng YOLO UNO. Auto Scaling, Amazon SQS, AWS IoT Core và kiến trúc hướng sự kiện vẫn chỉ là lựa chọn tương lai, chưa được triển khai.
+Những điều chỉnh trên giúp kiến trúc bám sát mã nguồn và phần cứng YOLO UNO thực tế. Auto Scaling, Amazon SQS, AWS IoT Core và kiến trúc hướng sự kiện vẫn chỉ là lựa chọn trong tương lai, chưa được triển khai.
 
 ## Đóng góp cá nhân
 
 | Thành viên | Phạm vi phụ trách và đóng góp cụ thể | Đường dẫn bằng chứng |
 | :--- | :--- | :--- |
 | **Phạm Lê Minh Khôi** | Kiến trúc AWS, ranh giới mạng/bảo mật, vận hành EC2/RDS/CloudWatch, nối dây YOLO UNO, cảm biến/thiết bị chấp hành, thăm dò telemetry/lệnh, thực thi và ACK | [Kiến trúc](../5.3-Architecture-and-Service-Design/), [thiết lập AWS](../5.4-AWS-Infrastructure-Setup/), [phần cứng](../5.6-Hardware-Integration/), [CloudWatch](../5.9-CloudWatch-Monitoring/) |
-| **Ngô Minh Thuận** | Các route FastAPI, tên thay thế trong Pydantic, mô hình SQLAlchemy, lưu dữ liệu bền vững bằng PostgreSQL, dịch vụ telemetry, vòng đời lệnh và xử lý ACK | [Thiết kế API/dữ liệu](../5.3-Architecture-and-Service-Design/), [backend/cơ sở dữ liệu](../5.5-Backend-and-Database/), [ma trận kiểm thử](../5.8-End-to-End-Testing/) |
+| **Ngô Minh Thuận** | Các route FastAPI, alias trong Pydantic, mô hình SQLAlchemy, lưu trữ bền vững bằng PostgreSQL, dịch vụ telemetry, vòng đời lệnh và xử lý ACK | [Thiết kế API/dữ liệu](../5.3-Architecture-and-Service-Design/), [backend/cơ sở dữ liệu](../5.5-Backend-and-Database/), [ma trận kiểm thử](../5.8-End-to-End-Testing/) |
 | **Thượng Đình Hưng** | Dashboard React/Vite, trực quan hóa telemetry, yêu cầu điều khiển, giao diện chế độ/đề xuất, gỡ lỗi tích hợp và quay/dựng video minh họa | [tích hợp frontend](../5.7-Frontend-Integration/), [xác minh đầu cuối](../5.8-End-to-End-Testing/), [bàn giao](../5.12-Project-Handover/) |
 | **Lê Bảo Khánh** | Nội dung đề xuất/báo cáo, blog/nhật ký/sự kiện, cấu trúc Workshop song ngữ, đối chiếu mã nguồn với tài liệu, điều hướng, kế hoạch ảnh và bảo đảm chất lượng | [tổng quan Workshop](../5.1-Workshop-overview/), [kế hoạch kiểm thử/bằng chứng](../5.8-End-to-End-Testing/), [kết quả](../5.11-Results-Challenges-Future/), [bàn giao](../5.12-Project-Handover/) |
 
-Đóng góp chỉ được nghiệm thu khi phần được liên kết đi kèm mã commit, ảnh chụp, log, kết quả kiểm thử, lịch sử tài liệu hoặc bằng chứng khác có thể xác định người thực hiện. Bảng này ghi phạm vi phụ trách, không thay thế phần nhìn lại cá nhân bên dưới.
+Một đóng góp chỉ được nghiệm thu khi phần liên kết đi kèm mã commit, ảnh chụp, log, kết quả kiểm thử, lịch sử tài liệu hoặc bằng chứng khác giúp xác định người thực hiện. Bảng này chỉ ghi phạm vi phụ trách, không thay thế phần nhìn lại cá nhân bên dưới.
 
 ## Nhìn lại theo từng thành viên (Individual Reflections)
 
@@ -67,9 +67,9 @@ Các lựa chọn trên điều chỉnh kiến trúc theo mã nguồn thực t�
 
 | Nội dung nhìn lại | Trình bày |
 | :--- | :--- |
-| Challenge | Tích hợp backend phục vụ demo, PostgreSQL riêng, hệ thống giám sát và thiết bị chấp hành vật lý mà không nhầm thành công trên đám mây với thành công của phần cứng |
-| Root Cause | Luồng xử lý đi qua quy tắc VPC, IAM, dịch vụ Linux, thăm dò HTTP, nối dây điện và trạng thái ACK bất đồng bộ |
-| Solution | Dùng tham chiếu Security Group từ EC2 tới RDS, EC2 IAM Role, kiểm tra `systemd`/CloudWatch, GPIO theo mã nguồn, nguồn an toàn, ID lệnh và cơ chế khôi phục ACK bền vững |
+| Challenge | Tích hợp backend phục vụ demo, PostgreSQL trong mạng riêng, hệ thống giám sát và thiết bị chấp hành vật lý mà vẫn phân biệt rõ thành công trên cloud với thành công của phần cứng |
+| Root Cause | Luồng xử lý đi qua nhiều lớp: quy tắc VPC, IAM, dịch vụ Linux, cơ chế thăm dò HTTP, đấu nối phần cứng và trạng thái ACK bất đồng bộ |
+| Solution | Dùng tham chiếu Security Group từ EC2 tới RDS, gắn EC2 IAM Role, kiểm tra `systemd` và CloudWatch, đối chiếu GPIO với mã nguồn, cấp nguồn an toàn, theo dõi ID lệnh và lưu trạng thái để gửi lại ACK |
 | Lesson Learned | Cần xác minh từng ranh giới độc lập và theo dõi cùng một ID lệnh qua API, cơ sở dữ liệu, cổng nối tiếp, thao tác vật lý và hệ thống giám sát |
 | Future Improvement | Bổ sung HTTPS/endpoint ổn định, Infrastructure as Code, giới hạn IAM chặt hơn, bằng chứng phần cứng đã hiệu chuẩn và chỉ đánh giá MQTT được quản lý sau khi rà soát kiến trúc |
 
@@ -77,9 +77,9 @@ Các lựa chọn trên điều chỉnh kiến trúc theo mã nguồn thực t�
 
 | Nội dung nhìn lại | Trình bày |
 | :--- | :--- |
-| Challenge | Lưu telemetry và làm cho quá trình hoàn tất lệnh có thể quan sát được qua thăm dò và ACK |
+| Challenge | Lưu telemetry và giúp người vận hành theo dõi được toàn bộ quá trình hoàn tất lệnh qua cơ chế thăm dò và ACK |
 | Root Cause | Các máy khách hoạt động bất đồng bộ nên trạng thái cơ sở dữ liệu có thể lệch; mã nguồn còn thiếu kiểm tra enum cho lệnh và chưa ràng buộc chặt ACK với thiết bị |
-| Solution | Mô hình hóa thiết bị, telemetry và lệnh trong PostgreSQL; trả ID/trạng thái lệnh; dùng FIFO cho lệnh đang chờ và chuyển trạng thái ACK rõ ràng |
+| Solution | Mô hình hóa thiết bị, telemetry và lệnh trong PostgreSQL; trả về ID cùng trạng thái lệnh; xử lý lệnh chờ theo FIFO và cập nhật trạng thái rõ ràng khi nhận ACK |
 | Lesson Learned | Đặc tả OpenAPI và trạng thái được lưu giúp tăng khả năng truy vết, nhưng kiểm tra đầu vào, phân quyền, tính lũy đẳng và quy trình thay đổi lược đồ phải được thiết kế rõ |
 | Future Improvement | Bổ sung kiểm tra lệnh được hỗ trợ, danh tính thiết bị đã xác thực, ACK gắn với thiết bị, quy tắc lũy đẳng, migration Alembic và kiểm thử API tự động |
 
@@ -87,9 +87,9 @@ Các lựa chọn trên điều chỉnh kiến trúc theo mã nguồn thực t�
 
 | Nội dung nhìn lại | Trình bày |
 | :--- | :--- |
-| Challenge | Hiển thị telemetry và điều khiển theo thời gian gần thực, đồng thời phân biệt chính xác việc nhận yêu cầu, thực thi vật lý và dữ liệu mô phỏng dự phòng |
-| Root Cause | Frontend thăm dò nhiều endpoint, giữ chế độ ở cục bộ, chuyển sang dữ liệu sinh khi lỗi và có thể báo thành công mô phỏng sau khi gửi lệnh thất bại |
-| Solution | Kiểm tra thẻ Network của DevTools, dùng route API số nhiều với đường dẫn tương đối, hiển thị ID/trạng thái lệnh, gắn nhãn dữ liệu mô phỏng và xác minh thực thi vật lý qua ACK/bằng chứng |
+| Challenge | Hiển thị telemetry và điều khiển gần thời gian thực, đồng thời phân biệt rõ việc backend nhận yêu cầu, thiết bị thực thi lệnh và giao diện chuyển sang dữ liệu mô phỏng |
+| Root Cause | Frontend thăm dò nhiều endpoint, chỉ lưu chế độ trên máy người dùng, chuyển sang dữ liệu mô phỏng khi lỗi và có thể báo thành công dù yêu cầu gửi lệnh thất bại |
+| Solution | Kiểm tra thẻ Network của DevTools, dùng route API số nhiều với đường dẫn tương đối, hiển thị ID và trạng thái lệnh, gắn nhãn dữ liệu mô phỏng, đồng thời xác minh thao tác vật lý bằng ACK và bằng chứng |
 | Lesson Learned | Giao diện phản hồi nhanh chưa đủ; trạng thái vận hành phải dựa trên backend và thiết bị, còn xử lý lỗi không được ám chỉ thành công khi chưa xác minh |
 | Future Improvement | Loại bỏ cơ chế báo thành công giả, bổ sung chế độ/trạng thái lệnh từ API, tập trung cấu hình môi trường, sửa nhãn Lux và thêm kiểm thử component/tích hợp |
 
@@ -97,10 +97,10 @@ Các lựa chọn trên điều chỉnh kiến trúc theo mã nguồn thực t�
 
 | Nội dung nhìn lại | Trình bày |
 | :--- | :--- |
-| Challenge | Chuyển các ghi chú mã nguồn thay đổi, đôi khi mâu thuẫn, thành Workshop song ngữ nhất quán mà không tự tạo bằng chứng triển khai |
+| Challenge | Chuyển các ghi chú mã nguồn thường xuyên thay đổi, đôi khi mâu thuẫn, thành một Workshop song ngữ nhất quán mà không tự suy diễn bằng chứng triển khai |
 | Root Cause | Workshop cũ mô tả dịch vụ không liên quan, phần diễn giải khác với firmware đang chạy và ảnh/kết quả kiểm thử bắt buộc chưa đầy đủ |
-| Solution | Lấy mã nguồn đang hoạt động làm chuẩn, đồng bộ cấu trúc Anh–Việt, ghi rõ hạn chế, dùng đúng đường dẫn TODO cho bằng chứng và chạy kiểm tra Hugo/cấu trúc/liên kết |
-| Lesson Learned | Tài liệu kỹ thuật phải phân biệt rõ nội dung đã triển khai, được đề xuất, mong đợi và đã chứng minh; đồng thời giữ lệnh, tên, đường dẫn và bản dịch đồng bộ |
+| Solution | Lấy mã nguồn đang hoạt động làm chuẩn, đồng bộ cấu trúc Anh–Việt, nêu rõ hạn chế, đặt TODO đúng vị trí cho bằng chứng còn thiếu và kiểm tra Hugo, cấu trúc cùng liên kết |
+| Lesson Learned | Tài liệu kỹ thuật phải phân biệt rõ nội dung đã triển khai, nội dung đề xuất, kết quả mong đợi và phần đã có bằng chứng; đồng thời giữ lệnh, tên và đường dẫn nhất quán giữa hai ngôn ngữ |
 | Future Improvement | Bổ sung CI để kiểm tra Hugo, liên kết, thông tin bí mật và tính đồng bộ Anh–Việt; thay TODO bằng bằng chứng có người chịu trách nhiệm; duy trì đặc tả API/GPIO có phiên bản và lên lịch để các thành viên rà soát, xác nhận |
 
 ## Thách thức và bài học
@@ -122,7 +122,7 @@ Các lựa chọn trên điều chỉnh kiến trúc theo mã nguồn thực t�
 
 ## Cải tiến tương lai
 
-- Gắn Elastic IP hoặc dùng domain để có endpoint ổn định.
+- Cân nhắc Elastic IP hoặc domain để có endpoint ổn định.
 - Thêm Nginx hoặc reverse proxy đã được rà soát.
 - Bổ sung HTTPS, xác thực và phân quyền chặt chẽ hơn.
 - Lưu bí mật ứng dụng trong giải pháp quản lý bí mật phù hợp.
@@ -134,10 +134,10 @@ Các lựa chọn trên điều chỉnh kiến trúc theo mã nguồn thực t�
 - Bổ sung kênh thông báo cho cảnh báo sau khi rà soát.
 - Hiệu chuẩn cảm biến ánh sáng và công bố phương pháp cùng đơn vị quy đổi.
 
-Mỗi hạng mục tương lai cần có người phụ trách, được rà soát kiến trúc, phân tích chi phí/bảo mật, triển khai và kiểm thử trước khi đưa vào sơ đồ trạng thái hiện tại.
+Mỗi hạng mục trong tương lai cần có người phụ trách, được rà soát kiến trúc, phân tích chi phí và bảo mật, triển khai rồi kiểm thử trước khi bổ sung vào tài liệu kiến trúc hiện tại.
 
 ## Kết quả
 
-Sau khi rà soát bằng chứng, ghi **Đạt**, **Không đạt** hoặc **Chưa chạy** cho từng điều kiện nghiệm thu và liên kết vấn đề cùng người phụ trách cho mọi khoảng trống. Không đổi “mong đợi” thành “đã đạt” khi chưa có bằng chứng.
+Sau khi rà soát bằng chứng, hãy ghi **Đạt**, **Không đạt** hoặc **Chưa chạy** cho từng điều kiện nghiệm thu. Với mọi nội dung còn thiếu, cần liên kết vấn đề và chỉ định người phụ trách. Không đổi “mong đợi” thành “đã đạt” khi chưa có bằng chứng.
 
 Tiếp theo: [chuẩn bị bàn giao dự án](../5.12-Project-Handover/).

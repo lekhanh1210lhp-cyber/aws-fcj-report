@@ -30,49 +30,74 @@ In the AWS Console, select the confirmed project region. This workshop uses **As
 
 ## Step 3 - Create Security Groups
 
-Create `iot-ec2-sg` and `iot-rds-sg` in the same VPC.
+Create the EC2 and RDS Security Groups in the same VPC. The deployed environment uses `iot-backend-sg` for backend access, `ec2-rds-1` for the EC2-to-RDS connection, and `rds-ec2-1` for the RDS-side rule.
 
 | Security Group | Type | Source | Purpose |
 | :--- | :---: | :--- | :--- |
-| `iot-ec2-sg` | SSH 22 | `<ADMIN_IP>/32` | Restricted administration |
-| `iot-ec2-sg` | Custom TCP 8000 | Approved demo clients | Direct Uvicorn demo access |
-| `iot-ec2-sg` | HTTP 80 | Only when a reverse proxy exists | Not required for direct port 8000 |
-| `iot-rds-sg` | PostgreSQL 5432 | **`iot-ec2-sg`**, not an IP CIDR | EC2-to-RDS only |
+| `iot-backend-sg` | SSH 22 | `<ADMIN_IP>/32` | Restricted administration |
+| `iot-backend-sg` | Custom TCP 8000 | `0.0.0.0/0` in the current Workshop | Direct FastAPI demo access |
+| `iot-backend-sg` | HTTP 80 | Rule exists in the current group | No Nginx or reverse-proxy deployment is claimed |
+| `ec2-rds-1` → `rds-ec2-1` | PostgreSQL 5432 | EC2 Security Group reference | EC2-to-RDS only |
 
-Using `0.0.0.0/0` on port 8000 may be temporarily acceptable for a supervised demo but is not a production recommendation. Do not make RDS publicly accessible.
+In the Workshop environment, port 8000 is exposed so that the frontend and YOLO UNO can access the FastAPI backend. A production deployment should restrict the allowed sources and use HTTPS, a reverse proxy, and authentication. The port 80 rule shown in the evidence does not prove that Nginx or another reverse proxy is running. RDS does not expose PostgreSQL port 5432 directly to `0.0.0.0/0`; it accepts the database connection from the EC2 Security Group.
+
+The following two screenshots separate the EC2-side rules from the RDS-side Security Group relationship while redacting the administrator IP and other sensitive identifiers.
+
+![EC2 Security Group inbound and outbound rules](/images/5-Workshop/5.4-aws-infrastructure/security-group-rules-EC2.png)
+*Figure 7a. EC2 Security Group rules for `iot-backend-server`: SSH is restricted to the administrator `/32`, Workshop ports 80 and 8000 are shown, and PostgreSQL traffic on port 5432 is directed to the RDS Security Group.*
+
+![RDS Security Group relationship with the EC2 Security Group](/images/5-Workshop/5.4-aws-infrastructure/security-group-rules-DB.png)
+*Figure 7b. The RDS connectivity view shows `rds-ec2-1` as the database VPC Security Group and `ec2-rds-1` as the associated EC2 Security Group, confirming the Security Group-to-Security Group relationship.*
 
 ## Step 4 - Create the EC2 IAM Role
 
 1. Open **IAM → Roles → Create role**.
 2. Select trusted entity **AWS service → EC2**.
 3. Attach `CloudWatchAgentServerPolicy` only if CloudWatch Agent will publish metrics/logs.
-4. Use the source runbook name `iot-dashboard-cloudwatch-role` (or the project-approved equivalent) and create an instance profile.
+4. Use the deployed role name `iot-dashboard-cloudwatch-role` and create an instance profile.
 
-Do not create long-lived access keys. The role grants permission; CloudWatch Agent is installed separately in section 5.9.
+Do not create long-lived access keys. The deployed role uses the AWS-managed `CloudWatchAgentServerPolicy`, allowing CloudWatch Agent to publish the required logs and metrics without hard-coded AWS access keys. The role grants permission; CloudWatch Agent is installed separately in section 5.9. Review and narrow IAM permissions for a production deployment instead of assuming the managed policy is perfectly least-privileged.
+
+The EC2 Security page and IAM Role details confirm the role attachment and the AWS-managed policy.
+
+![IAM Role and CloudWatchAgentServerPolicy attached to EC2](/images/5-Workshop/5.4-aws-infrastructure/ec2-iam-role-cloudwatch.png)
+*Figure 5. The EC2 instance is attached to the `iot-dashboard-cloudwatch-role`, which uses `CloudWatchAgentServerPolicy` to allow CloudWatch Agent to publish logs and metrics without hard-coded AWS access keys.*
 
 ## Step 5 - Launch EC2 and configure EBS
 
-1. Launch the approved Linux AMI and a small workshop instance type.
+1. Launch the approved Linux AMI as `iot-backend-server` using the deployed `t3.micro` instance type.
 2. Place it in the public subnet and enable a public IPv4 address for the demo.
-3. Attach `iot-ec2-sg`, the key pair, and the IAM instance profile.
-4. Configure the EBS root volume with the approved type, capacity, and encryption setting.
+3. Attach the deployed EC2 Security Groups, the key pair, and the IAM instance profile.
+4. Configure the EBS root volume as `gp3` with 10 GiB of capacity.
 5. Add tags for project, owner, environment, and clean-up date.
-6. Wait for both EC2 status checks to pass.
+6. Wait for the EC2 instance to reach **Running** and pass the displayed `3/3` status checks.
 
-Record `<EC2_PUBLIC_IP>` without publishing the private key. A changed public IP after stop/start is a known limitation; Elastic IP is only a future option.
+The root EBS volume is currently **In-use**, with normal I/O. The current EBS volume is not encrypted. A production deployment should enable EBS encryption with AWS KMS to protect data at rest.
+
+Record `<EC2_PUBLIC_IP>` without publishing the private key, instance ID, or key-pair details. A changed public IP after stop/start is a known limitation; Elastic IP is only a future option.
+
+The EC2 Instances page confirms the deployed compute size, Availability Zone, running state, and health checks.
+
+![Amazon EC2 instance hosting the FastAPI backend](/images/5-Workshop/5.4-aws-infrastructure/ec2-instance-running.png)
+*Figure 4. The `iot-backend-server` Amazon EC2 instance hosting the FastAPI backend in the Running state and passing all status checks.*
 
 ## Step 6 - Create Amazon RDS for PostgreSQL
 
 1. Open **RDS → Databases → Create database** and select PostgreSQL.
-2. Choose the workshop-sized instance and storage configuration.
+2. Choose the deployed `db.t4g.micro` class and the approved storage configuration.
 3. Set the initial database name to `iot_dashboard`.
-4. Select the project VPC, DB Subnet Group, and `iot-rds-sg`.
-5. Set **Public access: No**.
+4. Select the project VPC, DB Subnet Group `rds-ec2-db-subnet-group-1`, and the deployed RDS Security Groups.
+5. Keep the Internet access gateway disabled, as shown in the deployed RDS configuration.
 6. Store the master password securely as `<DB_PASSWORD>`; do not add it to screenshots or Git.
 7. Enable only the backup, encryption, and monitoring options approved for the project.
-8. Wait for status **Available** and record `<RDS_ENDPOINT>`.
+8. Wait for `iot-dashboard-db` to reach **Available** in `ap-southeast-1c` and record `<RDS_ENDPOINT>` privately.
 
-Do not claim Multi-AZ unless the deployed RDS configuration proves it.
+Do not claim Multi-AZ, read replicas, High Availability, RDS Proxy, a public endpoint, or enabled IAM database authentication because the current evidence does not prove those features.
+
+The RDS summary and Connectivity & security page confirm the PostgreSQL engine, instance class, DB Subnet Group, Availability Zone, and disabled Internet access gateway.
+
+![Amazon RDS PostgreSQL instance using a DB Subnet Group](/images/5-Workshop/5.4-aws-infrastructure/rds-postgresql-available.png)
+*Figure 6. The `iot-dashboard-db` Amazon RDS for PostgreSQL instance in the Available state, using the `rds-ec2-db-subnet-group-1` DB Subnet Group with the Internet access gateway disabled.*
 
 ## Step 7 - Verify access and network
 
@@ -93,12 +118,7 @@ If `nc` is unavailable, install the appropriate netcat package for the selected 
 
 ## Expected Result and Evidence
 
-Capture redacted evidence of the EC2 **running** state, attached EBS volume and IAM Role, RDS **available** state, DB Subnet Group, both Security Group rule sets, and successful EC2-to-RDS port test.
-
-<!-- TODO IMAGE: /images/5-Workshop/5.4-aws-infrastructure/ec2-instance-running.png — EC2 console showing the workshop instance in Running state; redact account ID, public DNS/IP when required, and key-pair details. -->
-<!-- TODO IMAGE: /images/5-Workshop/5.4-aws-infrastructure/ec2-iam-role-cloudwatch.png — EC2 instance profile showing iot-dashboard-cloudwatch-role and CloudWatchAgentServerPolicy; redact account ID and role ARN. -->
-<!-- TODO IMAGE: /images/5-Workshop/5.4-aws-infrastructure/rds-postgresql-available.png — Private RDS for PostgreSQL instance in Available state with DB Subnet Group; redact endpoint and account identifiers. -->
-<!-- TODO IMAGE: /images/5-Workshop/5.4-aws-infrastructure/security-group-rules.png — EC2 and RDS Security Group rules showing SSH restriction, demo port 8000, and PostgreSQL 5432 sourced from the EC2 Security Group; redact public IPs. -->
+The figures above provide redacted evidence of the EC2 **Running** state, attached IAM Role, RDS **Available** state, DB Subnet Group, and both Security Group rule sets. Preserve separate command output for the successful EC2-to-RDS port test and EBS volume details.
 
 ## Troubleshooting
 
