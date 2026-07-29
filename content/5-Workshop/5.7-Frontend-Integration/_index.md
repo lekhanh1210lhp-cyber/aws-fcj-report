@@ -103,7 +103,10 @@ Open browser DevTools → **Network**:
 **Expected result:** telemetry and history render, AWS health reflects the backend, controls create one traceable command, and the UI distinguishes request acceptance from physical execution.
 
 <!-- TODO IMAGE: /images/5-Workshop/5.7-frontend/dashboard-overview.png — Dashboard showing latest telemetry, history, explicit real/simulated data source, and Analog light value; redact the EC2 address. -->
+![Dashboard showing Real-time Control Station interface displaying telemetry data and the Remote Control Panel](\images\5-Workshop\5.7-frontend\dashboard-overview_1.PNG)
+![Automated Analysis & Recommendation Panel with Historical Telemetry Charts queried directly from Amazon RDS PostgreSQL](\images\5-Workshop\5.7-frontend\dashboard-overview_2.PNG)
 <!-- TODO IMAGE: /images/5-Workshop/5.7-frontend/control-panel-api-request.png — Control panel together with DevTools Network showing one plural-route POST, command ID, and server state; redact host/IP details. -->
+![API communication verification on the Web Dashboard via Chrome DevTools Network tab, with HTTP 200 OK responses](\images\5-Workshop\5.7-frontend\control-panel-api-request.PNG)
 
 ## Troubleshooting
 
