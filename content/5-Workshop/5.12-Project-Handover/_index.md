@@ -6,40 +6,137 @@ chapter: false
 pre: " <b> 5.12. </b> "
 ---
 
-# Project Handover
+## Overview and objectives
 
-## Deliverables
+Transfer enough source, configuration, operational knowledge, and evidence for a new maintainer to start, validate, update, troubleshoot, and safely clean up the prototype.
 
-Provide:
+## Repository structure
 
-- source repository URL and a clear repository tree;
-- `README.md` and `README.vi.md`;
-- backend, frontend, and hardware run instructions;
-- `.env.example` and `secrets.example.h` with placeholders;
-- database migration or initialization instructions;
-- test evidence from Section 5.8;
-- CloudWatch evidence and clean-up status; and
-- demo video link and team contribution summary.
+The application handover should contain:
 
-## Operator checklist
+```text
+<application-repository>/
+├── backend/              # FastAPI, Pydantic, SQLAlchemy, requirements
+├── frontend/             # React, Vite, TypeScript, Tailwind CSS
+├── hardware/             # PlatformIO firmware and YOLO UNO board definition
+│   └── include/
+│       └── secrets.example.h
+└── README.md
+```
 
-1. Configure database, Wi-Fi, device ID, and API endpoint secrets.
-2. Confirm EC2, RDS, IAM Role, and Security Group configuration.
-3. Start `aws-iot-backend` and verify `/api/health`.
-4. Start the frontend and confirm Vite proxy configuration.
-5. Power the hardware and inspect Serial Monitor.
-6. Run one telemetry and command/ACK smoke test.
-7. Review CloudWatch logs, metrics, and alarms.
+The reviewed application source is maintained separately at `F:\aws-iot-dashboard`; this repository contains the Hugo report and Workshop. Record:
 
-## Final review
+- source repository: `<SOURCE_REPOSITORY_URL>`;
+- demo video: `<VIDEO_DEMO_URL>`;
+- deployed application commit: `<COMMIT_SHA>`;
+- AWS region/resource inventory location: `<HANDOVER_EVIDENCE_LOCATION>`.
 
-- [ ] All 12 sections have matching English and Vietnamese pages.
-- [ ] Commands, endpoints, service names, and screenshots are consistent.
-- [ ] No placeholder remains in a claimed working configuration.
-- [ ] No secret or private key is committed.
-- [ ] The Hugo site builds and navigation works.
-- [ ] Each technical section has been reviewed by another team member.
+## Start procedures
 
-**Expected result:** A new operator can configure, run, validate, monitor, and safely clean up the project without relying on undocumented team knowledge.
+Backend on EC2 Linux Bash:
 
-This completes the AWS IoT Dashboard workshop.
+```bash
+sudo systemctl start aws-iot-backend
+sudo systemctl status aws-iot-backend --no-pager
+curl -i http://127.0.0.1:8000/api/health
+```
+
+Frontend on Windows PowerShell:
+
+```powershell
+Set-Location .\aws-iot-dashboard\frontend
+npm install
+npm run dev
+```
+
+Hardware in a PlatformIO terminal:
+
+```bash
+pio run
+pio run --target upload
+pio device monitor --baud 115200
+```
+
+## Required local secrets
+
+| Location | Values | Storage rule |
+| :--- | :--- | :--- |
+| Backend `.env` | `DATABASE_URL` and source-defined settings | EC2/local only; restricted; ignored |
+| Firmware `secrets.h` | Wi-Fi, API URL, `room_01` | Local only; ignored |
+| Frontend `.env.local` if used | API base URL | Local only; ignored |
+| EC2 key | Private key | Approved local secret storage; never Git |
+
+Handover the retrieval/rotation process, not plaintext credentials in the report.
+
+## AWS and operational checklist
+
+- [ ] Correct AWS account and region are known.
+- [ ] VPC, public subnet, DB Subnet Group, route tables, and tags are recorded.
+- [ ] EC2, EBS, key owner, IAM Role, and `iot-ec2-sg` are recorded.
+- [ ] RDS identifier/endpoint, database `iot_dashboard`, and `iot-rds-sg` are recorded.
+- [ ] RDS remains private and port 5432 is sourced from the EC2 SG.
+- [ ] `aws-iot-backend` and CloudWatch Agent start at boot.
+- [ ] Backend log group, metric dimensions, retention, and alarms are recorded.
+- [ ] `room_01` firmware build, exact GPIO map, and safe power requirements are recorded.
+- [ ] Latest T01-T15 results and open issues are linked.
+- [ ] Cost owner and clean-up date are assigned.
+
+## Update deployment procedure
+
+In EC2 Linux Bash:
+
+```bash
+cd ~/aws-iot-dashboard
+git status --short
+git pull --ff-only
+source backend/venv/bin/activate
+pip install -r backend/requirements.txt
+cd backend
+python -m app.database.init_db
+cd ..
+sudo systemctl restart aws-iot-backend
+sudo systemctl status aws-iot-backend --no-pager
+curl -i http://127.0.0.1:8000/api/health
+```
+
+Review model/schema changes and release notes first. `app.database.init_db` uses SQLAlchemy `create_all`; it is not a migration engine, so destructive or incompatible schema changes require an explicit reviewed procedure. Record the previous/new commit and rollback procedure. Never discard local changes with `git reset --hard`.
+
+## Database and CloudWatch checks
+
+From EC2 Linux Bash:
+
+```bash
+psql "host=<RDS_ENDPOINT> port=5432 dbname=iot_dashboard user=<DB_USER> sslmode=require"
+sudo systemctl status amazon-cloudwatch-agent --no-pager
+sudo tail -n 100 /opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log
+```
+
+In `psql`, run `\dt`, inspect `devices`, `telemetry_logs`, and `commands`, and use read-only validation queries. In CloudWatch, verify region, both backend log groups, recent timestamps, `IoTDashboard/EC2` guest metrics, native EC2 CPU, RDS CPU/connections, and the six documented alarm names/states.
+
+## Known limitations
+
+The documented prototype uses one room, direct HTTP on port 8000 for demo, a changeable EC2 public IP, periodic polling, and an uncalibrated analog light value. It has no implemented HTTPS, route authentication/API-key enforcement, HA, Multi-AZ proof, load balancer, rate limiting, or AI model. The frontend can simulate data and success after failures, stores mode locally, mislabels light as Lux, and hard-codes an EC2 target; the backend lacks command enum validation and strict ACK ownership checks. GPIO values, source paths/schema, and proposed alarm thresholds are recorded in sections 5.5, 5.6, and 5.9, but deployment evidence must still confirm the running environment.
+
+## Team responsibilities
+
+| Member | Responsibility |
+| :--- | :--- |
+| **Pham Le Minh Khoi** | AWS architecture, VPC, Security Groups, IAM Role, EC2, RDS, CloudWatch, DevOps, YOLO UNO hardware, sensors, actuators, telemetry, command polling, ACK |
+| **Ngo Minh Thuan** | FastAPI backend, endpoints, Pydantic schemas, SQLAlchemy models, PostgreSQL integration, telemetry processing, command lifecycle, ACK processing |
+| **Thuong Dinh Hung** | React + Vite frontend, dashboard UI, telemetry visualization, controls, overall integration, debugging, demo video recording/editing |
+| **Le Bao Khanh** | Documentation, proposal, blogs, weekly worklog, event reports, Workshop, bilingual review, navigation, screenshots, quality assurance |
+
+## Final handover checklist
+
+- [ ] Application source links and exact commit IDs open for the receiver.
+- [ ] No credential appears in Git, screenshots, video, or this Workshop.
+- [ ] Backend, frontend, and firmware start procedures were demonstrated.
+- [ ] OpenAPI routes and database schemas were reviewed from source.
+- [ ] Numeric GPIO map and power diagram were handed over.
+- [ ] Test matrix contains actual evidence and status.
+- [ ] CloudWatch configuration and alarm thresholds were confirmed.
+- [ ] Open issues, limitations, owners, cost decision, and clean-up status were signed off.
+
+<!-- TODO IMAGE: /images/5-Workshop/5.12-handover/repository-handover-checklist.png — Final redacted repository/resource/test handover checklist with commit IDs, owners, open issues, and team sign-off. -->
+
+Return to the [Workshop landing page](../).

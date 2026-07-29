@@ -126,7 +126,7 @@ Các dịch vụ này có thể được cân nhắc trong tương lai nếu pro
 
 ## 4. Kiến trúc giải pháp
 
-![Kiến trúc AWS IoT Monitoring and Control Dashboard](/images/2-Proposal/Iot_Dashboard_Architecture.png)
+![Kiến trúc AWS IoT Monitoring and Control Dashboard](/images/2-Proposal/IoT_Dashboard_Architecture.png)
 
 ### 4.1 Các thành phần kiến trúc
 
