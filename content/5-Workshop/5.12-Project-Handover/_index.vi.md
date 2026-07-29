@@ -8,9 +8,9 @@ pre: " <b> 5.12. </b> "
 
 ## Tổng quan và mục tiêu
 
-Chuyển giao đủ source, cấu hình, kiến thức vận hành và evidence để người bảo trì mới có thể khởi động, xác minh, cập nhật, xử lý sự cố và dọn dẹp prototype an toàn.
+Bàn giao đầy đủ mã nguồn, cấu hình, kiến thức vận hành và bằng chứng để người tiếp quản có thể khởi động, xác minh, cập nhật, xử lý sự cố và dọn dẹp mô hình thử nghiệm một cách an toàn.
 
-## Cấu trúc repository
+## Cấu trúc kho mã nguồn
 
 Gói bàn giao ứng dụng cần có:
 
@@ -18,18 +18,18 @@ Gói bàn giao ứng dụng cần có:
 <application-repository>/
 ├── backend/              # FastAPI, Pydantic, SQLAlchemy, requirements
 ├── frontend/             # React, Vite, TypeScript, Tailwind CSS
-├── hardware/             # PlatformIO firmware and YOLO UNO board definition
+├── hardware/             # Firmware PlatformIO và định nghĩa bo mạch YOLO UNO
 │   └── include/
 │       └── secrets.example.h
 └── README.md
 ```
 
-Source ứng dụng đã review được quản lý riêng tại `F:\aws-iot-dashboard`; repository này chứa báo cáo Hugo và Workshop. Ghi lại:
+Mã nguồn ứng dụng đã được rà soát và được quản lý riêng tại `F:\aws-iot-dashboard`; kho mã nguồn hiện tại chứa báo cáo Hugo và nội dung Workshop. Hồ sơ bàn giao cần ghi rõ:
 
-- source repository: `<SOURCE_REPOSITORY_URL>`;
-- demo video: `<VIDEO_DEMO_URL>`;
-- commit ứng dụng đã triển khai: `<COMMIT_SHA>`;
-- vị trí AWS region/resource inventory: `<HANDOVER_EVIDENCE_LOCATION>`.
+- kho mã nguồn ứng dụng: `<SOURCE_REPOSITORY_URL>`;
+- video minh họa: `<VIDEO_DEMO_URL>`;
+- mã commit của phiên bản đang triển khai: `<COMMIT_SHA>`;
+- nơi lưu danh mục tài nguyên AWS và bằng chứng bàn giao: `<HANDOVER_EVIDENCE_LOCATION>`.
 
 ## Quy trình khởi động
 
@@ -49,7 +49,7 @@ npm install
 npm run dev
 ```
 
-Hardware trong PlatformIO terminal:
+Phần cứng trong terminal của PlatformIO:
 
 ```bash
 pio run
@@ -57,31 +57,31 @@ pio run --target upload
 pio device monitor --baud 115200
 ```
 
-## Local secret cần thiết
+## Thông tin bí mật cần lưu cục bộ
 
 | Vị trí | Giá trị | Quy tắc lưu |
 | :--- | :--- | :--- |
-| Backend `.env` | `DATABASE_URL` và setting do source định nghĩa | Chỉ EC2/local; hạn chế quyền; ignore |
-| Firmware `secrets.h` | Wi-Fi, API URL, `room_01` | Chỉ local; ignore |
-| Frontend `.env.local` nếu dùng | API base URL | Chỉ local; ignore |
-| EC2 key | Private key | Kho secret local đã duyệt; không đưa vào Git |
+| Backend `.env` | `DATABASE_URL` và các thiết lập được định nghĩa trong mã nguồn | Chỉ lưu trên EC2 hoặc máy cục bộ; giới hạn quyền truy cập; loại khỏi Git |
+| Firmware `secrets.h` | Wi-Fi, API URL, `room_01` | Chỉ lưu cục bộ; loại khỏi Git |
+| Frontend `.env.local` nếu dùng | URL gốc của API | Chỉ lưu cục bộ; loại khỏi Git |
+| Khóa EC2 | Khóa riêng tư | Lưu trong nơi quản lý bí mật đã được phê duyệt; không đưa vào Git |
 
-Bàn giao quy trình lấy/rotate secret, không ghi credential plaintext trong báo cáo.
+Bàn giao cả cách lấy và thay mới thông tin bí mật. Không ghi thông tin xác thực ở dạng văn bản rõ trong báo cáo.
 
-## Checklist AWS và vận hành
+## Danh sách kiểm tra AWS và vận hành
 
-- [ ] Biết đúng AWS account và region.
-- [ ] Đã ghi VPC, public subnet, DB Subnet Group, route table và tag.
-- [ ] Đã ghi EC2, EBS, key owner, IAM Role và `iot-ec2-sg`.
-- [ ] Đã ghi RDS identifier/endpoint, database `iot_dashboard` và `iot-rds-sg`.
-- [ ] RDS vẫn private, port 5432 nhận từ EC2 SG.
-- [ ] `aws-iot-backend` và CloudWatch Agent chạy khi boot.
-- [ ] Đã ghi backend log group, metric dimension, retention và alarm.
-- [ ] Đã ghi firmware build `room_01`, GPIO map chính xác và yêu cầu nguồn an toàn.
-- [ ] Đã link kết quả T01-T15 mới nhất và issue đang mở.
-- [ ] Đã phân công cost owner và ngày dọn dẹp.
+- [ ] Xác định đúng tài khoản AWS và Khu vực.
+- [ ] Đã ghi lại VPC, public subnet, DB Subnet Group, route table và các thẻ tài nguyên.
+- [ ] Đã ghi lại EC2, EBS, người giữ khóa, IAM Role và `iot-ec2-sg`.
+- [ ] Đã ghi lại định danh/endpoint RDS, cơ sở dữ liệu `iot_dashboard` và `iot-rds-sg`.
+- [ ] RDS vẫn ở private subnet; cổng 5432 chỉ nhận kết nối từ Security Group của EC2.
+- [ ] `aws-iot-backend` và CloudWatch Agent tự chạy khi hệ điều hành khởi động.
+- [ ] Đã ghi lại log group của backend, chiều của metric, thời gian lưu log và các cảnh báo.
+- [ ] Đã ghi lại bản firmware cho `room_01`, sơ đồ chân GPIO chính xác và yêu cầu cấp nguồn an toàn.
+- [ ] Đã liên kết kết quả T01–T15 mới nhất và các vấn đề còn mở.
+- [ ] Đã chỉ định người chịu trách nhiệm chi phí và ngày dọn dẹp.
 
-## Quy trình cập nhật deployment
+## Quy trình cập nhật phiên bản triển khai
 
 Trong EC2 Linux Bash:
 
@@ -99,9 +99,9 @@ sudo systemctl status aws-iot-backend --no-pager
 curl -i http://127.0.0.1:8000/api/health
 ```
 
-Review thay đổi model/schema và release note trước. `app.database.init_db` dùng SQLAlchemy `create_all`, không phải migration engine; thay đổi schema destructive hoặc không tương thích cần quy trình riêng đã review. Ghi commit cũ/mới và rollback procedure. Không bỏ local change bằng `git reset --hard`.
+Trước khi cập nhật, cần rà soát thay đổi của mô hình dữ liệu, lược đồ và ghi chú phát hành. `app.database.init_db` sử dụng `create_all` của SQLAlchemy chứ không phải công cụ quản lý thay đổi lược đồ; mọi thay đổi có thể làm mất dữ liệu hoặc gây mất tương thích phải đi theo một quy trình riêng đã được xét duyệt. Ghi lại mã commit trước và sau khi cập nhật cùng phương án quay lui. Không dùng `git reset --hard` để xóa thay đổi cục bộ.
 
-## Kiểm tra database và CloudWatch
+## Kiểm tra cơ sở dữ liệu và CloudWatch
 
 Từ EC2 Linux Bash:
 
@@ -111,32 +111,35 @@ sudo systemctl status amazon-cloudwatch-agent --no-pager
 sudo tail -n 100 /opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log
 ```
 
-Trong `psql`, chạy `\dt`, xem `devices`, `telemetry_logs`, `commands` và dùng query read-only để xác minh. Trong CloudWatch, kiểm tra region, cả hai backend log group, timestamp mới, guest metric `IoTDashboard/EC2`, EC2 CPU native, RDS CPU/connections và tên/state của sáu alarm đã tài liệu hóa.
+Trong `psql`, chạy `\dt`, kiểm tra các bảng `devices`, `telemetry_logs`, `commands` và dùng truy vấn chỉ đọc để xác minh dữ liệu. Trong CloudWatch, kiểm tra đúng Khu vực, cả hai log group của backend, thời điểm có log gần nhất, metric tùy chỉnh `IoTDashboard/EC2`, metric CPU mặc định của EC2, CPU/số kết nối của RDS, cùng tên và trạng thái của sáu cảnh báo đã được mô tả.
 
 ## Hạn chế đã biết
 
-Prototype dùng một phòng, HTTP trực tiếp port 8000 cho demo, public IP EC2 có thể đổi, polling định kỳ và giá trị ánh sáng analog chưa hiệu chuẩn. Hệ thống chưa triển khai HTTPS, route authentication/API-key enforcement, HA, bằng chứng Multi-AZ, load balancer, rate limiting hoặc AI model. Frontend có thể dùng simulation và báo mock success sau lỗi, lưu mode local, gọi sai ánh sáng là Lux và hard-code EC2 target; backend thiếu command enum validation và kiểm tra ownership ACK chặt. GPIO, source path/schema và threshold alarm đề xuất đã ghi ở 5.5, 5.6, 5.9 nhưng vẫn cần evidence xác nhận môi trường đang chạy.
+Mô hình thử nghiệm hiện chỉ phục vụ một phòng, dùng HTTP trực tiếp qua cổng 8000 để minh họa, địa chỉ IP công khai của EC2 có thể thay đổi, thiết bị thăm dò lệnh theo chu kỳ và giá trị ánh sáng analog chưa được hiệu chuẩn. Hệ thống chưa triển khai HTTPS, xác thực route/thực thi API key, khả năng sẵn sàng cao, Multi-AZ, load balancer, giới hạn tần suất gọi API hoặc mô hình AI. Frontend vẫn có thể dùng dữ liệu mô phỏng, báo thành công giả sau lỗi, lưu chế độ ở máy người dùng, gọi giá trị ánh sáng là Lux và ghi cố định địa chỉ EC2; backend chưa kiểm tra chặt danh sách lệnh hợp lệ và quyền sở hữu khi ACK. Các đề xuất về GPIO, đường dẫn/lược đồ mã nguồn và ngưỡng cảnh báo đã được ghi ở 5.5, 5.6 và 5.9, nhưng vẫn cần bằng chứng từ môi trường đang chạy.
 
 ## Trách nhiệm nhóm
 
-| Thành viên | Trách nhiệm |
-| :--- | :--- |
-| **Phạm Lê Minh Khôi** | Kiến trúc AWS, VPC, Security Group, IAM Role, EC2, RDS, CloudWatch, DevOps, phần cứng YOLO UNO, cảm biến, actuator, telemetry, command polling, ACK |
-| **Ngô Minh Thuận** | FastAPI backend, endpoint, Pydantic schema, SQLAlchemy model, PostgreSQL integration, telemetry processing, command lifecycle, ACK processing |
-| **Thượng Đình Hưng** | React + Vite frontend, dashboard UI, telemetry visualization, control, tích hợp tổng thể, debug, quay/dựng demo video |
-| **Lê Bảo Khánh** | Tài liệu, proposal, blog, weekly worklog, event report, Workshop, review song ngữ, navigation, screenshot, quality assurance |
+| Thành viên | Trách nhiệm | Bằng chứng đóng góp |
+| :--- | :--- | :--- |
+| **Phạm Lê Minh Khôi** | Kiến trúc AWS; VPC, Security Group, IAM Role, EC2, RDS và CloudWatch; DevOps; phần cứng YOLO UNO; cảm biến, thiết bị chấp hành, telemetry, cơ chế thăm dò lệnh và ACK | [5.3 kiến trúc](../5.3-Architecture-and-Service-Design/), [5.4 AWS](../5.4-AWS-Infrastructure-Setup/), [5.6 phần cứng](../5.6-Hardware-Integration/), [5.9 giám sát](../5.9-CloudWatch-Monitoring/) |
+| **Ngô Minh Thuận** | Backend FastAPI; endpoint, lược đồ Pydantic, mô hình SQLAlchemy, tích hợp PostgreSQL, xử lý telemetry, vòng đời lệnh và ACK | [5.3 API/dữ liệu](../5.3-Architecture-and-Service-Design/), [5.5 backend/cơ sở dữ liệu](../5.5-Backend-and-Database/), [5.8 kiểm thử](../5.8-End-to-End-Testing/) |
+| **Thượng Đình Hưng** | Frontend React + Vite; giao diện dashboard, trực quan hóa telemetry, chức năng điều khiển, tích hợp tổng thể, xử lý lỗi và quay/dựng video minh họa | [5.7 frontend](../5.7-Frontend-Integration/), [5.8 bằng chứng tích hợp](../5.8-End-to-End-Testing/), liên kết video trong phần cấu trúc kho mã nguồn |
+| **Lê Bảo Khánh** | Tài liệu, proposal, blog, nhật ký công việc hằng tuần, báo cáo sự kiện, Workshop, rà soát song ngữ, điều hướng, ảnh chụp màn hình và bảo đảm chất lượng | [5.1 tiêu chí/kết quả](../5.1-Workshop-overview/), [5.11 tài liệu/điều chỉnh](../5.11-Results-Challenges-Future/), Workshop song ngữ và kết quả kiểm tra Hugo |
 
-## Checklist bàn giao cuối
+Bảng trên giữ nguyên nội dung phân công đã thống nhất và dẫn người chấm đến bằng chứng đóng góp tương ứng. Bảng không thay thế [phần nhìn lại riêng của từng thành viên ở mục 5.11](../5.11-Results-Challenges-Future/); trước khi nộp, mỗi thành viên phải rà soát và xác nhận cả phạm vi phụ trách lẫn phần nhìn lại của mình.
 
-- [ ] Người nhận mở được source link và đúng commit ID.
-- [ ] Không có credential trong Git, ảnh, video hoặc Workshop.
-- [ ] Đã demo cách khởi động backend, frontend và firmware.
-- [ ] Đã review OpenAPI route và database schema từ source.
-- [ ] Đã bàn giao GPIO map số và power diagram.
-- [ ] Test matrix có actual evidence và status.
-- [ ] Đã xác nhận cấu hình CloudWatch và alarm threshold.
-- [ ] Đã sign-off issue, hạn chế, owner, quyết định chi phí và trạng thái dọn dẹp.
+## Danh sách kiểm tra bàn giao cuối
 
-<!-- TODO IMAGE: /images/5-Workshop/5.12-handover/repository-handover-checklist.png — Checklist bàn giao repository/resource/test cuối đã che thông tin nhạy cảm, có commit ID, owner, open issue và xác nhận của nhóm. -->
+- [ ] Người nhận mở được liên kết mã nguồn và xác định đúng mã commit.
+- [ ] Git, hình ảnh, video và Workshop không chứa thông tin xác thực.
+- [ ] Đã trình bày cách khởi động backend, frontend và firmware.
+- [ ] Đã rà soát các route OpenAPI và lược đồ cơ sở dữ liệu dựa trên mã nguồn.
+- [ ] Đã bàn giao sơ đồ chân GPIO và sơ đồ cấp nguồn.
+- [ ] Ma trận kiểm thử có kết quả thực tế, bằng chứng và trạng thái.
+- [ ] Bằng chứng đóng góp được gắn đúng thành viên và phần nhìn lại cá nhân đã được rà soát.
+- [ ] Đã xác nhận cấu hình CloudWatch và ngưỡng cảnh báo.
+- [ ] Đã xác nhận các vấn đề còn mở, hạn chế, người phụ trách, quyết định chi phí và trạng thái dọn dẹp.
+
+<!-- TODO IMAGE: /images/5-Workshop/5.12-handover/repository-handover-checklist.png — Danh sách kiểm tra bàn giao kho mã nguồn, tài nguyên và kết quả kiểm thử; đã che thông tin nhạy cảm, có mã commit, người phụ trách, vấn đề còn mở và xác nhận của nhóm. -->
 
 Quay lại [trang Workshop](../).

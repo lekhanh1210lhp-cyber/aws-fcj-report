@@ -10,9 +10,22 @@ pre: " <b> 5.1. </b> "
 
 Small rooms and laboratories often operate sensors and actuators independently. Readings are not retained centrally, users cannot review history, and a dashboard click does not prove that the physical actuator completed the action. This workshop addresses that gap for one sample room without presenting the prototype as a production building-management system.
 
-## Users and proposed solution
+## Target Users and Proposed Solution
 
-The primary users are a workshop participant deploying the stack, an operator viewing the dashboard, and a maintainer investigating failures. YOLO UNO sends environmental telemetry through HTTP to FastAPI on EC2. FastAPI persists telemetry and command state in PostgreSQL. The dashboard reads latest/history data and creates commands; the device polls, executes, and acknowledges them.
+| Target user | Need | Workshop value |
+| :--- | :--- | :--- |
+| Workshop participant / cloud learner | Deploy and validate an end-to-end AWS workload | A reproducible path from AWS infrastructure to application, hardware, monitoring, and evidence |
+| Room operator | View current/history data and request actuator changes | One dashboard for telemetry and fan, light, curtain, and mode commands |
+| Maintainer / developer | Trace faults across software, database, network, and hardware | Correlated API, SQL, systemd, Serial Monitor, and CloudWatch evidence |
+| Project reviewer / FCAJ mentor | Assess AWS relevance, implementation depth, and individual work | Explicit architecture decisions, measurable tests, trade-offs, and handover links |
+
+YOLO UNO sends environmental telemetry through HTTP to FastAPI on EC2. FastAPI persists telemetry and command state in PostgreSQL. The dashboard reads latest/history data and creates commands; the device polls, executes, and acknowledges them.
+
+## Relevance to FCAJ and AWS
+
+The workshop matches FCAJ learning outcomes by connecting cloud architecture, Linux operations, networking, security, database integration, full-stack development, physical IoT, testing, monitoring, documentation, and handover in one traceable project. AWS is not used only as generic hosting: EC2, EBS, RDS, VPC, Security Groups, an IAM Role, CloudWatch, and CloudWatch Alarms each have a documented responsibility, operational check, cost consideration, and architectural trade-off.
+
+The scope also demonstrates engineering judgment. It reuses the implemented FastAPI/PostgreSQL/HTTP design instead of claiming unimplemented serverless or managed-IoT services, and it records production gaps as future work.
 
 ## Technical objectives
 
@@ -50,11 +63,33 @@ The primary users are a workshop participant deploying the stack, an operator vi
 
 The source contains two rule-based mechanisms, not an AI model: the frontend creates time/threshold recommendations, while firmware Auto mode directly controls the fan at `temperature >= 30°C`, the light at analog value `< 350`, and the curtain around the `< 700` threshold. Direct actuator commands switch firmware to Manual mode.
 
-## Success criteria and deliverables
+## Concrete Outputs
 
-The workshop succeeds when telemetry reaches RDS, the dashboard reads it, each supported actuator command is executed once, ACK updates the stored state, CloudWatch receives the configured evidence, and another participant can reproduce the procedure without real credentials in the documentation.
+| Output | Concrete artifact or evidence |
+| :--- | :--- |
+| AWS foundation | Resource inventory for EC2/EBS, RDS, VPC/subnets, Security Groups, IAM Role, and CloudWatch |
+| Running backend | Active `aws-iot-backend` service, HTTP 200 health response, and deployment commit |
+| PostgreSQL persistence | `devices`, `telemetry_logs`, and `commands` table/query evidence |
+| Integrated YOLO UNO | Wiring/GPIO record, PlatformIO build, telemetry, command execution, and ACK serial evidence |
+| Local dashboard | Latest/history view, control request, returned command ID/state, and clear real/simulated source |
+| Monitoring | Backend/error log streams, EC2/RDS metrics, and six documented alarm configurations |
+| Validation package | Completed T01-T15 matrix with Pass/Fail/Not Run, evidence links, owners, and reruns |
+| Handover package | Bilingual Workshop, known limitations, source/deployment commit IDs, and signed checklist |
 
-Deliverables are the AWS resources, deployed backend service, database records, configured firmware, local dashboard, test evidence, CloudWatch views, bilingual workshop, and handover checklist.
+## Measurable Success Criteria
+
+| ID | Criterion | Measurement |
+| :--- | :--- | :--- |
+| S01 | Backend availability | `GET /api/health` returns HTTP 200 from the deployed service |
+| S02 | Telemetry persistence | One valid `room_01` POST produces one identifiable row in `telemetry_logs` |
+| S03 | Dashboard retrieval | Latest and ordered history requests return the stored `room_01` data |
+| S04 | Physical control | All six direct actuator commands are tested once with command ID and physical evidence |
+| S05 | Mode control | `MODE_AUTO` and `MODE_MANUAL` are observed in firmware behavior/serial evidence |
+| S06 | Command completion | The same command ID is captured first as `Pending` and later as `Executed` after ACK |
+| S07 | Monitoring | Both backend log groups, required EC2/RDS metrics, and six alarm definitions are visible |
+| S08 | Reproducibility and safety | Another participant follows the runbook without exposed credentials; all T01-T15 rows have a recorded status |
+
+The criteria define acceptance; they do not claim that a test passed until the referenced evidence is attached.
 
 <!-- TODO IMAGE: /images/5-Workshop/5.1-overview/end-to-end-system-overview.png — End-to-end view showing the dashboard, EC2 backend, RDS command state, and YOLO UNO hardware without credentials. -->
 

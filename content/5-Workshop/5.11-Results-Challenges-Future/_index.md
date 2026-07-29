@@ -35,6 +35,74 @@ Mark a result complete only when its evidence is attached. This prototype does n
 - Frontend labels the raw ADC light reading as Lux and hard-codes a real EC2 target in Vite configuration.
 - Hardware prose in the source repository mentions servo GPIO 8 and omits LCD in one place, but active firmware uses GPIO 38 and includes LCD1602. Active code is the workshop authority.
 
+## Project Customizations
+
+The project is not an unchanged tutorial deployment. Its reviewed customizations include:
+
+- a `room_01` domain model joining physical telemetry, dashboard history, and actuator state;
+- a FastAPI/PostgreSQL command lifecycle with stored `Pending` and `Executed` states plus device ACK;
+- eight firmware commands covering automatic/manual mode and direct fan, light, and curtain control;
+- firmware thresholds, GPIO mapping, LCD1602 output, reconnect timing, and ESP32 Preferences-based ACK recovery;
+- a React/Vite dashboard with telemetry charts, controls, rule-based recommendations, and explicit real/simulated-source concerns;
+- a private RDS network path through Security Group reference rather than public database access;
+- project-specific CloudWatch namespace, two backend log groups, and six documented alarms; and
+- an evidence-first bilingual Workshop that separates source-verified behavior from results still requiring screenshots/tests.
+
+These choices adapt the architecture to the implemented source and YOLO UNO hardware. Auto Scaling, Amazon SQS, AWS IoT Core, and an event-driven architecture remain future options and are not project customizations already deployed.
+
+## Individual Contributions
+
+| Contributor | Owned scope and concrete contribution | Evidence path |
+| :--- | :--- | :--- |
+| **Pham Le Minh Khoi** | AWS architecture, network/security boundaries, EC2/RDS/CloudWatch operations, YOLO UNO wiring, sensors/actuators, telemetry polling, command execution, and ACK | [Architecture](../5.3-Architecture-and-Service-Design/), [AWS setup](../5.4-AWS-Infrastructure-Setup/), [hardware](../5.6-Hardware-Integration/), [CloudWatch](../5.9-CloudWatch-Monitoring/) |
+| **Ngo Minh Thuan** | FastAPI routes, Pydantic aliases, SQLAlchemy models, PostgreSQL persistence, telemetry service, command lifecycle, and ACK processing | [API/data design](../5.3-Architecture-and-Service-Design/), [backend/database](../5.5-Backend-and-Database/), [test matrix](../5.8-End-to-End-Testing/) |
+| **Thuong Dinh Hung** | React/Vite dashboard, telemetry visualization, control requests, mode/recommendation UI, integration debugging, and demo-video production | [frontend integration](../5.7-Frontend-Integration/), [end-to-end validation](../5.8-End-to-End-Testing/), [handover](../5.12-Project-Handover/) |
+| **Le Bao Khanh** | Proposal/report content, blogs/worklogs/events, bilingual Workshop structure, source-to-document verification, navigation, screenshot plan, and QA | [Workshop overview](../5.1-Workshop-overview/), [test/evidence plan](../5.8-End-to-End-Testing/), [results](../5.11-Results-Challenges-Future/), [handover](../5.12-Project-Handover/) |
+
+Contribution is accepted only when the linked section is paired with source commit, screenshot, log, test record, document history, or other attributable evidence. This table records ownership; it does not replace the individual reflections below.
+
+## Individual Reflections
+
+### Pham Le Minh Khoi
+
+| Reflection field | Reflection |
+| :--- | :--- |
+| Challenge | Integrate a publicly reachable demo backend, private PostgreSQL, monitoring, and physical actuators without confusing cloud success with hardware success |
+| Root Cause | The flow crosses VPC rules, IAM, Linux services, HTTP polling, electrical wiring, and asynchronous ACK state |
+| Solution | Use an EC2-to-RDS Security Group reference, EC2 IAM Role, systemd/CloudWatch checks, source-defined GPIOs, safe power, command IDs, and persistent ACK recovery |
+| Lesson Learned | Validate each boundary independently and correlate one command ID through API, database, serial output, actuator action, and monitoring |
+| Future Improvement | Add HTTPS/stable endpoint, Infrastructure as Code, stronger IAM scoping, calibrated hardware evidence, and evaluate managed MQTT only after architecture review |
+
+### Ngo Minh Thuan
+
+| Reflection field | Reflection |
+| :--- | :--- |
+| Challenge | Preserve telemetry and make command completion observable across polling and ACK |
+| Root Cause | Asynchronous clients and database state can diverge; the current source also lacks command enum validation and strict ACK device ownership |
+| Solution | Model devices, telemetry, and commands in PostgreSQL; return command IDs/states; use FIFO pending polling and explicit ACK transitions |
+| Lesson Learned | An OpenAPI contract and stored state improve traceability, but validation, authorization, idempotency, and schema migration must be designed explicitly |
+| Future Improvement | Add supported-command validation, authenticated device identity, device-bound ACK checks, idempotency rules, Alembic migrations, and automated API tests |
+
+### Thuong Dinh Hung
+
+| Reflection field | Reflection |
+| :--- | :--- |
+| Challenge | Present live telemetry and controls while accurately distinguishing request acceptance, physical execution, and simulated fallback |
+| Root Cause | The current frontend polls multiple endpoints, keeps mode locally, falls back to generated data, and can report mock success after a failed command |
+| Solution | Inspect DevTools Network, use plural relative API routes, expose command ID/state, label simulated data, and verify physical execution through ACK/evidence |
+| Lesson Learned | A responsive UI is not enough; operational truth must come from backend/device state and error handling must never imply unverified success |
+| Future Improvement | Remove false-success fallback, add API-backed mode/command status, centralize environment configuration, correct the Lux label, and add component/integration tests |
+
+### Le Bao Khanh
+
+| Reflection field | Reflection |
+| :--- | :--- |
+| Challenge | Turn evolving and sometimes inconsistent source notes into a coherent bilingual Workshop without inventing deployment evidence |
+| Root Cause | Old Workshop pages described unrelated services, prose disagreed with active firmware, and required screenshots/test artifacts were incomplete |
+| Solution | Treat active source as authority, align English/Vietnamese structure, document limitations, use exact TODO evidence paths, and run Hugo/structure/link checks |
+| Lesson Learned | Technical documentation must distinguish implemented, proposed, expected, and proven states while keeping commands, names, paths, and translations synchronized |
+| Future Improvement | Add CI for Hugo/link/secret/parity checks, replace TODOs with attributable evidence, maintain a versioned API/GPIO contract, and schedule member review/sign-off |
+
 ## Challenges and lessons learned
 
 | Problem | Root cause | Solution | Lesson learned |

@@ -132,6 +132,10 @@ Expected Serial Monitor sequence, without fabricated fixed sensor values:
 [ack] command acknowledged
 ```
 
+## Expected Result
+
+YOLO UNO reads DHT20 and the analog light sensor, updates LCD1602, posts the exact telemetry schema every configured interval, receives each supported command once, applies safe actuator state, and changes the matching backend command from `Pending` to `Executed` through ACK. Serial evidence contains no Wi-Fi password or unredacted public endpoint.
+
 <!-- TODO IMAGE: /images/5-Workshop/5.6-hardware/yolo-uno-hardware-setup.png — Full YOLO UNO setup with DHT20, analog light sensor, LCD1602, fan, light/relay, and curtain servo; do not expose Wi-Fi credentials. -->
 <!-- TODO IMAGE: /images/5-Workshop/5.6-hardware/hardware-wiring-gpio-mapping.png — Annotated wiring close-up showing GPIO 1, 6, 10, 11, 12, 17, and 38 plus safe power/common ground. -->
 <!-- TODO IMAGE: /images/5-Workshop/5.6-hardware/platformio-serial-monitor.png — PlatformIO Serial Monitor showing Wi-Fi, telemetry, one command execution, and ACK; redact IPs and credentials. -->

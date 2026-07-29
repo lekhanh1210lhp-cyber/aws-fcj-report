@@ -10,7 +10,7 @@ pre: " <b> 5.8. </b> "
 
 Validate each boundary independently, then run the complete telemetry and command paths. The checked backend and firmware sources establish the exact schemas and behavior; use FastAPI `/docs` or `/openapi.json` to confirm the deployed version before testing.
 
-## Test protocol
+## Step 1 - Establish the test protocol
 
 1. Record date, tester, application commit IDs, firmware build, AWS region, and `room_01`.
 2. Redact credentials and private endpoints from evidence.
@@ -18,7 +18,7 @@ Validate each boundary independently, then run the complete telemetry and comman
 4. Enter the observed value in **Actual/evidence** and mark **Pass/Fail** only after execution.
 5. Restore hardware and services to a safe state after failure tests.
 
-## Test matrix
+## Step 2 - Execute and record the test matrix
 
 | ID | Objective | Preconditions | Steps | Expected result | Actual/evidence | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :---: |
@@ -38,7 +38,7 @@ Validate each boundary independently, then run the complete telemetry and comman
 | T14 | Wi-Fi disconnected | Safe device state | Disconnect Wi-Fi, observe, reconnect | Reconnect occurs; no command is duplicated | Serial evidence | Record |
 | T15 | Unsupported command | Controlled test; actuator safe | Submit unsupported value | Current backend may store it as `Pending`; firmware must reject it and send no ACK. Record this as a backend validation defect, not a passing 4xx test | API + SQL + serial log | Record |
 
-## API and database checks
+## Step 3 - Run API and database checks
 
 From EC2 Linux Bash:
 
@@ -63,7 +63,7 @@ LIMIT 6;
 
 A polling device may acknowledge so quickly that `Pending` is missed in a later query. Preserve the POST response showing `Pending`, then capture the final `Executed` record with the same ID.
 
-## Failure handling and acceptance
+## Step 4 - Validate failure handling and acceptance
 
 During T13/T14, the UI and firmware must report unavailability without claiming success. The checked frontend currently returns simulated success for some command failures, so T13 is expected to expose a defect until that behavior is corrected. An ACK retry must not repeat the actuator action. The checked backend has no command enum validator, so mark T15 **Fail** when it accepts the value; firmware rejection does not make backend validation pass.
 
@@ -71,8 +71,20 @@ During T13/T14, the UI and firmware must report unavailability without claiming 
 <!-- TODO IMAGE: /images/5-Workshop/5.8-testing/command-pending-to-executed.png — Same command ID shown first as Pending and later as Executed after ACK in API/SQL evidence. -->
 <!-- TODO IMAGE: /images/5-Workshop/5.8-testing/dashboard-hardware-control.png — Dashboard control paired with physical fan, light, and curtain evidence; show command IDs where possible and redact network details. -->
 
-## Result and troubleshooting
+## Expected Result
+
+Every T01-T15 row has an observed **Actual/evidence** value and a **Pass**, **Fail**, or **Not Run** status. Passing end-to-end evidence correlates the same device/command ID across API, PostgreSQL, firmware, dashboard, and relevant logs; known frontend/backend defects remain recorded as failures until corrected and rerun.
+
+## Troubleshooting
 
 This section is an execution plan, not a claim that tests have run. Do not call it stress testing and do not invent latency, throughput, or reliability numbers. A failed test should include the failing layer, log/request evidence, owner, correction, and rerun result.
+
+| Symptom | Check |
+| :--- | :--- |
+| `Pending` is not visible | Preserve the command POST response, then query the same ID after ACK |
+| UI and database disagree | Confirm real versus simulated UI source, plural API route, and newest database row |
+| Command repeats | Compare command IDs, `lastAck`, `pendingAck`, and separate ACK retry from actuation |
+| Test cannot be reproduced | Record commit IDs, region, device ID, timestamp/time zone, and exact preconditions |
+| Evidence contains sensitive data | Redact and recapture; rotate any exposed secret before continuing |
 
 Next: [configure and validate CloudWatch](../5.9-CloudWatch-Monitoring/).

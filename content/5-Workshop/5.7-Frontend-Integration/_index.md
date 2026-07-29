@@ -100,7 +100,9 @@ Open browser DevTools → **Network**:
 4. observe `Pending`, then the ACK-driven `Executed` state; and
 5. simulate a backend error and confirm the UI remains usable.
 
-**Expected result:** telemetry and history render, AWS health reflects the backend, controls create one traceable command, and the UI distinguishes request acceptance from physical execution.
+## Expected Result
+
+Telemetry and history render, AWS health reflects a real backend request, controls create one traceable command, and the UI distinguishes request acceptance from physical execution. Simulation is visibly labeled and a failed POST is not reported as physical success.
 
 <!-- TODO IMAGE: /images/5-Workshop/5.7-frontend/dashboard-overview.png — Dashboard showing latest telemetry, history, explicit real/simulated data source, and Analog light value; redact the EC2 address. -->
 <!-- TODO IMAGE: /images/5-Workshop/5.7-frontend/control-panel-api-request.png — Control panel together with DevTools Network showing one plural-route POST, command ID, and server state; redact host/IP details. -->

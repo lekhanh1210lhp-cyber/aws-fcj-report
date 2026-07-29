@@ -8,7 +8,7 @@ pre: " <b> 5.5. </b> "
 
 ## Tổng quan và mục tiêu
 
-Cài ứng dụng Python trên Amazon Linux EC2, kết nối database private `iot_dashboard`, xác minh API theo source và duy trì Uvicorn bằng `aws-iot-backend`. Runbook ứng dụng dùng user `ec2-user`, backend path `/home/ec2-user/aws-iot-dashboard/backend`, virtual environment `venv` và entry point `main:app`.
+Cài ứng dụng Python trên EC2 Amazon Linux, kết nối với cơ sở dữ liệu riêng `iot_dashboard`, xác minh API theo mã nguồn và duy trì Uvicorn bằng dịch vụ `aws-iot-backend`. Tài liệu vận hành của ứng dụng dùng tài khoản `ec2-user`, thư mục backend `/home/ec2-user/aws-iot-dashboard/backend`, môi trường ảo `venv` và điểm vào `main:app`.
 
 ## Bước 1 - Kết nối và cài công cụ
 
@@ -25,9 +25,9 @@ sudo dnf update -y
 sudo dnf install -y git python3 python3-pip postgresql15 curl
 ```
 
-Nếu bản Amazon Linux đã chọn dùng tên package PostgreSQL client khác, xác nhận bằng `dnf search postgresql` trước khi cài.
+Nếu phiên bản Amazon Linux đã chọn dùng tên gói PostgreSQL client khác, hãy kiểm tra bằng `dnf search postgresql` trước khi cài.
 
-## Bước 2 - Clone và tạo virtual environment
+## Bước 2 - Sao chép kho mã nguồn và tạo môi trường ảo
 
 Trong EC2 Linux Bash:
 
@@ -40,23 +40,23 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Source đã kiểm tra có `backend/main.py` và export `app`; vì vậy entry point của Uvicorn là `main:app`.
+Mã nguồn đã kiểm tra có file `backend/main.py` và xuất đối tượng `app`; vì vậy điểm vào của Uvicorn là `main:app`.
 
-## Bước 3 - Tạo environment file
+## Bước 3 - Tạo file biến môi trường
 
-Tạo `.env` đã ignore trên EC2:
+Tạo file `.env` trên EC2 và bảo đảm file này đã được loại khỏi Git:
 
 ```dotenv
 DATABASE_URL=postgresql://<DB_USER>:<DB_PASSWORD>@<RDS_ENDPOINT>:5432/iot_dashboard
 ```
 
-Nếu backend dùng `sslmode=verify-full`, tải Amazon RDS CA bundle hiện hành theo runbook của project, lưu với quyền hạn chế và dùng absolute path mà SQLAlchemy/psycopg yêu cầu:
+Nếu backend dùng `sslmode=verify-full`, hãy tải gói chứng chỉ CA hiện hành của Amazon RDS theo tài liệu dự án, lưu file với quyền truy cập hạn chế và dùng đường dẫn tuyệt đối theo yêu cầu của SQLAlchemy/psycopg:
 
 ```dotenv
 DATABASE_URL=postgresql://<DB_USER>:<DB_PASSWORD>@<RDS_ENDPOINT>:5432/iot_dashboard?sslmode=verify-full&sslrootcert=<ABSOLUTE_CA_PATH>/global-bundle.pem
 ```
 
-URL-encode ký tự đặc biệt trong `<DB_PASSWORD>`. Không commit `.env` hoặc password thật.
+Mã hóa URL các ký tự đặc biệt trong `<DB_PASSWORD>`. Không commit file `.env` hoặc mật khẩu thật.
 
 ## Bước 4 - Kiểm tra PostgreSQL
 
@@ -73,13 +73,13 @@ SELECT current_database(), current_user;
 \dt
 ```
 
-Khởi tạo schema SQLAlchemy bằng lệnh có trong source:
+Khởi tạo schema SQLAlchemy bằng lệnh được định nghĩa trong mã nguồn:
 
 ```bash
 python -m app.database.init_db
 ```
 
-Lệnh gọi `Base.metadata.create_all` và dự kiến tạo `devices`, `telemetry_logs`, `commands`. Xác nhận bằng `\dt` và `\d <table_name>`; project này không định nghĩa quy trình migration Alembic.
+Lệnh này gọi `Base.metadata.create_all` và dự kiến tạo ba bảng `devices`, `telemetry_logs`, `commands`. Xác nhận bằng `\dt` và `\d <table_name>`; dự án hiện không có quy trình migration bằng Alembic.
 
 ## Bước 5 - Chạy Uvicorn thủ công
 
@@ -97,11 +97,11 @@ curl -i http://127.0.0.1:8000/api/health
 curl -s http://127.0.0.1:8000/openapi.json
 ```
 
-Xác nhận tám route đã nêu ở mục 5.3 và xem Pydantic request schema được sinh ra trước khi tạo ví dụ telemetry hoặc command.
+Xác nhận tám route đã nêu ở mục 5.3 và xem schema yêu cầu do Pydantic sinh ra trước khi tạo dữ liệu telemetry hoặc lệnh mẫu.
 
 ## Bước 6 - Tạo `aws-iot-backend.service`
 
-Tạo `/etc/systemd/system/aws-iot-backend.service` bằng user, path và Uvicorn module đã xác minh:
+Tạo `/etc/systemd/system/aws-iot-backend.service` bằng tài khoản, đường dẫn và module Uvicorn đã xác minh:
 
 ```ini
 [Unit]
@@ -124,7 +124,7 @@ StandardError=append:/var/log/aws-iot-backend/backend-error.log
 WantedBy=multi-user.target
 ```
 
-Chuẩn bị thư mục log và khởi động service:
+Chuẩn bị thư mục log và khởi động dịch vụ:
 
 ```bash
 sudo install -d -o ec2-user -g ec2-user /var/log/aws-iot-backend
@@ -135,9 +135,9 @@ sudo systemctl status aws-iot-backend --no-pager
 curl -i http://127.0.0.1:8000/api/health
 ```
 
-**Kết quả mong đợi:** service là `active (running)`, health trả HTTP 200 và các table ứng dụng có trong `iot_dashboard`.
+**Kết quả mong đợi:** dịch vụ ở trạng thái `active (running)`, API kiểm tra sức khỏe trả HTTP 200 và các bảng ứng dụng đã có trong `iot_dashboard`.
 
-## Bước 7 - Xem log và cập nhật deployment
+## Bước 7 - Xem log và cập nhật phiên bản triển khai
 
 ```bash
 sudo journalctl -u aws-iot-backend -n 100 --no-pager
@@ -151,22 +151,26 @@ sudo systemctl restart aws-iot-backend
 curl -i http://127.0.0.1:8000/api/health
 ```
 
-Chỉ pull từ branch đã duyệt, chạy lại `python -m app.database.init_db` khi model thay đổi và rà soát tương thích schema trước khi restart. Không dùng `git reset --hard` làm lối tắt triển khai.
+Chỉ lấy thay đổi từ nhánh đã được duyệt. Khi mô hình dữ liệu thay đổi, chạy lại `python -m app.database.init_db` và rà soát tính tương thích của lược đồ trước khi khởi động lại. Không dùng `git reset --hard` làm lối tắt triển khai.
 
-<!-- TODO IMAGE: /images/5-Workshop/5.5-backend-database/backend-systemd-health-check.png — Terminal hiển thị aws-iot-backend active và GET /api/health trả HTTP 200; che hostname, public IP và credential. -->
-<!-- TODO IMAGE: /images/5-Workshop/5.5-backend-database/postgresql-tables-and-commands.png — Bằng chứng psql cho devices, telemetry_logs, commands và query command-state đã che thông tin nhạy cảm; không để lộ RDS endpoint hoặc password. -->
+## Kết quả mong đợi
+
+Dịch vụ `aws-iot-backend` ở trạng thái `active (running)`, `GET /api/health` trả HTTP 200, EC2 kết nối được với RDS riêng và ba bảng `devices`, `telemetry_logs`, `commands` tồn tại trong `iot_dashboard`. Bằng chứng triển khai phải ghi mã commit của ứng dụng và không chứa thông tin xác thực.
+
+<!-- TODO IMAGE: /images/5-Workshop/5.5-backend-database/backend-systemd-health-check.png — Terminal hiển thị aws-iot-backend đang hoạt động và GET /api/health trả HTTP 200; che tên máy, địa chỉ IP công khai và thông tin xác thực. -->
+<!-- TODO IMAGE: /images/5-Workshop/5.5-backend-database/postgresql-tables-and-commands.png — Bằng chứng psql cho các bảng devices, telemetry_logs, commands và truy vấn trạng thái lệnh đã che thông tin nhạy cảm; không để lộ endpoint RDS hoặc mật khẩu. -->
 
 ## Xử lý sự cố
 
 | Hiện tượng | Chẩn đoán và khắc phục |
 | :--- | :--- |
-| Connection refused | Xác nhận RDS/port hoặc Uvicorn đang chạy và listen |
-| Connection timeout | Kiểm tra source RDS SG là `iot-ec2-sg`, subnet, endpoint và region |
-| Sai `DATABASE_URL` | Kiểm tra database/user/encoding; nạp đúng `.env` mà systemd dùng |
-| curl local được, remote lỗi | Bind `0.0.0.0`, kiểm tra EC2 SG port 8000 và public IP |
-| `systemd` thất bại | Xem `systemctl status`, `journalctl`; kiểm tra user, path, module, quyền |
-| Port đã được dùng | Chạy `sudo ss -ltnp | grep :8000` và dừng process ngoài dự kiến |
-| SSL verify lỗi | Dùng đúng CA bundle, absolute path, permission và endpoint hostname |
-| Thiếu table | Chạy migration/init do source định nghĩa; không tạo schema tùy ý |
+| Bị từ chối kết nối | Xác nhận RDS/đúng cổng hoặc Uvicorn đang chạy và lắng nghe |
+| Hết thời gian chờ | Kiểm tra nguồn của RDS SG là `iot-ec2-sg`, subnet, endpoint và khu vực |
+| Sai `DATABASE_URL` | Kiểm tra tên cơ sở dữ liệu, người dùng, cách mã hóa; nạp đúng `.env` mà `systemd` sử dụng |
+| curl cục bộ thành công, truy cập từ xa thất bại | Bind `0.0.0.0`, kiểm tra cổng 8000 trong EC2 SG và IP công khai |
+| `systemd` không khởi động được | Xem `systemctl status`, `journalctl`; kiểm tra tài khoản, đường dẫn, module và quyền |
+| Cổng đã được sử dụng | Chạy `sudo ss -ltnp | grep :8000` và dừng tiến trình ngoài dự kiến |
+| Xác minh SSL thất bại | Dùng đúng CA bundle, đường dẫn tuyệt đối, quyền file và tên máy chủ endpoint |
+| Thiếu bảng | Chạy lệnh khởi tạo/migration do mã nguồn định nghĩa; không tự tạo schema khác |
 
 Tiếp theo: [tích hợp phần cứng YOLO UNO](../5.6-Hardware-Integration/).

@@ -136,6 +136,10 @@ Verify the deployed threshold, period, evaluation count, missing-data behavior, 
 - **In alarm:** enough datapoints breach the configured threshold.
 - **Insufficient data:** the alarm lacks enough usable datapoints; this is not the same as healthy.
 
+## Expected Result
+
+CloudWatch shows recent events in both backend log groups, guest memory/disk/CPU metrics in `IoTDashboard/EC2`, native EC2 and RDS metrics, and the six named alarm configurations with explainable states. Evidence proves what is deployed and does not claim SNS notifications.
+
 <!-- TODO IMAGE: /images/5-Workshop/5.9-cloudwatch/backend-cloudwatch-logs.png — Both backend and backend-error log groups with recent instance streams; redact account IDs, instance IDs, IPs, and sensitive log values. -->
 <!-- TODO IMAGE: /images/5-Workshop/5.9-cloudwatch/ec2-rds-metrics.png — IoTDashboard/EC2 guest metrics plus native EC2 and RDS metric graphs over the same recent time range. -->
 <!-- TODO IMAGE: /images/5-Workshop/5.9-cloudwatch/cloudwatch-alarms.png — Six documented alarms with names, thresholds, and current states; redact account identifiers. -->

@@ -91,7 +91,7 @@ nc -vz <RDS_ENDPOINT> 5432
 
 If `nc` is unavailable, install the appropriate netcat package for the selected Linux distribution. A successful TCP test proves the route and Security Groups, not database credentials.
 
-## Evidence and expected result
+## Expected Result and Evidence
 
 Capture redacted evidence of the EC2 **running** state, attached EBS volume and IAM Role, RDS **available** state, DB Subnet Group, both Security Group rule sets, and successful EC2-to-RDS port test.
 

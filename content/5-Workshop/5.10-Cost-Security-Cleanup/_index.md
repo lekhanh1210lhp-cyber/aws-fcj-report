@@ -10,7 +10,7 @@ pre: " <b> 5.10. </b> "
 
 Understand the cost drivers, review the prototype security boundary, preserve required evidence, and remove resources in dependency order. Exact prices are not stated because they depend on region, resource sizes, retention, transfer, and current pricing.
 
-## Cost review
+## Step 1 - Review cost drivers
 
 | Resource | Cost driver | Workshop control |
 | :--- | :--- | :--- |
@@ -22,7 +22,7 @@ Understand the cost drivers, review the prototype security boundary, preserve re
 
 Use the AWS Pricing Calculator or the actual bill for a dated estimate. Do not copy an unverified price into the report.
 
-## Security review
+## Step 2 - Review the security boundary
 
 - Use least-privilege identities and MFA.
 - Use an EC2 IAM Role; do not hard-code AWS access keys.
@@ -37,7 +37,7 @@ Use the AWS Pricing Calculator or the actual bill for a dated estimate. Do not c
 
 Production recommendations include a reverse proxy, HTTPS, authentication, authorization, managed secrets, backups, and a reviewed network design. They are not current implemented features.
 
-## Pre-clean-up evidence
+## Step 3 - Preserve pre-clean-up evidence
 
 Before deleting anything, preserve:
 
@@ -50,22 +50,24 @@ Before deleting anything, preserve:
 
 Confirm who owns snapshots and how long evidence must be retained.
 
-## Clean-up procedure
+## Step 4 - Clean up only project-owned resources
 
 1. Stop new telemetry/command traffic and place actuators in a safe state.
-2. Stop or terminate EC2 according to the handover decision.
-3. Delete unattached EBS volumes and unnecessary snapshots after confirming ownership.
-4. Delete RDS, taking a final snapshot only when retention is required and approved.
-5. Delete CloudWatch alarms.
-6. Delete unneeded log groups and custom monitoring data according to retention policy.
-7. Remove the project IAM Role/instance profile if it is used only by this project.
-8. Delete Security Groups only after dependent ENIs/resources are gone.
-9. Remove workshop-only route/network resources only when no shared dependency exists.
-10. Open Billing/Cost Explorer and verify that no unexpected project resource remains.
+2. Preserve the evidence and final-snapshot decision recorded in Step 3.
+3. Stop and terminate the project EC2 instance after handover approval.
+4. Verify the EC2 root EBS `DeleteOnTermination` setting; delete only project-owned unattached volumes and snapshots that were actually created.
+5. Delete the project RDS for PostgreSQL instance; create a final snapshot only when retention is required and approved.
+6. Delete the six project CloudWatch alarms and, after the retention decision, the two project log groups.
+7. Remove `iot-dashboard-cloudwatch-role` and its instance profile only if no other workload uses them.
+8. Delete `iot-ec2-sg` and `iot-rds-sg` after their ENI/resource dependencies are gone.
+9. If this Workshop created a dedicated DB Subnet Group, public subnet, two DB subnets, route table, Internet Gateway, and VPC, delete them in dependency order. Do not delete selected/shared network resources.
+10. Open Billing/Cost Explorer and the tagged-resource inventory to verify that no unexpected project resource remains.
+
+The implementation creates no S3 bucket and no CloudFormation, SAM, CDK, or Terraform stack/state. Therefore, clean-up does **not** instruct participants to delete a bucket or stack. If a future deployment adds one, update the inventory and dependency order first.
 
 Stopping RDS is temporary and subject to service limits; it may start automatically again. Deleting the database and other billable resources is the way to avoid continuing long-term charges, subject to the team's retention decision.
 
-## Verification and troubleshooting
+## Step 5 - Verify the clean-up
 
 - Re-run the tagged-resource inventory in the correct region.
 - Check for stopped instances, unattached EBS volumes, retained RDS snapshots, log groups, and idle alarms.
@@ -75,6 +77,19 @@ Stopping RDS is temporary and subject to service limits; it may start automatica
 
 <!-- TODO IMAGE: /images/5-Workshop/5.10-cleanup/aws-resource-inventory.png — Redacted before/after AWS resource inventory and Billing/Cost Explorer check showing the workshop clean-up result. -->
 
-**Expected result:** required evidence is retained, no unapproved billable workshop resource remains, and the security review records current limitations without claiming production readiness.
+## Expected Result
+
+Required evidence is retained, no unapproved billable project-owned Workshop resource remains, shared resources are untouched, and the security review records current limitations without claiming production readiness.
+
+## Troubleshooting
+
+| Symptom | Check |
+| :--- | :--- |
+| Security Group cannot be deleted | Find dependent ENIs, EC2, RDS, or referenced Security Groups |
+| VPC/subnet cannot be deleted | Check Internet Gateway, route table associations, DB Subnet Group, and ENIs |
+| RDS deletion is blocked | Deletion protection, final snapshot name, retained automated backups, and owner approval |
+| EBS cost remains | Unattached volumes and snapshots actually owned by this project |
+| CloudWatch cost remains | Log-group retention/ingestion and alarms; confirm the agent stopped with EC2 |
+| Resource ownership is uncertain | Stop deletion, use tags/inventory and obtain owner confirmation |
 
 Next: [document results, challenges, and future improvements](../5.11-Results-Challenges-Future/).
