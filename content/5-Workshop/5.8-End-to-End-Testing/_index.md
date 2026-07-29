@@ -30,7 +30,7 @@ Validate each boundary independently, then run the complete telemetry and comman
 | T06 | Hardware polling | Device online | Observe polling after T05 | Device receives the correct ID/command once | Hardware demonstration video | **Pass** |
 | T07 | Fan ON/OFF | Fan safely wired | Send `FAN_ON`, then `FAN_OFF` | Physical state matches each command | Hardware demonstration video | **Pass** |
 | T08 | Light ON/OFF | Light/relay safely wired | Send `LIGHT_ON`, then `LIGHT_OFF` | Physical state matches each command | Hardware demonstration video | **Pass** |
-| T09 | Curtain OPEN/CLOSE | Servo safely wired | Send open, then close | Servo reaches source-defined positions | Hardware demonstration video | **Pass** |
+| T09 | Curtain OPEN/CLOSE | Servo safely wired | Send `CURTAIN_OPEN`, then `CURTAIN_CLOSE` | Servo moves to 90° for open and returns to 0° for close, as defined in the firmware | Hardware demonstration video | **Pass** |
 | T10 | ACK lifecycle | T05-T09 command exists | Observe POST ACK and query state | Same command changes `Pending` → `Executed` | Figure 16: the same ID 189 changes to `Executed` | **Pass** |
 | T11 | PostgreSQL persistence | DB session available | Query after telemetry/commands | Records survive API refresh/restart | SQL evidence in Figures 15 and 16 | **Pass** |
 | T12 | CloudWatch logs | Agent configured | Create a new health/telemetry request | New backend event appears in correct stream | Backend logs in section 5.9 | **Pass** |
@@ -79,7 +79,7 @@ To isolate the command lifecycle while hardware was unavailable at the time of e
 
 ### T06-T09 evidence - Hardware demonstration video
 
-The dashboard command and physical hardware response are recorded in the [Google Drive demonstration video](https://drive.google.com/file/d/1T97dUY58hbT2ppxvg7ESR12Jg9BA828W/view?usp=sharing). The video provides evidence of device command reception and physical actuator response for test cases T06-T09, replacing Figure 17.
+The dashboard command and physical hardware response are recorded in the [Google Drive demonstration video](https://drive.google.com/file/d/1T97dUY58hbT2ppxvg7ESR12Jg9BA828W/view?usp=sharing). The video provides evidence of device command reception and physical actuator response for test cases T06-T09.
 
 ## Step 4 - Validate reconnection behavior and acceptance
 

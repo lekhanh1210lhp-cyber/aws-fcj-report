@@ -30,7 +30,7 @@ Trước tiên, xác minh độc lập từng lớp kết nối; sau đó kiểm
 | T06 | Phần cứng thăm dò lệnh | Thiết bị trực tuyến | Quan sát quá trình thăm dò sau T05 | Thiết bị nhận đúng ID/lệnh đúng một lần | Video demo phần cứng | **Đạt** |
 | T07 | Bật/tắt quạt | Quạt được đấu nối an toàn | Gửi `FAN_ON`, rồi `FAN_OFF` | Trạng thái vật lý đúng với từng lệnh | Video demo phần cứng | **Đạt** |
 | T08 | Bật/tắt đèn | Đèn/relay được đấu nối an toàn | Gửi `LIGHT_ON`, rồi `LIGHT_OFF` | Trạng thái vật lý đúng với từng lệnh | Video demo phần cứng | **Đạt** |
-| T09 | Mở/đóng rèm | Servo được đấu nối an toàn | Gửi `CURTAIN_OPEN`, rồi `CURTAIN_CLOSE` | Servo đi đến vị trí được định nghĩa trong mã nguồn | Video demo phần cứng | **Đạt** |
+| T09 | Mở/đóng rèm | Servo được đấu nối an toàn | Gửi `CURTAIN_OPEN`, rồi `CURTAIN_CLOSE` | Servo quay đến 90° khi mở và trở về 0° khi đóng, đúng với giá trị được định nghĩa trong firmware | Video demo phần cứng | **Đạt** |
 | T10 | Vòng đời ACK | Có lệnh từ T05-T09 | Quan sát POST ACK và truy vấn trạng thái | Cùng một lệnh đổi `Pending` → `Executed` | Hình 16: cùng ID 189 chuyển sang `Executed` | **Đạt** |
 | T11 | Khả năng lưu trữ bền vững của PostgreSQL | Có phiên kết nối DB | Truy vấn sau khi gửi telemetry/lệnh | Bản ghi vẫn còn sau khi tải lại hoặc khởi động lại API | Bằng chứng SQL trong Hình 15 và Hình 16 | **Đạt** |
 | T12 | Log CloudWatch | Agent đã cấu hình | Tạo yêu cầu sức khỏe/telemetry mới | Sự kiện backend mới xuất hiện đúng luồng log | Log backend trong mục 5.9 | **Đạt** |
@@ -79,7 +79,7 @@ Hình 15 sử dụng một yêu cầu `curl` có kiểm soát để xác minh ri
 
 ### Bằng chứng T06-T09 - Video demo phần cứng
 
-Quá trình dashboard gửi lệnh và phần cứng thực thi được ghi lại trong [video demo trên Google Drive](https://drive.google.com/file/d/1T97dUY58hbT2ppxvg7ESR12Jg9BA828W/view?usp=sharing). Video được dùng làm bằng chứng cho quá trình thiết bị nhận lệnh và phản ứng vật lý trong các test case T06-T09, thay cho Hình 17.
+Quá trình dashboard gửi lệnh và phần cứng thực thi được ghi lại trong [video demo trên Google Drive](https://drive.google.com/file/d/1T97dUY58hbT2ppxvg7ESR12Jg9BA828W/view?usp=sharing). Video được dùng làm bằng chứng cho quá trình thiết bị nhận lệnh và phản ứng vật lý trong các test case T06-T09.
 
 ## Bước 4 - Xác minh khả năng kết nối lại và nghiệm thu
 
