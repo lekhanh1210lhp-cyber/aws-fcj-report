@@ -103,10 +103,12 @@ Mở DevTools → **Network**:
 **Kết quả mong đợi:** telemetry và history được render, AWS health phản ánh backend, control tạo đúng một command có thể theo dõi, UI phân biệt nhận request với thực thi vật lý.
 
 <!-- TODO IMAGE: /images/5-Workshop/5.7-frontend/dashboard-overview.png — Dashboard hiển thị latest telemetry, history, nguồn dữ liệu real/simulated rõ ràng và Analog light value; che địa chỉ EC2. -->
-![Giao diện Trạm Điều khiển Thời gian thực hiển thị dữ liệu telemetry và Bảng Gửi Lệnh điều khiển thiết bị từ xa](\images\5-Workshop\5.7-frontend\dashboard-overview_1.PNG)
-![Giao diện Phân tích & Đề xuất Tự động kèm Biểu đồ Lịch sử được truy vấn trực tiếp từ Amazon RDS PostgreSQL](\images\5-Workshop\5.7-frontend\dashboard-overview_2.PNG)
+![Giao diện Trạm Điều khiển Thời gian thực hiển thị dữ liệu telemetry và Bảng Gửi Lệnh điều khiển thiết bị từ xa](/images/5-Workshop/5.7-frontend/dashboard-overview_1.PNG)
+![Giao diện Phân tích & Đề xuất Tự động kèm Biểu đồ Lịch sử được truy vấn trực tiếp từ Amazon RDS PostgreSQL](/images/5-Workshop/5.7-frontend/dashboard-overview_2.PNG)
+*Hình 5-7-1. Dashboard hiển thị latest telemetry, history, nguồn dữ liệu real/simulated rõ ràng và Analog light value.*
 <!-- TODO IMAGE: /images/5-Workshop/5.7-frontend/control-panel-api-request.png — Control panel cùng DevTools Network hiển thị một POST route plural, command ID và server state; che host/IP. -->
-![Kiểm tra giao tiếp API trên Web Dashboard qua Chrome DevTools Network tab, trả về HTTP 200 OK thành công.](\images\5-Workshop\5.7-frontend\control-panel-api-request.PNG)
+![Kiểm tra giao tiếp API trên Web Dashboard qua Chrome DevTools Network tab, trả về HTTP 200 OK thành công.](/images/5-Workshop/5.7-frontend/control-panel-api-request.PNG)
+*Hình 5-7-2. Kiểm tra giao tiếp API trên Web Dashboard qua Chrome DevTools Network tab, trả về HTTP 200 OK thành công.*
 
 ## Xử lý sự cố
 

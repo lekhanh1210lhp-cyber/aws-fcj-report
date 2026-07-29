@@ -70,11 +70,13 @@ During T13/T14, the UI and firmware must report unavailability without claiming 
 <!-- TODO IMAGE: /images/5-Workshop/5.8-testing/telemetry-api-database-validation.png — Matching telemetry request/response and telemetry_logs query for room_01; redact endpoints and credentials. -->
 <!-- TODO IMAGE: /images/5-Workshop/5.8-testing/command-pending-to-executed.png — Same command ID shown first as Pending and later as Executed after ACK in API/SQL evidence. -->
 <!-- TODO IMAGE: /images/5-Workshop/5.8-testing/dashboard-hardware-control.png — Dashboard control paired with physical fan, light, and curtain evidence; show command IDs where possible and redact network details. -->
-![Real-time verification of remote fan hardware control through dashboard control panel](\images\5-Workshop\5.8-testing\dashboard-hardware-control_Fan.PNG)
+![Real-time verification of remote fan hardware control through dashboard control panel](/images/5-Workshop/5.8-testing/dashboard-hardware-control_Fan.PNG)
 
-![Real-time verification of remote light control through dashboard control panel](\images\5-Workshop\5.8-testing\dashboard-hardware-control_Light.PNG)
+![Real-time verification of remote light control through dashboard control panel](/images/5-Workshop/5.8-testing/dashboard-hardware-control_LED.PNG)
 
-![Real-time verification of remote curtain hardware control through dashboard control panel](\images\5-Workshop\5.8-testing\dashboard-hardware-control_Curtain.PNG)
+![Real-time verification of remote curtain hardware control through dashboard control panel](/images/5-Workshop/5.8-testing/dashboard-hardware-control_Curtain.PNG)
+
+*Figure 5-8. Real-time verification of remote fan hardware control through dashboard control panel.*
 
 ## Result and troubleshooting
 

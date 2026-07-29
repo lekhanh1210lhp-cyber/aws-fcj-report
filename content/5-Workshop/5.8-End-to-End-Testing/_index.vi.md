@@ -71,12 +71,12 @@ Trong T13/T14, UI và firmware phải báo unavailable mà không tuyên bố th
 <!-- TODO IMAGE: /images/5-Workshop/5.8-testing/command-pending-to-executed.png — Cùng command ID xuất hiện trước ở Pending, sau ở Executed sau ACK trong evidence API/SQL. -->
 <!-- TODO IMAGE: /images/5-Workshop/5.8-testing/dashboard-hardware-control.png — Control dashboard ghép với evidence vật lý cho quạt, đèn, rèm; hiện command ID khi có thể và che thông tin mạng. -->
 
-![Kiểm tra điều khiển quạt từ xa qua dashboard control panel](\images\5-Workshop\5.8-testing\dashboard-hardware-control_Fan.PNG)
+![Kiểm tra điều khiển quạt từ xa qua dashboard control panel](/images/5-Workshop/5.8-testing/dashboard-hardware-control_Fan.PNG)
 
-![Kiểm tra điều khiển đèn từ xa qua dashboard control panel](\images\5-Workshop\5.8-testing\dashboard-hardware-control_Light.PNG)
+![Kiểm tra điều khiển đèn từ xa qua dashboard control panel](/images/5-Workshop/5.8-testing/dashboard-hardware-control_Light.PNG)
 
-![Kiểm tra điều khiển đèn từ xa qua dashboard control panel](\images\5-Workshop\5.8-testing\dashboard-hardware-control_Curtain.PNG)
-
+![Kiểm tra điều khiển đèn từ xa qua dashboard control panel](/images/5-Workshop/5.8-testing/dashboard-hardware-control_Curtain.PNG)
+*Hình 5-8. Kiểm tra điều khiển đèn từ xa qua dashboard control panel theo thời gian thực.*
 ## Kết quả và xử lý sự cố
 
 Đây là kế hoạch thực thi, không phải tuyên bố test đã chạy. Không gọi là stress testing và không bịa số liệu latency, throughput hoặc reliability. Test fail phải ghi layer lỗi, log/request evidence, owner, cách sửa và kết quả rerun.
