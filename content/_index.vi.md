@@ -27,7 +27,7 @@ chapter: false
 
 &emsp; **Thời gian thực tập:** Từ ngày 15/06/2026 đến ngày 23/08/2026
 
-<img src="/images/Le_Bao_Khanh.png" alt="Ảnh đại diện của bạn" width="450"/>
+<img src="/images/Ảnh CV_2.jpg" alt="Ảnh đại diện của bạn" width="450"/>
 
 ### Nội dung báo cáo
 
