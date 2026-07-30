@@ -10,7 +10,7 @@ pre: " <b> 5.2. </b> "
 
 Prepare the AWS account, local tools, hardware, access material, and baseline knowledge before creating billable resources. The examples use Asia Pacific (Singapore), `ap-southeast-1`, as the workshop baseline; confirm the deployed project region and keep EC2, RDS, VPC, and CloudWatch in that same region.
 
-## AWS access
+## Step 1 - Verify AWS access
 
 - An AWS account with billing visibility and MFA enabled.
 - Least-privilege access to EC2, EBS, RDS, VPC, Security Groups, IAM Role attachment, CloudWatch, and CloudWatch Alarms.
@@ -20,7 +20,7 @@ Prepare the AWS account, local tools, hardware, access material, and baseline kn
 
 Before provisioning, record the region, VPC CIDR, public subnet CIDR, two DB subnets in different Availability Zones, resource-name prefix, and the person responsible for clean-up.
 
-## Local tools and version checks
+## Step 2 - Verify local tools and versions
 
 Run each command in the named environment. Compatible newer versions are acceptable when the project source supports them.
 
@@ -37,7 +37,7 @@ Run each command in the named environment. Compatible newer versions are accepta
 
 If PowerShell cannot find a tool, reopen the terminal after installation and verify `Get-Command <tool>`. Do not mix `%USERPROFILE%` from Command Prompt with `$env:USERPROFILE` in PowerShell.
 
-## Hardware and electrical safety
+## Step 3 - Prepare hardware and electrical safety
 
 Prepare:
 
@@ -52,17 +52,30 @@ Prepare:
 
 Do not power a motor or relay load directly from a microcontroller GPIO. Verify voltage levels, driver/flyback protection, and common ground before connecting actuators.
 
-## Source and secrets readiness
+## Step 4 - Verify source and secrets readiness
 
 The application source is the separate `aws-iot-dashboard` repository. It contains backend `requirements.txt`, frontend `package.json`, firmware `platformio.ini`, `boards/yolo_uno.json`, and `include/secrets.example.h`. Its `.gitignore` excludes `.env`, `.pem`, virtual environments, build output, and `node_modules`; confirm `hardware/include/secrets.h` remains untracked before sharing.
 
 The reviewed source confirms Uvicorn `main:app`, Amazon Linux user `ec2-user`, virtual environment `venv`, tables `devices`, `telemetry_logs`, and `commands`, and the numeric GPIO map documented in section 5.6.
 
-## Knowledge checklist
+## Step 5 - Confirm prerequisite knowledge
 
 Participants should understand REST methods/status codes, PostgreSQL queries, Security Group references, FastAPI/OpenAPI, React/Vite, PlatformIO, basic Linux permissions, and `systemd`.
 
-## Readiness gate
+## Step 6 - Confirm optional tooling boundaries
+
+| Tool | Required for this implementation? | Reason |
+| :--- | :---: | :--- |
+| AWS Management Console | Yes | The documented provisioning and evidence flow uses the Console |
+| AWS CLI | No | Useful for inventory/verification, but no required deployment command depends on it |
+| AWS SAM CLI | No | The project does not deploy Lambda or a SAM application |
+| AWS CDK | No | The current infrastructure is not defined as a CDK application |
+| Terraform | No | No Terraform configuration/state is part of the reviewed source |
+| CloudFormation | No | No CloudFormation stack is created by this Workshop |
+
+Participants may add an approved Infrastructure as Code workflow later, but its resources and clean-up procedure must then be documented separately. Do not block the current Workshop because AWS CLI, SAM, CDK, or Terraform is absent.
+
+## Step 7 - Complete the readiness gate
 
 - [ ] Region and naming are agreed.
 - [ ] Least-privilege AWS access works.
@@ -74,8 +87,18 @@ Participants should understand REST methods/status codes, PostgreSQL queries, Se
 
 <!-- TODO IMAGE: /images/5-Workshop/5.2-prerequisites/development-tools-versions.png — Terminal evidence showing the verified Git, Python, Node.js, npm, PlatformIO, and psql versions. -->
 
-## Result and troubleshooting
+## Expected Result
 
 Proceed only when every blocking item above is satisfied. If a required source repository or the exact firmware pin map is missing, record it as a handover blocker; do not invent values or energize the circuit.
+
+## Troubleshooting
+
+| Symptom | Check |
+| :--- | :--- |
+| AWS action is denied | Signed-in identity, MFA, required service permission, `iam:PassRole`, and correct account |
+| Tool command is not found | Installation path, reopened terminal, and `Get-Command <tool>` |
+| Repository is incomplete | Correct branch/commit and presence of backend, frontend, hardware, and example secret files |
+| Secret appears tracked | Stop, remove it from the change set, rotate exposed values, and verify `.gitignore` |
+| Hardware requirement is unclear | Do not energize actuators; verify the active firmware map and rated supply first |
 
 Next: [review the architecture and service boundaries](../5.3-Architecture-and-Service-Design/).

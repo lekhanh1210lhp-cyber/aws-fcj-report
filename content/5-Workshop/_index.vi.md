@@ -6,22 +6,22 @@ chapter: false
 pre: " <b> 5. </b> "
 ---
 
-Workshop thực hành này xây dựng luồng end-to-end đã được tài liệu hóa cho một thiết bị vật lý `room_01`: YOLO UNO đọc DHT20 và cảm biến ánh sáng analog, FastAPI lưu telemetry và command trong Amazon RDS for PostgreSQL, React hiển thị dữ liệu và tạo command, còn thiết bị gửi ACK sau khi thực thi thao tác quạt, đèn và rèm.
+Workshop này hướng dẫn xây dựng một quy trình đầu cuối cho thiết bị có mã `room_01`: YOLO UNO đọc dữ liệu từ DHT20 và cảm biến ánh sáng analog; FastAPI lưu telemetry cùng lệnh điều khiển vào Amazon RDS for PostgreSQL; React hiển thị dữ liệu và gửi lệnh; sau khi điều khiển quạt, đèn hoặc rèm, thiết bị gửi ACK để xác nhận đã thực thi.
 
 ## Mục tiêu và kết quả cuối
 
 Sau Workshop, bạn có thể:
 
-- triển khai backend FastAPI trên Amazon EC2 với EBS root volume;
-- kết nối riêng EC2 tới Amazon RDS for PostgreSQL trong DB Subnet Group;
-- tích hợp telemetry, polling command, thực thi và ACK trên YOLO UNO;
-- kết nối dashboard React + Vite + TypeScript chạy local;
-- xác minh command chuyển từ `Pending` sang `Executed`; và
-- thu thập bằng chứng vận hành EC2, RDS và backend trên CloudWatch.
+- triển khai backend FastAPI trên Amazon EC2 với ổ đĩa gốc Amazon EBS;
+- kết nối EC2 với Amazon RDS for PostgreSQL qua mạng riêng trong DB Subnet Group;
+- tích hợp quá trình gửi telemetry, thăm dò lệnh, thực thi lệnh và gửi ACK trên YOLO UNO;
+- kết nối dashboard React + Vite + TypeScript chạy trên máy cục bộ;
+- xác minh lệnh chuyển từ `Pending` sang `Executed`; và
+- thu thập bằng chứng vận hành của EC2, RDS và backend trên CloudWatch.
 
-Kết quả mong đợi là một prototype có thể tái tạo cho `room_01`, không phải hệ thống BMS enterprise. Dự kiến cần **8-12 giờ tập trung** sau khi đã có source ứng dụng và tài khoản AWS.
+Kết quả cuối cùng là một mô hình thử nghiệm có thể tái tạo cho `room_01`, không phải hệ thống quản lý tòa nhà ở quy mô doanh nghiệp. Sau khi chuẩn bị sẵn mã nguồn và tài khoản AWS, người học dự kiến cần khoảng **8–12 giờ** để hoàn thành.
 
-## Bản đồ Workshop
+## Nội dung Workshop
 
 1. [5.1 Tổng quan Workshop](5.1-Workshop-overview/)
 2. [5.2 Điều kiện tiên quyết](5.2-Prerequisites/)
@@ -40,8 +40,8 @@ Kết quả mong đợi là một prototype có thể tái tạo cho `room_01`, 
 
 ![Kiến trúc AWS IoT Monitoring and Control Dashboard](/images/5-Workshop/5.3-architecture/aws-iot-dashboard-architecture.png)
 
-*Hình 5-1. Sơ đồ từ source repository đặt người dùng dashboard, React frontend local và YOLO UNO bên ngoài AWS; EC2 và RDS bên trong VPC; IAM và CloudWatch là dịch vụ cấp tài khoản/khu vực nằm ngoài ranh giới VPC.*
+*Hình 5-1. Sơ đồ kiến trúc từ kho mã nguồn ứng dụng: người dùng dashboard, React frontend chạy cục bộ và YOLO UNO nằm ngoài AWS; EC2 và RDS nằm trong VPC; IAM và CloudWatch hoạt động ở cấp tài khoản hoặc khu vực nên không nằm trong ranh giới VPC.*
 
-Các dịch vụ AWS đã dùng gồm **Amazon EC2, Amazon EBS, Amazon RDS for PostgreSQL, Amazon VPC, subnet, Security Group, AWS IAM Role, Amazon CloudWatch và CloudWatch Alarms**. AWS IoT Core, Lambda, API Gateway, S3, SNS, ECS/ECR, Cognito, CloudFront và DynamoDB không thuộc kiến trúc hiện tại.
+Kiến trúc hiện sử dụng **Amazon EC2, Amazon EBS, Amazon RDS for PostgreSQL, Amazon VPC, subnet, Security Group, AWS IAM Role, Amazon CloudWatch và CloudWatch Alarms**. AWS IoT Core, Lambda, API Gateway, S3, SNS, ECS/ECR, Cognito, CloudFront và DynamoDB chưa được sử dụng.
 
 Bắt đầu tại [Tổng quan Workshop](5.1-Workshop-overview/).

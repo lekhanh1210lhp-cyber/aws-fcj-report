@@ -153,6 +153,10 @@ curl -i http://127.0.0.1:8000/api/health
 
 Pull only from the approved branch, rerun `python -m app.database.init_db` when models change, and review schema compatibility before restarting. Do not use `git reset --hard` as a deployment shortcut.
 
+## Expected Result
+
+The `aws-iot-backend` service is `active (running)`, `GET /api/health` returns HTTP 200, EC2 reaches private RDS, and `devices`, `telemetry_logs`, and `commands` exist in `iot_dashboard`. Deployment evidence records the application commit and contains no credentials.
+
 <!-- TODO IMAGE: /images/5-Workshop/5.5-backend-database/backend-systemd-health-check.png — Terminal showing aws-iot-backend active and GET /api/health returning HTTP 200; redact hostnames, public IPs, and credentials. -->
 <!-- TODO IMAGE: /images/5-Workshop/5.5-backend-database/postgresql-tables-and-commands.png — psql evidence for devices, telemetry_logs, and commands plus a redacted command-state query; do not expose the RDS endpoint or password. -->
 

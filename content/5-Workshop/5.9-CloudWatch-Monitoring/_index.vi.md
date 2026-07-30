@@ -1,5 +1,5 @@
 ---
-title: "Giám sát với CloudWatch"
+title: "Giám sát bằng CloudWatch"
 date: "2026-07-28"
 weight: 9
 chapter: false
@@ -8,30 +8,30 @@ pre: " <b> 5.9. </b> "
 
 ## Tổng quan và mục tiêu
 
-Dùng metric mặc định của EC2/RDS cùng guest metric và backend log từ CloudWatch Agent. EC2 IAM Role cấp quyền gửi dữ liệu; CloudWatch Agent là phần mềm riêng chạy trên instance.
+Sử dụng metric mặc định của EC2/RDS, metric của hệ điều hành trên EC2 và log backend do CloudWatch Agent thu thập. EC2 IAM Role cấp quyền gửi dữ liệu; CloudWatch Agent là phần mềm chạy riêng trên instance.
 
 ## Danh mục giám sát
 
-| Nguồn | Metric/log | Đường thu thập |
+| Nguồn | Metric/log | Cách thu thập |
 | :--- | :--- | :--- |
 | EC2 | `CPUUtilization` | Metric mặc định EC2 |
-| Guest OS EC2 | `mem_used_percent` | CloudWatch Agent |
+| Guest OS EC2 | `mem_used_percent` | Cấu hình CloudWatch Agent; Hình 19 không chứng minh có datapoint bộ nhớ |
 | Guest OS EC2 | `disk_used_percent` | CloudWatch Agent |
 | Guest OS EC2 | `cpu_usage_idle`, `cpu_usage_user`, `cpu_usage_system` | CloudWatch Agent |
-| FastAPI | Backend application log | Thu log bằng CloudWatch Agent |
+| FastAPI | Log ứng dụng backend | CloudWatch Agent đọc file log |
 | RDS | `CPUUtilization` | Metric mặc định RDS |
 | RDS | `DatabaseConnections` | Metric mặc định RDS |
 
-## Bước 1 - Xác minh role và cài agent
+## Bước 1 - Xác minh IAM Role và cài Agent
 
-Trong EC2 Console, xác nhận instance có IAM instance profile với `CloudWatchAgentServerPolicy` đã duyệt. Trên EC2 Linux Bash, cài package `amazon-cloudwatch-agent` theo quy trình chính thức cho distribution đã chọn, rồi kiểm tra:
+Trong EC2 Console, xác nhận instance đã gắn IAM instance profile có `CloudWatchAgentServerPolicy` được phê duyệt. Trên EC2 Linux Bash, cài gói `amazon-cloudwatch-agent` theo hướng dẫn chính thức cho bản phân phối Linux đã chọn, rồi kiểm tra:
 
 ```bash
 sudo systemctl status amazon-cloudwatch-agent --no-pager
 ls -l /opt/aws/amazon-cloudwatch-agent/bin/
 ```
 
-Không lưu AWS access key trong cấu hình agent.
+Không lưu AWS access key trong cấu hình của Agent.
 
 ## Bước 2 - Cấu hình metric và backend log
 
@@ -68,13 +68,13 @@ Tạo `/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json`:
         "collect_list": [
           {
             "file_path": "/var/log/aws-iot-backend/backend.log",
-            "log_group_name": "/aws/ec2/iot-dashboard/backend",
+            "log_group_name": "/aws/ec2/aws-iot-dashboard/backend",
             "log_stream_name": "{instance_id}/backend",
             "timezone": "UTC"
           },
           {
             "file_path": "/var/log/aws-iot-backend/backend-error.log",
-            "log_group_name": "/aws/ec2/iot-dashboard/backend-error",
+            "log_group_name": "/aws/ec2/aws-iot-dashboard/backend-error",
             "log_stream_name": "{instance_id}/backend-error",
             "timezone": "UTC"
           }
@@ -85,9 +85,9 @@ Tạo `/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json`:
 }
 ```
 
-Nếu service đang chạy chỉ log vào journald, hãy cấu hình file logger theo source hoặc dùng cách thu journald đã duyệt; không trỏ agent vào file không tồn tại.
+Nếu dịch vụ chỉ ghi log vào journald, hãy cấu hình ghi log ra file theo mã nguồn hoặc dùng phương thức thu thập journald đã được phê duyệt; không cấu hình Agent đọc một file không tồn tại.
 
-## Bước 3 - Start và enable agent
+## Bước 3 - Khởi động Agent và bật chế độ tự chạy
 
 Trong EC2 Linux Bash:
 
@@ -101,56 +101,81 @@ sudo systemctl enable amazon-cloudwatch-agent
 sudo systemctl status amazon-cloudwatch-agent --no-pager
 ```
 
-Xem log chẩn đoán agent:
+Xem log chẩn đoán của Agent:
 
 ```bash
 sudo tail -n 100 /opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log
 ```
 
-## Bước 4 - Tạo và xem evidence
+## Bước 4 - Tạo và kiểm tra bằng chứng
 
-1. Gọi `/api/health` và gửi một telemetry request hợp lệ.
-2. Mở CloudWatch trong cùng region.
-3. Kiểm tra log group `/aws/ec2/iot-dashboard/backend` và `/aws/ec2/iot-dashboard/backend-error`.
-4. Mở **Metrics → IoTDashboard/EC2** cho guest memory/disk/CPU.
+1. Gọi `/api/health` và gửi một yêu cầu telemetry hợp lệ.
+2. Mở CloudWatch trong cùng khu vực.
+3. Kiểm tra log group `/aws/ec2/aws-iot-dashboard/backend` và `/aws/ec2/aws-iot-dashboard/backend-error`.
+4. Mở **Metrics → IoTDashboard/EC2** để xem bộ nhớ, ổ đĩa và CPU của hệ điều hành khách.
 5. Mở **Metrics → EC2** cho `CPUUtilization`.
 6. Mở **Metrics → RDS** cho `CPUUtilization` và `DatabaseConnections`.
-7. Đặt time range phù hợp và xác nhận timestamp mới.
+7. Chọn khoảng thời gian phù hợp và xác nhận có dữ liệu với timestamp mới.
 
-## Bước 5 - Tạo và xác minh alarm
+### Log backend
 
-Runbook source đề xuất chính xác bộ alarm dưới đây. Xem đây là target configuration được tài liệu hóa đến khi screenshot/export chứng minh đã deploy:
+Log stream `/aws/ec2/aws-iot-dashboard/backend` trong ảnh chứa các sự kiện truy cập FastAPI gần đây. Yêu cầu tới `/api/health` và `/` đều trả về HTTP `200 OK`, cho thấy backend có thể truy cập được tại các thời điểm đã ghi nhận. Tuy nhiên, riêng ảnh này chưa đủ để xác nhận toàn bộ cấu hình của CloudWatch Agent.
 
-| Tên alarm | Metric | Điều kiện trong tài liệu source |
+![FastAPI backend access logs trong Amazon CloudWatch Logs](/images/5-Workshop/5.9-cloudwatch/backend-cloudwatch-logs.png)
+
+*Hình 18. Log truy cập của FastAPI backend trên EC2 được thu thập và hiển thị trong Amazon CloudWatch Logs, bao gồm timestamp, endpoint và HTTP status.*
+
+### Metric của EC2 và RDS
+
+Dashboard `ec2-rds-metrics` hiển thị bốn widget: EC2 `CPUUtilization`, EC2 `disk_used_percent`, RDS `CPUUtilization` và RDS `DatabaseConnections`. Tại thời điểm chụp, biểu đồ số kết nối cơ sở dữ liệu có một điểm dữ liệu bằng `1`. Hình 19 chưa chứng minh metric bộ nhớ đã có dữ liệu.
+
+![CloudWatch dashboard hiển thị EC2 và RDS metrics](/images/5-Workshop/5.9-cloudwatch/ec2-rds-metrics.png)
+
+*Hình 19. Dashboard Amazon CloudWatch hiển thị các metric vận hành của EC2 và RDS, gồm mức sử dụng CPU, dung lượng ổ đĩa và số kết nối cơ sở dữ liệu.*
+
+## Bước 5 - Tạo và xác minh các alarm
+
+Bảng điều khiển CloudWatch xác nhận năm cấu hình alarm sau:
+
+| Tên alarm | Metric | Điều kiện |
 | :--- | :--- | :--- |
-| `iot-dashboard-ec2-high-cpu` | `CPUUtilization` | ≥80% trong 5 phút |
-| `iot-dashboard-ec2-high-memory` | `mem_used_percent` | ≥80% trong 5 phút |
-| `iot-dashboard-ec2-high-disk` | `disk_used_percent` | ≥80% trong 5 phút |
-| `iot-dashboard-rds-high-cpu` | `CPUUtilization` | ≥80% trong 5 phút |
-| `iot-dashboard-rds-high-connections` | `DatabaseConnections` | ≥10 trong 5 phút |
-| `iot-dashboard-ec2-status-check` | `StatusCheckFailed` | ≥1 trong 5 phút |
+| `iot-dashboard-rds-high-connections` | `DatabaseConnections` | ≥10 với một datapoint trong 5 phút |
+| `iot-dashboard-rds-high-cpu` | `CPUUtilization` | ≥70% với một datapoint trong 5 phút |
+| `iot-dashboard-ec2-high-cpu` | `CPUUtilization` | ≥70% với một datapoint trong 5 phút |
+| `iot-dashboard-ec2-high-disk` | `disk_used_percent` | ≥80% với một datapoint trong 5 phút |
+| `iot-dashboard-ec2-high-memory` | `mem_used_percent` | ≥80% với một datapoint trong 5 phút |
 
-Xác minh threshold, period, evaluation count, missing-data behavior và action đã deploy thay vì giả định runbook đã được áp dụng. README source gốc nói rõ không dùng SNS; backend README chỉ nhắc SNS như tùy chọn mở rộng, vì vậy không tuyên bố topic/subscription SNS đã deploy.
+Hãy kiểm tra ngưỡng, chu kỳ, số lần đánh giá, cách xử lý dữ liệu thiếu và action thực tế của từng alarm, thay vì mặc định cấu hình trong tài liệu đã được áp dụng. README gốc cho biết dự án không dùng SNS; README của backend chỉ nêu SNS như một hướng mở rộng, vì vậy không được tuyên bố đã triển khai SNS topic hoặc subscription.
 
-- **OK:** datapoint gần đây không vi phạm rule.
-- **In alarm:** đủ datapoint vi phạm threshold đã cấu hình.
-- **Insufficient data:** alarm thiếu datapoint dùng được; không đồng nghĩa hệ thống khỏe.
+![Năm CloudWatch Alarms giám sát EC2 và RDS](/images/5-Workshop/5.9-cloudwatch/cloudwatch-alarms.png)
 
-<!-- TODO IMAGE: /images/5-Workshop/5.9-cloudwatch/backend-cloudwatch-logs.png — Hai log group backend và backend-error cùng instance stream mới; che account ID, instance ID, IP và giá trị log nhạy cảm. -->
-<!-- TODO IMAGE: /images/5-Workshop/5.9-cloudwatch/ec2-rds-metrics.png — Guest metric IoTDashboard/EC2 cùng graph metric native EC2 và RDS trong cùng time range gần đây. -->
-<!-- TODO IMAGE: /images/5-Workshop/5.9-cloudwatch/cloudwatch-alarms.png — Sáu alarm đã tài liệu hóa với tên, threshold và current state; che định danh tài khoản. -->
+*Hình 20. Năm CloudWatch Alarms giám sát CPU của EC2 và RDS, dung lượng ổ đĩa, bộ nhớ và số kết nối cơ sở dữ liệu. Trạng thái OK hoặc Insufficient data phản ánh dữ liệu metric tại thời điểm chụp.*
+
+### Ý nghĩa trạng thái alarm
+
+- **OK:** metric hiện chưa vượt ngưỡng cấu hình.
+- **In alarm:** metric đã vượt ngưỡng trong khoảng đánh giá.
+- **Insufficient data:** CloudWatch chưa nhận đủ datapoint để đánh giá alarm tại thời điểm đó.
+
+Hai alarm về ổ đĩa và bộ nhớ đang ở trạng thái `Insufficient data`. Trạng thái này không nhất thiết là lỗi cấu hình; CloudWatch chỉ chưa có đủ dữ liệu khớp với metric, dimension và khoảng đánh giá.
+
+Cột `Actions` hiển thị `No actions`, nghĩa là các alarm chưa được gắn hành động thông báo. Phiên bản hiện tại chỉ dùng alarm để theo dõi trạng thái metric. Việc tích hợp Amazon SNS để gửi email hoặc thông báo là hướng phát triển trong tương lai.
+
+## Kết quả mong đợi
+
+CloudWatch hiển thị các sự kiện truy cập backend gần đây, bốn widget EC2/RDS trong Hình 19 và năm cấu hình alarm với trạng thái có thể giải thích. Phần bằng chứng chỉ mô tả những gì quan sát được; không khẳng định metric bộ nhớ đã có dữ liệu, SNS đã gửi thông báo hoặc log group thứ hai đã xuất hiện.
 
 ## Xử lý sự cố
 
 | Hiện tượng | Nội dung cần kiểm tra |
 | :--- | :--- |
-| Agent inactive | Cú pháp JSON, service log, package installation |
-| Access denied | Instance profile và policy đã gắn; không dùng AWS key local |
-| Không có memory/disk metric | Namespace `IoTDashboard/EC2`, dimension, interval, reload config |
-| Không có backend log | Log path thật, quyền đọc, request mới, timestamp stream |
-| Alarm insufficient data | Sai metric/dimension/region hoặc không có datapoint mới |
-| Thiếu RDS metric | DB identifier, region và graph time range |
+| Agent không hoạt động | Cú pháp JSON, log dịch vụ và quá trình cài gói |
+| Bị từ chối quyền | Instance profile và policy đã gắn; không dùng AWS key cục bộ |
+| Không có metric bộ nhớ/ổ đĩa | Namespace `IoTDashboard/EC2`, dimension, chu kỳ thu thập và việc nạp lại cấu hình |
+| Không có log backend | Đường dẫn log thực tế, quyền đọc, yêu cầu mới và timestamp của luồng |
+| Alarm thiếu dữ liệu | Sai metric/dimension/khu vực hoặc không có điểm dữ liệu mới |
+| Thiếu metric RDS | Đúng DB identifier, khu vực và khoảng thời gian của biểu đồ |
 
-Project không dùng AI Operations, GenAI Observability, Application Signals, resource discovery hoặc observability pipeline.
+Dự án không sử dụng AI Operations, GenAI Observability, Application Signals, tính năng khám phá tài nguyên hoặc quy trình quan sát nâng cao.
 
 Tiếp theo: [rà soát chi phí, bảo mật và dọn dẹp](../5.10-Cost-Security-Cleanup/).
