@@ -12,9 +12,9 @@ YOLO UNO thu thập nhiệt độ, độ ẩm và giá trị ánh sáng rồi g�
 
 Thiết bị thăm dò lệnh đang chờ, thực thi lệnh một lần và gửi ACK để backend chuyển trạng thái từ `Pending` sang `Executed`. Amazon CloudWatch thu thập log backend, theo dõi các metric của EC2/RDS và đánh giá các cảnh báo đã cấu hình.
 
-- **Người biên soạn báo cáo:** Phạm Lê Minh Khôi
+- **Người biên soạn báo cáo:** Lê Bảo Khánh
 - **Đơn vị:** Trường Đại học Bách Khoa TP.HCM (HCMUT) – Khoa Khoa học và Kỹ thuật Máy tính
-- **Workshop:** [Xem báo cáo trực tuyến](https://danielleit241.github.io/aws-fcj-report/)
+- **Workshop:** [Xem báo cáo trực tuyến](https://lekhanh1210lhp-cyber.github.io/aws-fcaj-report/)
 
 ---
 
@@ -132,4 +132,4 @@ hugo --minify
 
 ## 📄 Bản quyền
 
-Copyright © 2026 Phạm Lê Minh Khôi – HCMUT. All rights reserved.
+Copyright © 2026 Lê Bảo Khánh – HCMUT. All rights reserved.
