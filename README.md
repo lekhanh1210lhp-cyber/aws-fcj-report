@@ -14,7 +14,7 @@ Thiết bị thăm dò lệnh đang chờ, thực thi lệnh một lần và g�
 
 - **Người biên soạn báo cáo:** Lê Bảo Khánh
 - **Đơn vị:** Trường Đại học Bách Khoa TP.HCM (HCMUT) – Khoa Khoa học và Kỹ thuật Máy tính
-- **Workshop:** [Xem báo cáo trực tuyến](https://lekhanh1210lhp-cyber.github.io/aws-fcaj-report/)
+- **Workshop:** [Xem báo cáo trực tuyến](https://lekhanh1210lhp-cyber.github.io/aws-fcj-report/)
 
 ---
 
