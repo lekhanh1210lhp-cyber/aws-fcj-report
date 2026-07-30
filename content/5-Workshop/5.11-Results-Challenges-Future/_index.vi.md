@@ -140,4 +140,4 @@ Mỗi hạng mục trong tương lai cần có người phụ trách, được r
 
 Sau khi rà soát bằng chứng, hãy ghi **Đạt**, **Không đạt** hoặc **Chưa chạy** cho từng điều kiện nghiệm thu. Với mọi nội dung còn thiếu, cần liên kết vấn đề và chỉ định người phụ trách. Không đổi “mong đợi” thành “đã đạt” khi chưa có bằng chứng.
 
-Tiếp theo: [chuẩn bị bàn giao dự án](../5.12-Project-Handover/).
+Tiếp theo: [chuẩn bị bàn giao dự án](../5.12-project-handover/).

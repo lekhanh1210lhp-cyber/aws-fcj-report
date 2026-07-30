@@ -203,4 +203,4 @@ Trong tương lai, nhóm có thể cân nhắc DNS/HTTPS ổn định, xác th�
 
 Mỗi mũi tên trong sơ đồ kiến trúc phải tương ứng với một lời gọi API, quy tắc mạng, thao tác cơ sở dữ liệu hoặc đường đi của metric/log. Nếu chưa rõ một kết nối, hãy xác định nguồn, đích, cổng, danh tính và bằng chứng cần thu thập trước khi cấp phát tài nguyên.
 
-Tiếp theo: [xây dựng hạ tầng AWS](../5.4-AWS-Infrastructure-Setup/).
+Tiếp theo: [xây dựng hạ tầng AWS](../5.4-aws-infrastructure-setup/).

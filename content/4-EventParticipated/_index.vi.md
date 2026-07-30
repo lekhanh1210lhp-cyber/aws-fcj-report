@@ -8,7 +8,7 @@ pre: " <b> 4. </b> "
 
 Trong suốt quá trình học tập, tôi đã tham gia ba sự kiện. Mỗi sự kiện đều là một trải nghiệm đáng nhớ, mang lại những kiến thức mới mẻ, thú vị và hữu ích, cùng với những món quà và những khoảnh khắc tuyệt vời.
 
-### [Sự kiện 1](4.1-Event1/)
+### [Sự kiện 1](4.1-event1/)
 
 &emsp;**Tên sự kiện:** First Cloud Journey Community Day
 
@@ -20,7 +20,7 @@ Trong suốt quá trình học tập, tôi đã tham gia ba sự kiện. Mỗi s
 
 ---
 
-### [Sự kiện 2](4.2-Event2/)
+### [Sự kiện 2](4.2-event2/)
 
 &emsp;**Tên sự kiện:** First Cloud AI Journey Meetup: Sự nghiệp, DevOps và Văn hóa MNC
 
@@ -32,7 +32,7 @@ Trong suốt quá trình học tập, tôi đã tham gia ba sự kiện. Mỗi s
 
 ---
 
-### [Sự kiện 3](4.3-Event3/)
+### [Sự kiện 3](4.3-event3/)
 
 &emsp;**Tên sự kiện:** First Cloud AI Journey: Bảo mật Ứng dụng, Chiến lược thi Cloud Practitioner và Giám sát SLA
 

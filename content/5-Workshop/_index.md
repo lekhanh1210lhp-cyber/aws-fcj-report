@@ -23,18 +23,18 @@ The expected result is a reproducible prototype for `room_01`, not an enterprise
 
 ## Workshop map
 
-1. [5.1 Workshop Overview](5.1-Workshop-overview/)
-2. [5.2 Prerequisites](5.2-Prerequisites/)
-3. [5.3 Architecture and Service Design](5.3-Architecture-and-Service-Design/)
-4. [5.4 AWS Infrastructure Setup](5.4-AWS-Infrastructure-Setup/)
-5. [5.5 Backend Deployment and Database Integration](5.5-Backend-and-Database/)
-6. [5.6 Hardware Integration](5.6-Hardware-Integration/)
-7. [5.7 Frontend Integration](5.7-Frontend-Integration/)
-8. [5.8 End-to-End Testing and Validation](5.8-End-to-End-Testing/)
-9. [5.9 Monitoring with CloudWatch](5.9-CloudWatch-Monitoring/)
-10. [5.10 Cost, Security and Clean-up](5.10-Cost-Security-Cleanup/)
-11. [5.11 Results, Challenges and Future Improvements](5.11-Results-Challenges-Future/)
-12. [5.12 Project Handover](5.12-Project-Handover/)
+1. [5.1 Workshop Overview](5.1-workshop-overview/)
+2. [5.2 Prerequisites](5.2-prerequisites/)
+3. [5.3 Architecture and Service Design](5.3-architecture-and-service-design/)
+4. [5.4 AWS Infrastructure Setup](5.4-aws-infrastructure-setup/)
+5. [5.5 Backend Deployment and Database Integration](5.5-backend-and-database/)
+6. [5.6 Hardware Integration](5.6-hardware-integration/)
+7. [5.7 Frontend Integration](5.7-frontend-integration/)
+8. [5.8 End-to-End Testing and Validation](5.8-end-to-end-testing/)
+9. [5.9 Monitoring with CloudWatch](5.9-cloudwatch-monitoring/)
+10. [5.10 Cost, Security and Clean-up](5.10-cost-security-cleanup/)
+11. [5.11 Results, Challenges and Future Improvements](5.11-results-challenges-future/)
+12. [5.12 Project Handover](5.12-project-handover/)
 
 ## Architecture
 
@@ -44,4 +44,4 @@ The expected result is a reproducible prototype for `room_01`, not an enterprise
 
 The deployed AWS services are **Amazon EC2, Amazon EBS, Amazon RDS for PostgreSQL, Amazon VPC, subnets, Security Groups, an AWS IAM Role, Amazon CloudWatch, and CloudWatch Alarms**. AWS IoT Core, Lambda, API Gateway, S3, SNS, ECS/ECR, Cognito, CloudFront, and DynamoDB are not part of the current architecture.
 
-Start with [Workshop Overview](5.1-Workshop-overview/).
+Start with [Workshop Overview](5.1-workshop-overview/).

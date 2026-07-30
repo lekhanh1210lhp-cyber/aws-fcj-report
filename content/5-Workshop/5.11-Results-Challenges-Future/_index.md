@@ -140,4 +140,4 @@ Each future item needs an owner, architecture review, cost/security analysis, im
 
 After evidence review, record Passed, Failed, or Not Run for each acceptance statement and link the owning issue for any gap. Never convert “expected” into “achieved” without proof.
 
-Next: [prepare the project handover](../5.12-Project-Handover/).
+Next: [prepare the project handover](../5.12-project-handover/).

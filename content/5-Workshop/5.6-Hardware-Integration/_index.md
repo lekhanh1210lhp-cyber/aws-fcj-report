@@ -200,4 +200,4 @@ PlatformIO compiles the `yolo_uno` environment successfully and creates `firmwar
 | Command stays `Pending` | ACK URL/ID/body, HTTP response, backend log |
 | Unsupported command | Log and reject it; do not ACK it as executed |
 
-Next: [connect the React dashboard](../5.7-Frontend-Integration/).
+Next: [connect the React dashboard](../5.7-frontend-integration/).

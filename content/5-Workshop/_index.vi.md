@@ -23,18 +23,18 @@ Kết quả cuối cùng là một mô hình thử nghiệm có thể tái tạo
 
 ## Nội dung Workshop
 
-1. [5.1 Tổng quan Workshop](5.1-Workshop-overview/)
-2. [5.2 Điều kiện tiên quyết](5.2-Prerequisites/)
-3. [5.3 Kiến trúc và thiết kế dịch vụ](5.3-Architecture-and-Service-Design/)
-4. [5.4 Thiết lập hạ tầng AWS](5.4-AWS-Infrastructure-Setup/)
-5. [5.5 Triển khai backend và tích hợp cơ sở dữ liệu](5.5-Backend-and-Database/)
-6. [5.6 Tích hợp phần cứng](5.6-Hardware-Integration/)
-7. [5.7 Tích hợp frontend](5.7-Frontend-Integration/)
-8. [5.8 Kiểm thử và xác minh end-to-end](5.8-End-to-End-Testing/)
-9. [5.9 Giám sát với CloudWatch](5.9-CloudWatch-Monitoring/)
-10. [5.10 Chi phí, bảo mật và dọn dẹp](5.10-Cost-Security-Cleanup/)
-11. [5.11 Kết quả, thách thức và cải tiến tương lai](5.11-Results-Challenges-Future/)
-12. [5.12 Bàn giao dự án](5.12-Project-Handover/)
+1. [5.1 Tổng quan Workshop](5.1-workshop-overview/)
+2. [5.2 Điều kiện tiên quyết](5.2-prerequisites/)
+3. [5.3 Kiến trúc và thiết kế dịch vụ](5.3-architecture-and-service-design/)
+4. [5.4 Thiết lập hạ tầng AWS](5.4-aws-infrastructure-setup/)
+5. [5.5 Triển khai backend và tích hợp cơ sở dữ liệu](5.5-backend-and-database/)
+6. [5.6 Tích hợp phần cứng](5.6-hardware-integration/)
+7. [5.7 Tích hợp frontend](5.7-frontend-integration/)
+8. [5.8 Kiểm thử và xác minh end-to-end](5.8-end-to-end-testing/)
+9. [5.9 Giám sát với CloudWatch](5.9-cloudwatch-monitoring/)
+10. [5.10 Chi phí, bảo mật và dọn dẹp](5.10-cost-security-cleanup/)
+11. [5.11 Kết quả, thách thức và cải tiến tương lai](5.11-results-challenges-future/)
+12. [5.12 Bàn giao dự án](5.12-project-handover/)
 
 ## Kiến trúc
 

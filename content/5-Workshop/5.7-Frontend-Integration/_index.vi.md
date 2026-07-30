@@ -122,4 +122,4 @@ Mở DevTools → **Network**:
 | UI báo thành công quá sớm | Hiện `Pending` đến khi backend báo ACK/`Executed` |
 | Chạy đến khi EC2 restart | Cập nhật public IP mới hoặc endpoint ổn định trong tương lai |
 
-Tiếp theo: [chạy xác minh end-to-end](../5.8-End-to-End-Testing/).
+Tiếp theo: [chạy xác minh end-to-end](../5.8-end-to-end-testing/).

@@ -81,4 +81,4 @@ Trong T13/T14, UI và firmware phải báo unavailable mà không tuyên bố th
 
 Đây là kế hoạch thực thi, không phải tuyên bố test đã chạy. Không gọi là stress testing và không bịa số liệu latency, throughput hoặc reliability. Test fail phải ghi layer lỗi, log/request evidence, owner, cách sửa và kết quả rerun.
 
-Tiếp theo: [cấu hình và xác minh CloudWatch](../5.9-CloudWatch-Monitoring/).
+Tiếp theo: [cấu hình và xác minh CloudWatch](../5.9-cloudwatch-monitoring/).

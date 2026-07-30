@@ -82,4 +82,4 @@ During T13/T14, the UI and firmware must report unavailability without claiming 
 
 This section is an execution plan, not a claim that tests have run. Do not call it stress testing and do not invent latency, throughput, or reliability numbers. A failed test should include the failing layer, log/request evidence, owner, correction, and rerun result.
 
-Next: [configure and validate CloudWatch](../5.9-CloudWatch-Monitoring/).
+Next: [configure and validate CloudWatch](../5.9-cloudwatch-monitoring/).

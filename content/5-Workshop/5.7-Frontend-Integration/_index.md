@@ -123,4 +123,4 @@ Telemetry and history render, AWS health reflects a real backend request, contro
 | UI says success too early | Display `Pending` until backend reports ACK/`Executed` |
 | Works until EC2 restarts | Update the changed public IP or future stable endpoint |
 
-Next: [run end-to-end validation](../5.8-End-to-End-Testing/).
+Next: [run end-to-end validation](../5.8-end-to-end-testing/).

@@ -117,4 +117,4 @@ Các bằng chứng cần thiết được lưu lại; không còn tài nguyên 
 | CloudWatch vẫn phát sinh phí | Thời gian lưu/lượng log thu nhận và alarm; xác nhận Agent đã dừng cùng EC2 |
 | Chưa rõ tài nguyên thuộc về ai | Dừng xóa, dùng tag/danh mục tài nguyên và xin người sở hữu xác nhận |
 
-Tiếp theo: [ghi nhận kết quả, thách thức và cải tiến tương lai](../5.11-Results-Challenges-Future/).
+Tiếp theo: [ghi nhận kết quả, thách thức và cải tiến tương lai](../5.11-results-challenges-future/).

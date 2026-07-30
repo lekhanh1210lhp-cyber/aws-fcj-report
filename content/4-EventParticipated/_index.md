@@ -8,7 +8,7 @@ pre: " <b> 4. </b> "
 
 During my learning journey, I participated in three events. Each one was a memorable experience that provided new, interesting, and useful knowledge, along with gifts and wonderful moments.
 
-### [Event 1](4.1-Event1/)
+### [Event 1](4.1-event1/)
 
 &emsp;**Event Name:** First Cloud Journey Community Day
 
@@ -20,7 +20,7 @@ During my learning journey, I participated in three events. Each one was a memor
 
 ---
 
-### [Event 2](4.2-Event2/)
+### [Event 2](4.2-event2/)
 
 &emsp;**Event Name:** First Cloud AI Journey Meetup: Career, DevOps, and MNC Culture
 
@@ -32,7 +32,7 @@ During my learning journey, I participated in three events. Each one was a memor
 
 ---
 
-### [Event 3](4.3-Event3/)
+### [Event 3](4.3-event3/)
 
 &emsp;**Event Name:** First Cloud AI Journey: Application Security, Cloud Practitioner Strategy, and SLA Monitoring
 

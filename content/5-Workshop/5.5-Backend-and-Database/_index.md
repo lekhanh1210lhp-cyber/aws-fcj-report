@@ -173,4 +173,4 @@ The `aws-iot-backend` service is `active (running)`, `GET /api/health` returns H
 | SSL verification fails | Use the correct CA bundle, absolute path, permissions, and endpoint hostname |
 | Tables missing | Run the source-defined migration/init process; do not create an ad-hoc schema |
 
-Next: [integrate YOLO UNO hardware](../5.6-Hardware-Integration/).
+Next: [integrate YOLO UNO hardware](../5.6-hardware-integration/).

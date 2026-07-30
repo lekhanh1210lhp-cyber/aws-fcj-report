@@ -200,4 +200,4 @@ PlatformIO biên dịch thành công môi trường `yolo_uno` và tạo `firmwa
 | Lệnh giữ trạng thái `Pending` | URL/ID/nội dung ACK, phản hồi HTTP và log backend |
 | Lệnh không được hỗ trợ | Ghi log và từ chối; không ACK thành `Executed` |
 
-Tiếp theo: [kết nối React dashboard](../5.7-Frontend-Integration/).
+Tiếp theo: [kết nối React dashboard](../5.7-frontend-integration/).

@@ -203,4 +203,4 @@ Possible future options include a stable DNS/HTTPS endpoint, authentication and 
 
 Every arrow in the architecture should map to one API call, network rule, database action, or metric/log path. If a connection is unclear, identify its source, destination, port, identity, and expected evidence before provisioning.
 
-Next: [build the AWS foundation](../5.4-AWS-Infrastructure-Setup/).
+Next: [build the AWS foundation](../5.4-aws-infrastructure-setup/).
