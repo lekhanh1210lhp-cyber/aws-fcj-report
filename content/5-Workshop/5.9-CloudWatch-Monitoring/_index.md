@@ -178,4 +178,4 @@ CloudWatch shows recent backend access events, the four EC2/RDS dashboard widget
 
 This project does not use AI Operations, GenAI Observability, Application Signals, resource discovery, or observability pipelines.
 
-Next: [review cost, security, and clean-up](../5.10-cost-security-cleanup/).
+Next: [review cost, security, and clean-up](../5.10-Cost-Security-Cleanup/).

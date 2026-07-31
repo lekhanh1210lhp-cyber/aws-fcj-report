@@ -97,4 +97,4 @@ The criteria define acceptance; they do not claim that a test passed until the r
 
 If the team cannot state which component owns a failure, trace one request across browser Network, FastAPI logs, PostgreSQL, device Serial Monitor, and ACK status. Do not label an unverified result as passed.
 
-Next: [prepare the required account, tools, and hardware](../5.2-prerequisites/).
+Next: [prepare the required account, tools, and hardware](../5.2-Prerequisites/).

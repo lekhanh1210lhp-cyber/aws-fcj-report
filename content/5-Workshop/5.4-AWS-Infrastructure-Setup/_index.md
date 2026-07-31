@@ -131,4 +131,4 @@ The figures above provide redacted evidence of the EC2 **Running** state, attach
 | EC2 cannot publish metrics | IAM instance profile attachment and outbound HTTPS |
 | Browser cannot reach port 8000 | Backend bind address, service state, EC2 SG, client network |
 
-Next: [deploy FastAPI and connect PostgreSQL](../5.5-backend-and-database/).
+Next: [deploy FastAPI and connect PostgreSQL](../5.5-Backend-and-Database/).

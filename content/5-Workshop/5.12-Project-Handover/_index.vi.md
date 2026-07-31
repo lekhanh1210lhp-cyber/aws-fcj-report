@@ -121,12 +121,12 @@ Mô hình thử nghiệm hiện chỉ phục vụ một phòng và dùng HTTP tr
 
 | Thành viên | Trách nhiệm | Bằng chứng đóng góp |
 | :--- | :--- | :--- |
-| **Phạm Lê Minh Khôi** | Kiến trúc AWS; VPC, Security Group, IAM Role, EC2, RDS và CloudWatch; DevOps; phần cứng YOLO UNO; cảm biến, thiết bị chấp hành, telemetry, cơ chế thăm dò lệnh và ACK | [5.3 kiến trúc](../5.3-architecture-and-service-design/), [5.4 AWS](../5.4-aws-infrastructure-setup/), [5.6 phần cứng](../5.6-hardware-integration/), [5.9 giám sát](../5.9-cloudwatch-monitoring/) |
-| **Ngô Minh Thuận** | Backend FastAPI; endpoint, lược đồ Pydantic, mô hình SQLAlchemy, tích hợp PostgreSQL, xử lý telemetry, vòng đời lệnh và ACK | [5.3 API/dữ liệu](../5.3-architecture-and-service-design/), [5.5 backend/cơ sở dữ liệu](../5.5-backend-and-database/), [5.8 kiểm thử](../5.8-end-to-end-testing/) |
-| **Thượng Đình Hưng** | Frontend React + Vite; giao diện dashboard, trực quan hóa telemetry, chức năng điều khiển, tích hợp tổng thể, xử lý lỗi và quay/dựng video minh họa | [5.7 frontend](../5.7-frontend-integration/), [5.8 bằng chứng tích hợp](../5.8-end-to-end-testing/), liên kết video trong phần cấu trúc kho mã nguồn |
-| **Lê Bảo Khánh** | Tài liệu, proposal, blog, nhật ký công việc hằng tuần, báo cáo sự kiện, Workshop, rà soát song ngữ, điều hướng, ảnh chụp màn hình và bảo đảm chất lượng | [5.1 tiêu chí/kết quả](../5.1-workshop-overview/), [5.11 tài liệu/điều chỉnh](../5.11-results-challenges-future/), Workshop song ngữ và kết quả kiểm tra Hugo |
+| **Phạm Lê Minh Khôi** | Kiến trúc AWS; VPC, Security Group, IAM Role, EC2, RDS và CloudWatch; DevOps; phần cứng YOLO UNO; cảm biến, thiết bị chấp hành, telemetry, cơ chế thăm dò lệnh và ACK | [5.3 kiến trúc](../5.3-Architecture-and-Service-Design/), [5.4 AWS](../5.4-AWS-Infrastructure-Setup/), [5.6 phần cứng](../5.6-Hardware-Integration/), [5.9 giám sát](../5.9-CloudWatch-Monitoring/) |
+| **Ngô Minh Thuận** | Backend FastAPI; endpoint, lược đồ Pydantic, mô hình SQLAlchemy, tích hợp PostgreSQL, xử lý telemetry, vòng đời lệnh và ACK | [5.3 API/dữ liệu](../5.3-Architecture-and-Service-Design/), [5.5 backend/cơ sở dữ liệu](../5.5-Backend-and-Database/), [5.8 kiểm thử](../5.8-End-to-End-Testing/) |
+| **Thượng Đình Hưng** | Frontend React + Vite; giao diện dashboard, trực quan hóa telemetry, chức năng điều khiển, tích hợp tổng thể, xử lý lỗi và quay/dựng video minh họa | [5.7 frontend](../5.7-Frontend-Integration/), [5.8 bằng chứng tích hợp](../5.8-End-to-End-Testing/), liên kết video trong phần cấu trúc kho mã nguồn |
+| **Lê Bảo Khánh** | Tài liệu, proposal, blog, nhật ký công việc hằng tuần, báo cáo sự kiện, Workshop, rà soát song ngữ, điều hướng, ảnh chụp màn hình và bảo đảm chất lượng | [5.1 tiêu chí/kết quả](../5.1-Workshop-overview/), [5.11 tài liệu/điều chỉnh](../5.11-Results-Challenges-Future/), Workshop song ngữ và kết quả kiểm tra Hugo |
 
-Bảng trên giữ nguyên nội dung phân công đã thống nhất và dẫn người chấm tới bằng chứng đóng góp tương ứng. Bảng này không thay thế [phần nhìn lại riêng của từng thành viên ở mục 5.11](../5.11-results-challenges-future/). Trước khi nộp, mỗi thành viên cần rà soát và xác nhận cả phạm vi phụ trách lẫn phần nhìn lại của mình.
+Bảng trên giữ nguyên nội dung phân công đã thống nhất và dẫn người chấm tới bằng chứng đóng góp tương ứng. Bảng này không thay thế [phần nhìn lại riêng của từng thành viên ở mục 5.11](../5.11-Results-Challenges-Future/). Trước khi nộp, mỗi thành viên cần rà soát và xác nhận cả phạm vi phụ trách lẫn phần nhìn lại của mình.
 
 ## Danh sách kiểm tra bàn giao cuối
 

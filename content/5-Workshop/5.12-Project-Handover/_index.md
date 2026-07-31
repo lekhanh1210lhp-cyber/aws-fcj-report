@@ -121,12 +121,12 @@ The documented prototype uses one room, direct HTTP on port 8000 for demo, a cha
 
 | Member | Responsibility | Contribution evidence |
 | :--- | :--- | :--- |
-| **Pham Le Minh Khoi** | AWS architecture, VPC, Security Groups, IAM Role, EC2, RDS, CloudWatch, DevOps, YOLO UNO hardware, sensors, actuators, telemetry, command polling, ACK | [5.3 architecture](../5.3-architecture-and-service-design/), [5.4 AWS](../5.4-aws-infrastructure-setup/), [5.6 hardware](../5.6-hardware-integration/), [5.9 monitoring](../5.9-cloudwatch-monitoring/) |
-| **Ngo Minh Thuan** | FastAPI backend, endpoints, Pydantic schemas, SQLAlchemy models, PostgreSQL integration, telemetry processing, command lifecycle, ACK processing | [5.3 API/data](../5.3-architecture-and-service-design/), [5.5 backend/database](../5.5-backend-and-database/), [5.8 validation](../5.8-end-to-end-testing/) |
-| **Thuong Dinh Hung** | React + Vite frontend, dashboard UI, telemetry visualization, controls, overall integration, debugging, demo video recording/editing | [5.7 frontend](../5.7-frontend-integration/), [5.8 integration evidence](../5.8-end-to-end-testing/), demo link recorded in repository structure |
-| **Le Bao Khanh** | Documentation, proposal, blogs, weekly worklog, event reports, Workshop, bilingual review, navigation, screenshots, quality assurance | [5.1 rubric/output](../5.1-workshop-overview/), [5.11 documentation/customization](../5.11-results-challenges-future/), bilingual Workshop and Hugo QA |
+| **Pham Le Minh Khoi** | AWS architecture, VPC, Security Groups, IAM Role, EC2, RDS, CloudWatch, DevOps, YOLO UNO hardware, sensors, actuators, telemetry, command polling, ACK | [5.3 architecture](../5.3-Architecture-and-Service-Design/), [5.4 AWS](../5.4-AWS-Infrastructure-Setup/), [5.6 hardware](../5.6-Hardware-Integration/), [5.9 monitoring](../5.9-CloudWatch-Monitoring/) |
+| **Ngo Minh Thuan** | FastAPI backend, endpoints, Pydantic schemas, SQLAlchemy models, PostgreSQL integration, telemetry processing, command lifecycle, ACK processing | [5.3 API/data](../5.3-Architecture-and-Service-Design/), [5.5 backend/database](../5.5-Backend-and-Database/), [5.8 validation](../5.8-End-to-End-Testing/) |
+| **Thuong Dinh Hung** | React + Vite frontend, dashboard UI, telemetry visualization, controls, overall integration, debugging, demo video recording/editing | [5.7 frontend](../5.7-Frontend-Integration/), [5.8 integration evidence](../5.8-End-to-End-Testing/), demo link recorded in repository structure |
+| **Le Bao Khanh** | Documentation, proposal, blogs, weekly worklog, event reports, Workshop, bilingual review, navigation, screenshots, quality assurance | [5.1 rubric/output](../5.1-Workshop-overview/), [5.11 documentation/customization](../5.11-Results-Challenges-Future/), bilingual Workshop and Hugo QA |
 
-The table preserves the agreed assignment and points reviewers to contribution evidence. It does not replace the separate [individual reflections in section 5.11](../5.11-results-challenges-future/); each member must review and sign off both ownership and reflection before final submission.
+The table preserves the agreed assignment and points reviewers to contribution evidence. It does not replace the separate [individual reflections in section 5.11](../5.11-Results-Challenges-Future/); each member must review and sign off both ownership and reflection before final submission.
 
 ## Final handover checklist
 

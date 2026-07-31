@@ -178,4 +178,4 @@ CloudWatch hiển thị các sự kiện truy cập backend gần đây, bốn w
 
 Dự án không sử dụng AI Operations, GenAI Observability, Application Signals, tính năng khám phá tài nguyên hoặc quy trình quan sát nâng cao.
 
-Tiếp theo: [rà soát chi phí, bảo mật và dọn dẹp](../5.10-cost-security-cleanup/).
+Tiếp theo: [rà soát chi phí, bảo mật và dọn dẹp](../5.10-Cost-Security-Cleanup/).

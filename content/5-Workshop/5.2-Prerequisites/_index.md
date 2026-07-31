@@ -101,4 +101,4 @@ Proceed only when every blocking item above is satisfied. If a required source r
 | Secret appears tracked | Stop, remove it from the change set, rotate exposed values, and verify `.gitignore` |
 | Hardware requirement is unclear | Do not energize actuators; verify the active firmware map and rated supply first |
 
-Next: [review the architecture and service boundaries](../5.3-architecture-and-service-design/).
+Next: [review the architecture and service boundaries](../5.3-Architecture-and-Service-Design/).

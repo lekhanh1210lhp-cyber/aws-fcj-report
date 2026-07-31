@@ -101,4 +101,4 @@ Chỉ tiếp tục khi mọi điều kiện bắt buộc ở trên đã hoàn t�
 | File bí mật bị Git theo dõi | Dừng lại, bỏ file khỏi thay đổi, thay mới giá trị đã lộ và kiểm tra `.gitignore` |
 | Chưa rõ yêu cầu phần cứng | Không cấp nguồn cho thiết bị chấp hành; xác minh sơ đồ chân trong firmware đang dùng và nguồn đúng định mức |
 
-Tiếp theo: [xem kiến trúc và ranh giới dịch vụ](../5.3-architecture-and-service-design/).
+Tiếp theo: [xem kiến trúc và ranh giới dịch vụ](../5.3-Architecture-and-Service-Design/).

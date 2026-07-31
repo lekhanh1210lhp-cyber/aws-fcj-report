@@ -97,4 +97,4 @@ Các tiêu chí trên là điều kiện nghiệm thu. Chỉ kết luận một 
 
 Nếu chưa xác định được thành phần gây lỗi, hãy lần theo một yêu cầu qua thẻ Network của trình duyệt, log FastAPI, PostgreSQL, Serial Monitor và trạng thái ACK. Không đánh dấu đạt khi kết quả chưa được xác minh.
 
-Tiếp theo: [chuẩn bị tài khoản, công cụ và phần cứng](../5.2-prerequisites/).
+Tiếp theo: [chuẩn bị tài khoản, công cụ và phần cứng](../5.2-Prerequisites/).

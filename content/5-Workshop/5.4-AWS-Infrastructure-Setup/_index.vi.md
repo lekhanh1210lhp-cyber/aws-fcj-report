@@ -131,4 +131,4 @@ Các hình trên cung cấp bằng chứng đã che thông tin nhạy cảm về
 | EC2 không gửi được metric | IAM instance profile đã gắn và kết nối HTTPS đi ra |
 | Trình duyệt không tới cổng 8000 | Địa chỉ bind, trạng thái dịch vụ, EC2 SG và mạng của máy khách |
 
-Tiếp theo: [triển khai FastAPI và kết nối PostgreSQL](../5.5-backend-and-database/).
+Tiếp theo: [triển khai FastAPI và kết nối PostgreSQL](../5.5-Backend-and-Database/).
