@@ -173,4 +173,4 @@ Dịch vụ `aws-iot-backend` ở trạng thái `active (running)`, `GET /api/he
 | Xác minh SSL thất bại | Dùng đúng CA bundle, đường dẫn tuyệt đối, quyền file và tên máy chủ endpoint |
 | Thiếu bảng | Chạy lệnh khởi tạo hoặc migration do mã nguồn định nghĩa; không tự tạo một lược đồ khác |
 
-Tiếp theo: [tích hợp phần cứng YOLO UNO](../5.6-hardware-integration/).
+Tiếp theo: [tích hợp phần cứng YOLO UNO](../5.6-Hardware-Integration/).
