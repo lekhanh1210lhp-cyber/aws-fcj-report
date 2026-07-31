@@ -206,6 +206,9 @@ Working with Amazon S3 Tables and table buckets
 
 Build a data lake for streaming data with Amazon S3 Tables and Amazon Data Firehose
 
+**Post in AWS Study Group**
+## ![](/images/image_2.png)
+
 ## **About the authors**
 
 <div style="display:flex; flex-direction:column; gap:1rem;">

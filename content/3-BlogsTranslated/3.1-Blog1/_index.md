@@ -174,6 +174,9 @@ With Managed Service for Apache Flink, the team was able to focus on the busines
 
 To learn more about Managed Service for Apache Flink and choosing the right managed service option and API for your use case, see [**What is Amazon Managed Service for Apache Flink**](https://docs.aws.amazon.com/managed-flink/latest/java/what-is.html). To experience hands-on how to develop, deploy, and operate Apache Flink applications on AWS, see the [**Amazon Managed Service for Apache Flink Workshop**](https://catalog.workshops.aws/managed-flink/en-US).
 
+**Post in AWS Study Group**
+## ![](/images/image_1.png)
+
 ## **About the authors**
 
 <div style="display:flex; flex-direction:column; gap:1rem;">

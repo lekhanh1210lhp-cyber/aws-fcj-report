@@ -204,6 +204,9 @@ Làm việc với Amazon S3 Tables và table buckets
 
 Xây dựng data lake cho dữ liệu truyền phát bằng Amazon S3 Tables và Amazon Data Firehose
 
+**Bài đăng trên AWS Study Group**
+## ![](/images/image_2.png)
+
 ## **Về các tác giả**
 
 <div style="display:flex; flex-direction:column; gap:1rem;">

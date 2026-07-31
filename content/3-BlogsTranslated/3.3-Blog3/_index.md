@@ -168,6 +168,9 @@ For more information about running Flink, Prometheus, and Grafana on AWS, see th
 
 For more information about the Flink Prometheus integration, see the Apache Flink documentation.
 
+**Post in AWS Study Group**
+## ![](/images/image_3.png)
+
 ## **About the authors**
 
 <div style="display:flex; flex-direction:column; gap:1rem;">

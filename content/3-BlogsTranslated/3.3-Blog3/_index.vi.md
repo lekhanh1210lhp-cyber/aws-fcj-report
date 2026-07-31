@@ -168,6 +168,9 @@ Việc trực tiếp trực quan hóa và phân tích dữ liệu có độ đa 
 
 Để biết thêm thông tin về việc tích hợp Flink Prometheus, hãy xem tài liệu của Apache Flink.
 
+**Bài đăng trên AWS Study Group**
+## ![](/images/image_3.png)
+
 ## **Về các tác giả**
 
 <div style="display:flex; flex-direction:column; gap:1rem;">

@@ -173,6 +173,9 @@ Cùng sự trợ lực mạnh mẽ từ Managed Service cho Apache Flink, cả t
 
 Nếu muốn tìm hiểu chuyên sâu sắc thêm về nền tảng Managed Service cho Apache Flink cùng bí kíp lựa chọn tìm ra lựa chọn tính năng quản lý với API bám sát bài toán (use case) của riêng mình, hãy thử nhấp đọc tham khảo thông tin ở [**Amazon Managed Service cho Apache Flink là gì**](https://docs.aws.amazon.com/managed-flink/latest/java/what-is.html). Kế đó nếu muốn tận tay tự mình thử nghiệm nhúng tay lập trình phát triển (develop), phóng triển khai (deploy), hay điều khiển lái vận hành (operate) cụm công cụ Flink apps đặt tại AWS, vui lòng truy cập nghiên cứu tại mục [**Hội thảo Amazon Managed Service cho Apache Flink**](https://catalog.workshops.aws/managed-flink/en-US).
 
+**Bài đăng trên AWS Study Group**
+## ![](/images/image_1.png)
+
 ## **Về các tác giả**
 
 <div style="display:flex; flex-direction:column; gap:1rem;">
