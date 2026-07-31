@@ -100,13 +100,15 @@ Open browser DevTools → **Network**:
 4. observe `Pending`, then the ACK-driven `Executed` state; and
 5. simulate a backend error and confirm the UI remains usable.
 
-## Expected Result
-
-Telemetry and history render, AWS health reflects a real backend request, controls create one traceable command, and the UI distinguishes request acceptance from physical execution. Simulation is visibly labeled and a failed POST is not reported as physical success.
+**Expected result:** telemetry and history render, AWS health reflects the backend, controls create one traceable command, and the UI distinguishes request acceptance from physical execution.
 
 <!-- TODO IMAGE: /images/5-Workshop/5.7-frontend/dashboard-overview.png — Dashboard showing latest telemetry, history, explicit real/simulated data source, and Analog light value; redact the EC2 address. -->
+![Dashboard showing Real-time Control Station interface displaying telemetry data and the Remote Control Panel](/images/5-Workshop/5.7-frontend/dashboard-overview_1.PNG)
+![Automated Analysis & Recommendation Panel with Historical Telemetry Charts queried directly from Amazon RDS PostgreSQL](/images/5-Workshop/5.7-frontend/dashboard-overview_2.PNG)
+*Figure 5-7-1. Dashboard showing latest telemetry, history, explicit real/simulated data source, and Analog light value.*
 <!-- TODO IMAGE: /images/5-Workshop/5.7-frontend/control-panel-api-request.png — Control panel together with DevTools Network showing one plural-route POST, command ID, and server state; redact host/IP details. -->
-
+![API communication verification on the Web Dashboard via Chrome DevTools Network tab, with HTTP 200 OK responses](/images/5-Workshop/5.7-frontend/control-panel-api-request.PNG)
+*Figure 5-7-2. API communication verification on the Web Dashboard via Chrome DevTools Network tab, with HTTP 200 OK responses.*
 ## Troubleshooting
 
 | Symptom | Check |
