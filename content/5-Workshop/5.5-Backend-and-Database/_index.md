@@ -40,6 +40,8 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+*Note: Ensure that you have already created the database (e.g., `iot_dashboard`). Your PostgreSQL URL must contain this exact database name at the end.*
+
 The checked source has `backend/main.py` and exports `app`; therefore the Uvicorn entry point is `main:app`.
 
 ## Step 3 - Create the environment file
@@ -71,15 +73,23 @@ In PostgreSQL `psql`:
 ```sql
 SELECT current_database(), current_user;
 \dt
+\q
 ```
 
-Initialize the SQLAlchemy schema with the checked source command:
+Exit `psql` and initialize the SQLAlchemy schema with the checked source command:
 
 ```bash
 python -m app.database.init_db
 ```
 
-It calls `Base.metadata.create_all` and should create `devices`, `telemetry_logs`, and `commands`. Confirm with `\dt` and `\d <table_name>`; this project does not define an Alembic migration workflow.
+It calls `Base.metadata.create_all` and should create tables: `devices`, `telemetry_logs`, and `commands`. Confirm with `\dt` and `\d <table_name>`.
+
+<div align="center" style="margin: 20px 0;">
+  <img src="/images/5-Workshop/5.5-Backend-and-Database/hinh_9.png" alt="Successful connection to Amazon RDS" style="max-width: 100%; height: auto;">
+  <p style="font-size: 1.15em; margin-top: 8px;">
+    <em>Figure 8. Successful connection to Amazon RDS and verification of the command table in PostgreSQL.</em>
+  </p>
+</div>
 
 ## Step 5 - Run Uvicorn manually
 
@@ -137,6 +147,13 @@ curl -i http://127.0.0.1:8000/api/health
 
 **Expected result:** the service is `active (running)`, health returns HTTP 200, and application tables are present in `iot_dashboard`.
 
+<div align="center">
+  <img src="/images/5-Workshop/5.5-Backend-and-Database/hinh_8.png" alt="FastAPI backend running with systemd" style="max-width: 100%;">
+  <p style="font-size: 1.1em; margin-top: 8px;">
+    <em>Figure 9. The FastAPI backend running as a systemd service and returning a successful health check.</em>
+  </p>
+</div>
+
 ## Step 7 - Inspect logs and deploy an update
 
 ```bash
@@ -153,13 +170,6 @@ curl -i http://127.0.0.1:8000/api/health
 
 Pull only from the approved branch, rerun `python -m app.database.init_db` when models change, and review schema compatibility before restarting. Do not use `git reset --hard` as a deployment shortcut.
 
-## Expected Result
-
-The `aws-iot-backend` service is `active (running)`, `GET /api/health` returns HTTP 200, EC2 reaches private RDS, and `devices`, `telemetry_logs`, and `commands` exist in `iot_dashboard`. Deployment evidence records the application commit and contains no credentials.
-
-<!-- TODO IMAGE: /images/5-Workshop/5.5-backend-database/backend-systemd-health-check.png — Terminal showing aws-iot-backend active and GET /api/health returning HTTP 200; redact hostnames, public IPs, and credentials. -->
-<!-- TODO IMAGE: /images/5-Workshop/5.5-backend-database/postgresql-tables-and-commands.png — psql evidence for devices, telemetry_logs, and commands plus a redacted command-state query; do not expose the RDS endpoint or password. -->
-
 ## Troubleshooting
 
 | Symptom | Diagnosis and correction |
@@ -169,7 +179,7 @@ The `aws-iot-backend` service is `active (running)`, `GET /api/health` returns H
 | Wrong `DATABASE_URL` | Verify database/user/encoding; load the same `.env` used by systemd |
 | Local curl works, remote fails | Bind `0.0.0.0`, verify EC2 SG port 8000 and public IP |
 | `systemd` fails | Run `systemctl status` and `journalctl`; verify user, path, module, permissions |
-| Port already in use | Use `sudo ss -ltnp | grep :8000` and stop the unintended process |
+| Port already in use | Use `sudo ss -ltnp \| grep :8000` and stop the unintended process |
 | SSL verification fails | Use the correct CA bundle, absolute path, permissions, and endpoint hostname |
 | Tables missing | Run the source-defined migration/init process; do not create an ad-hoc schema |
 

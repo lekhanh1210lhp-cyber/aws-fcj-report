@@ -1,5 +1,5 @@
 ---
-title: "Triển khai backend và tích hợp cơ sở dữ liệu"
+title: "Triển khai Backend và Tích hợp Cơ sở dữ liệu"
 date: "2026-07-28"
 weight: 5
 chapter: false
@@ -8,9 +8,9 @@ pre: " <b> 5.5. </b> "
 
 ## Tổng quan và mục tiêu
 
-Triển khai ứng dụng Python trên EC2 Amazon Linux, kết nối tới cơ sở dữ liệu riêng `iot_dashboard`, đối chiếu API với mã nguồn và chạy Uvicorn ổn định bằng dịch vụ `aws-iot-backend`. Quy trình vận hành sử dụng tài khoản `ec2-user`, thư mục backend `/home/ec2-user/aws-iot-dashboard/backend`, môi trường ảo `venv` và điểm vào `main:app`.
+Cài đặt ứng dụng Python trên Amazon Linux EC2, kết nối ứng dụng với cơ sở dữ liệu riêng tư `iot_dashboard`, xác minh API được định nghĩa trong mã nguồn và duy trì Uvicorn chạy dưới dạng dịch vụ `aws-iot-backend`. Hướng dẫn triển khai ứng dụng sử dụng người dùng `ec2-user`, thư mục backend `/home/ec2-user/aws-iot-dashboard/backend`, môi trường ảo `venv` và điểm khởi chạy `main:app`.
 
-## Bước 1 - Kết nối và cài công cụ
+## Bước 1 - Kết nối và cài đặt các thành phần cần thiết
 
 Từ Windows PowerShell:
 
@@ -25,9 +25,9 @@ sudo dnf update -y
 sudo dnf install -y git python3 python3-pip postgresql15 curl
 ```
 
-Nếu phiên bản Amazon Linux đã chọn dùng tên gói PostgreSQL client khác, hãy kiểm tra bằng `dnf search postgresql` trước khi cài.
+Nếu phiên bản Amazon Linux đã chọn sử dụng tên gói PostgreSQL client khác, hãy xác nhận bằng `dnf search postgresql` trước khi cài đặt.
 
-## Bước 2 - Sao chép kho mã nguồn và tạo môi trường ảo
+## Bước 2 - Sao chép mã nguồn và tạo môi trường ảo
 
 Trong EC2 Linux Bash:
 
@@ -40,23 +40,25 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Qua kiểm tra, file `backend/main.py` có xuất đối tượng `app`; vì vậy điểm vào Uvicorn là `main:app`.
+*Lưu ý: Hãy đảm bảo rằng bạn đã tạo cơ sở dữ liệu (ví dụ: `iot_dashboard`). URL PostgreSQL của bạn phải chứa chính xác tên cơ sở dữ liệu này ở cuối.*
 
-## Bước 3 - Tạo file biến môi trường
+Mã nguồn đã kiểm tra có `backend/main.py` và export `app`; vì vậy điểm khởi chạy của Uvicorn là `main:app`.
 
-Tạo file `.env` trên EC2 và bảo đảm file này đã được loại khỏi Git:
+## Bước 3 - Tạo tệp môi trường
+
+Tạo tệp `.env` (được bỏ qua bởi Git) trên EC2:
 
 ```dotenv
 DATABASE_URL=postgresql://<DB_USER>:<DB_PASSWORD>@<RDS_ENDPOINT>:5432/iot_dashboard
 ```
 
-Nếu backend dùng `sslmode=verify-full`, hãy tải gói chứng chỉ CA hiện hành của Amazon RDS theo tài liệu dự án, lưu file với quyền truy cập hạn chế và dùng đường dẫn tuyệt đối theo yêu cầu của SQLAlchemy/psycopg:
+Nếu backend sử dụng `sslmode=verify-full`, hãy tải xuống Amazon RDS CA bundle hiện tại theo hướng dẫn của dự án, lưu tệp với quyền truy cập được giới hạn và sử dụng đường dẫn tuyệt đối theo yêu cầu của SQLAlchemy/psycopg:
 
 ```dotenv
 DATABASE_URL=postgresql://<DB_USER>:<DB_PASSWORD>@<RDS_ENDPOINT>:5432/iot_dashboard?sslmode=verify-full&sslrootcert=<ABSOLUTE_CA_PATH>/global-bundle.pem
 ```
 
-Nếu `<DB_PASSWORD>` chứa ký tự đặc biệt, hãy mã hóa các ký tự đó theo chuẩn URL. Không commit file `.env` hoặc mật khẩu thật.
+Mã hóa URL (URL-encode) các ký tự đặc biệt trong `<DB_PASSWORD>`. Không bao giờ commit tệp `.env` hoặc mật khẩu thực tế.
 
 ## Bước 4 - Kiểm tra PostgreSQL
 
@@ -71,19 +73,27 @@ Trong PostgreSQL `psql`:
 ```sql
 SELECT current_database(), current_user;
 \dt
+\q
 ```
 
-Khởi tạo lược đồ SQLAlchemy bằng lệnh được định nghĩa trong mã nguồn:
+Thoát khỏi `psql` và khởi tạo schema SQLAlchemy bằng lệnh được định nghĩa trong mã nguồn:
 
 ```bash
 python -m app.database.init_db
 ```
 
-Lệnh này gọi `Base.metadata.create_all` để tạo ba bảng `devices`, `telemetry_logs`, `commands`. Hãy xác nhận bằng `\dt` và `\d <table_name>`; dự án hiện chưa có quy trình migration bằng Alembic.
+Lệnh này sẽ gọi `Base.metadata.create_all` và tạo các bảng: `devices`, `telemetry_logs` và `commands`. Xác nhận bằng `\dt` và `\d <table_name>`.
+
+<div align="center" style="margin: 20px 0;">
+  <img src="/images/5-Workshop/5.5-Backend-and-Database/hinh_9.png" alt="Successful connection to Amazon RDS" style="max-width: 100%; height: auto;">
+  <p style="font-size: 1.15em; margin-top: 8px;">
+    <em>Hình 8. Kết nối thành công tới Amazon RDS và xác minh bảng command trong PostgreSQL.</em>
+  </p>
+</div>
 
 ## Bước 5 - Chạy Uvicorn thủ công
 
-Trong EC2 Linux Bash, tại thư mục backend:
+Trong EC2 Linux Bash, từ thư mục backend:
 
 ```bash
 source venv/bin/activate
@@ -97,11 +107,11 @@ curl -i http://127.0.0.1:8000/api/health
 curl -s http://127.0.0.1:8000/openapi.json
 ```
 
-Đối chiếu tám route đã nêu ở mục 5.3 và xem lược đồ yêu cầu do Pydantic tạo ra trước khi gửi telemetry hoặc lệnh mẫu.
+Xác nhận tám endpoint được mô tả trong mục 5.3 và kiểm tra các schema request Pydantic được tạo trước khi tạo ví dụ về telemetry hoặc command.
 
 ## Bước 6 - Tạo `aws-iot-backend.service`
 
-Tạo `/etc/systemd/system/aws-iot-backend.service` bằng tài khoản, đường dẫn và module Uvicorn đã xác minh:
+Tạo `/etc/systemd/system/aws-iot-backend.service` bằng đúng người dùng, đường dẫn và module Uvicorn đã xác minh:
 
 ```ini
 [Unit]
@@ -135,9 +145,16 @@ sudo systemctl status aws-iot-backend --no-pager
 curl -i http://127.0.0.1:8000/api/health
 ```
 
-**Kết quả mong đợi:** dịch vụ ở trạng thái `active (running)`, API kiểm tra sức khỏe trả HTTP 200 và các bảng ứng dụng đã có trong `iot_dashboard`.
+**Kết quả mong đợi:** dịch vụ ở trạng thái `active (running)`, endpoint health trả về HTTP 200 và các bảng của ứng dụng đã xuất hiện trong `iot_dashboard`.
 
-## Bước 7 - Xem log và cập nhật phiên bản triển khai
+<div align="center">
+  <img src="/images/5-Workshop/5.5-Backend-and-Database/hinh_8.png" alt="FastAPI backend running with systemd" style="max-width: 100%;">
+  <p style="font-size: 1.1em; margin-top: 8px;">
+    <em>Hình 9. Backend FastAPI đang chạy dưới dạng dịch vụ systemd và trả về kết quả health check thành công.</em>
+  </p>
+</div>
+
+## Bước 7 - Kiểm tra log và triển khai bản cập nhật
 
 ```bash
 sudo journalctl -u aws-iot-backend -n 100 --no-pager
@@ -151,26 +168,19 @@ sudo systemctl restart aws-iot-backend
 curl -i http://127.0.0.1:8000/api/health
 ```
 
-Chỉ cập nhật từ nhánh đã được duyệt. Khi mô hình dữ liệu thay đổi, hãy chạy lại `python -m app.database.init_db` và kiểm tra tính tương thích của lược đồ trước khi khởi động lại dịch vụ. Không dùng `git reset --hard` như một cách triển khai nhanh.
+Chỉ pull từ nhánh đã được phê duyệt, chạy lại `python -m app.database.init_db` khi model thay đổi và kiểm tra khả năng tương thích của schema trước khi khởi động lại. Không sử dụng `git reset --hard` như một cách triển khai nhanh.
 
-## Kết quả mong đợi
+## Khắc phục sự cố
 
-Dịch vụ `aws-iot-backend` ở trạng thái `active (running)`, `GET /api/health` trả HTTP 200, EC2 kết nối được với RDS riêng và ba bảng `devices`, `telemetry_logs`, `commands` tồn tại trong `iot_dashboard`. Bằng chứng triển khai phải ghi mã commit của ứng dụng và không chứa thông tin xác thực.
-
-<!-- TODO IMAGE: /images/5-Workshop/5.5-backend-database/backend-systemd-health-check.png — Terminal hiển thị aws-iot-backend đang hoạt động và GET /api/health trả HTTP 200; che tên máy, địa chỉ IP công khai và thông tin xác thực. -->
-<!-- TODO IMAGE: /images/5-Workshop/5.5-backend-database/postgresql-tables-and-commands.png — Bằng chứng psql cho các bảng devices, telemetry_logs, commands và truy vấn trạng thái lệnh đã che thông tin nhạy cảm; không để lộ endpoint RDS hoặc mật khẩu. -->
-
-## Xử lý sự cố
-
-| Hiện tượng | Chẩn đoán và khắc phục |
+| Triệu chứng | Chẩn đoán và cách khắc phục |
 | :--- | :--- |
-| Bị từ chối kết nối | Xác nhận đúng RDS và cổng kết nối; nếu gọi API, kiểm tra Uvicorn đang chạy và lắng nghe |
-| Hết thời gian chờ | Kiểm tra nguồn của RDS SG là `ec2-rds-1`, subnet, endpoint và khu vực |
-| Sai `DATABASE_URL` | Kiểm tra tên cơ sở dữ liệu, người dùng, cách mã hóa; nạp đúng `.env` mà `systemd` sử dụng |
-| curl cục bộ thành công, truy cập từ xa thất bại | Bind `0.0.0.0`, kiểm tra cổng 8000 trong EC2 SG và IP công khai |
-| `systemd` không khởi động được | Xem `systemctl status`, `journalctl`; kiểm tra tài khoản, đường dẫn, module và quyền |
-| Cổng đã được sử dụng | Chạy `sudo ss -ltnp | grep :8000` và dừng tiến trình ngoài dự kiến |
-| Xác minh SSL thất bại | Dùng đúng CA bundle, đường dẫn tuyệt đối, quyền file và tên máy chủ endpoint |
-| Thiếu bảng | Chạy lệnh khởi tạo hoặc migration do mã nguồn định nghĩa; không tự tạo một lược đồ khác |
+| Connection refused | Xác nhận RDS/cổng hoặc kiểm tra Uvicorn đang chạy và lắng nghe kết nối |
+| Connection timeout | Kiểm tra nguồn của Security Group RDS là `iot-ec2-sg`, định tuyến subnet, endpoint và region |
+| Sai `DATABASE_URL` | Kiểm tra cơ sở dữ liệu/người dùng/mã hóa; nạp đúng tệp `.env` mà systemd sử dụng |
+| Curl cục bộ hoạt động, truy cập từ xa thất bại | Đảm bảo bind `0.0.0.0`, kiểm tra EC2 Security Group mở cổng 8000 và địa chỉ IP công khai |
+| `systemd` thất bại | Chạy `systemctl status` và `journalctl`; kiểm tra người dùng, đường dẫn, module và quyền |
+| Cổng đã được sử dụng | Dùng `sudo ss -ltnp \| grep :8000` và dừng tiến trình không mong muốn |
+| Xác minh SSL thất bại | Sử dụng đúng CA bundle, đường dẫn tuyệt đối, quyền truy cập và hostname của endpoint |
+| Thiếu bảng | Chạy quy trình migration/khởi tạo được định nghĩa trong mã nguồn; không tự tạo schema tạm thời |
 
 Tiếp theo: [tích hợp phần cứng YOLO UNO](../5.6-Hardware-Integration/).
