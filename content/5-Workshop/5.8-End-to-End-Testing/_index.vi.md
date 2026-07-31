@@ -1,5 +1,5 @@
 ---
-title: "Kiểm thử và xác minh end-to-end"
+title: "Kiểm thử và Xác thực End-to-End"
 date: "2026-07-28"
 weight: 8
 chapter: false
@@ -8,37 +8,43 @@ pre: " <b> 5.8. </b> "
 
 ## Tổng quan và mục tiêu
 
-Xác minh từng ranh giới độc lập, sau đó chạy toàn bộ luồng telemetry và command. Source backend và firmware đã kiểm tra xác định schema cùng hành vi chính xác; dùng FastAPI `/docs` hoặc `/openapi.json` để xác nhận bản đang deploy trước khi test.
+Xác thực từng thành phần của hệ thống một cách độc lập trước khi thực hiện quy trình truyền dữ liệu (telemetry) và điều khiển thiết bị (command) theo luồng end-to-end hoàn chỉnh. Mã nguồn backend và firmware đã được kiểm tra là cơ sở xác định cấu trúc API và hành vi của các lệnh điều khiển. Trước khi kiểm thử, cần xác nhận phiên bản FastAPI đang được triển khai thông qua `/docs` hoặc `/openapi.json`.
 
-## Quy trình kiểm thử
+---
 
-1. Ghi ngày, người test, commit ID ứng dụng, firmware build, AWS region và `room_01`.
-2. Che credential và private endpoint trong evidence.
-3. Thu request/response, log liên quan, trạng thái SQL, output thiết bị và trạng thái dashboard.
-4. Điền giá trị quan sát vào **Actual/evidence** và chỉ đánh dấu **Pass/Fail** sau khi chạy.
-5. Đưa phần cứng và service về trạng thái an toàn sau failure test.
+## Bước 1 - Thiết lập quy trình kiểm thử
 
-## Ma trận kiểm thử
+1. Ghi lại ngày kiểm thử, người thực hiện, commit ID của ứng dụng, phiên bản firmware, vùng AWS và mã thiết bị (`room_01`).
+2. Che hoặc loại bỏ thông tin nhạy cảm như thông tin xác thực, API key và các endpoint nội bộ khỏi toàn bộ bằng chứng kiểm thử.
+3. Thu thập đầy đủ request/response của API, log của backend, trạng thái cơ sở dữ liệu SQL, đầu ra của thiết bị, trạng thái dashboard và log CloudWatch (nếu có).
+4. Ghi nhận kết quả quan sát được vào cột **Actual/Evidence** và chỉ đánh dấu **Pass**, **Fail** hoặc **Not Run** sau khi quá trình kiểm thử hoàn tất.
+5. Sau các bài kiểm thử lỗi, khôi phục phần cứng và các dịch vụ về trạng thái hoạt động an toàn.
 
-| ID | Mục tiêu | Điều kiện trước | Các bước | Kết quả mong đợi | Actual/evidence | Pass/Fail |
+---
+
+## Bước 2 - Thực hiện và ghi nhận ma trận kiểm thử
+
+| ID | Mục tiêu | Điều kiện tiên quyết | Các bước thực hiện | Kết quả mong đợi | Bằng chứng thực tế | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :---: |
-| T01 | Backend health | Service active | `GET /api/health` | HTTP 200 và health body đã định nghĩa | Ghi curl response | Ghi |
-| T02 | POST telemetry | Biết OpenAPI schema; DB reachable | Post một payload `room_01` hợp lệ | Response thành công và một row được lưu | Đính kèm API + SQL | Ghi |
-| T03 | Latest telemetry | Hoàn tất T02 | `GET /api/devices/room_01/latest` | Trả bản ghi mới nhất | Đính kèm response | Ghi |
-| T04 | History | Có nhiều bản ghi | `GET /api/devices/room_01/history` | History theo thiết bị và thứ tự | Đính kèm response/chart | Ghi |
-| T05 | Tạo command | Không có action pending trùng | POST một command hỗ trợ | Command ID có state `Pending` | Đính kèm response | Ghi |
-| T06 | Hardware polling | Thiết bị online | Quan sát polling sau T05 | Thiết bị nhận đúng ID/command một lần | Serial evidence | Ghi |
-| T07 | Fan ON/OFF | Quạt nối an toàn | Gửi `FAN_ON`, rồi `FAN_OFF` | Trạng thái vật lý đúng từng command | Video/ảnh + ID | Ghi |
-| T08 | Light ON/OFF | Đèn/relay nối an toàn | Gửi `LIGHT_ON`, rồi `LIGHT_OFF` | Trạng thái vật lý đúng từng command | Video/ảnh + ID | Ghi |
-| T09 | Curtain OPEN/CLOSE | Servo nối an toàn | Gửi open, rồi close | Servo tới vị trí source định nghĩa | Video/ảnh + ID | Ghi |
-| T10 | Vòng đời ACK | Có command T05-T09 | Quan sát POST ACK và query state | Cùng command đổi `Pending` → `Executed` | API + SQL + log | Ghi |
-| T11 | PostgreSQL persistence | Có DB session | Query sau telemetry/command | Bản ghi còn sau API refresh/restart | SQL evidence | Ghi |
-| T12 | CloudWatch logs | Agent đã cấu hình | Tạo health/telemetry request mới | Event backend mới xuất hiện đúng stream | CloudWatch evidence | Ghi |
-| T13 | Backend unavailable | Maintenance window an toàn | Stop service; retry client; restart | Báo lỗi/retry rõ, không báo thành công giả | UI/device/log evidence | Ghi |
-| T14 | Wi-Fi disconnected | Trạng thái thiết bị an toàn | Ngắt Wi-Fi, quan sát, kết nối lại | Reconnect; không lặp command | Serial evidence | Ghi |
-| T15 | Unsupported command | Test có kiểm soát; actuator an toàn | Gửi giá trị không hỗ trợ | Backend hiện tại có thể lưu thành `Pending`; firmware phải từ chối và không ACK. Ghi đây là lỗi validation backend, không phải test 4xx pass | API + SQL + serial log | Ghi |
+| T01 | Kiểm tra trạng thái backend | Dịch vụ đang hoạt động | `GET /api/health` | HTTP 200 và nội dung phản hồi đúng theo tài liệu | Phản hồi HTTP 200 và log backend | **Pass** |
+| T02 | Gửi telemetry | Đã biết schema OpenAPI; cơ sở dữ liệu sẵn sàng | Gửi một payload telemetry hợp lệ của `room_01` | API trả về thành công và lưu đúng một bản ghi | Hình 15: bản ghi API và SQL khớp nhau | **Pass** |
+| T03 | Lấy telemetry mới nhất | Đã hoàn thành T02 | `GET /api/devices/room_01/latest` | Trả về bản ghi telemetry mới nhất | Đã xác minh phản hồi API | **Pass** |
+| T04 | Lấy lịch sử telemetry | Có nhiều bản ghi trong cơ sở dữ liệu | `GET /api/devices/room_01/history` | Trả về lịch sử telemetry theo đúng thứ tự thời gian | Phản hồi API và biểu đồ trên dashboard | **Pass** |
+| T05 | Tạo lệnh điều khiển | Không có lệnh Pending trùng lặp | Gửi một lệnh điều khiển hợp lệ | Sinh Command ID với trạng thái `Pending` | Hình 16: Command ID 189 ở trạng thái `Pending` | **Pass** |
+| T06 | Kiểm tra cơ chế polling của phần cứng | Thiết bị đang trực tuyến | Quan sát sau khi thực hiện T05 | Thiết bị nhận đúng lệnh và chỉ nhận một lần | Video minh họa phần cứng | **Pass** |
+| T07 | Điều khiển Quạt BẬT/TẮT | Quạt được kết nối an toàn | Gửi `FAN_ON`, sau đó `FAN_OFF` | Trạng thái thực tế của quạt khớp với lệnh | Dashboard và bằng chứng phần cứng | **Pass** |
+| T08 | Điều khiển Đèn BẬT/TẮT | Đèn được kết nối an toàn | Gửi `LIGHT_ON`, sau đó `LIGHT_OFF` | Trạng thái thực tế của đèn khớp với lệnh | Dashboard và bằng chứng phần cứng | **Pass** |
+| T09 | Điều khiển Rèm MỞ/ĐÓNG | Servo được kết nối an toàn | Gửi `CURTAIN_OPEN`, sau đó `CURTAIN_CLOSE` | Servo quay đến 90° rồi trở về 0° | Dashboard và bằng chứng phần cứng | **Pass** |
+| T10 | Kiểm tra vòng đời ACK | Đã có lệnh từ T05-T09 | Quan sát ACK và kiểm tra trạng thái | Cùng một Command ID chuyển từ `Pending` sang `Executed` | Hình 16: Command ID 189 chuyển sang `Executed` | **Pass** |
+| T11 | Kiểm tra tính lưu trữ của PostgreSQL | Cơ sở dữ liệu sẵn sàng | Truy vấn sau khi gửi telemetry và command | Dữ liệu vẫn tồn tại sau khi API refresh hoặc restart | Bằng chứng SQL | **Pass** |
+| T12 | Kiểm tra CloudWatch | CloudWatch Agent đã được cấu hình | Tạo một request API mới | Log mới xuất hiện trong CloudWatch | Log CloudWatch (Mục 5.9) | **Pass** |
+| T13 | Backend không khả dụng | Trong thời gian bảo trì an toàn | Dừng backend, gửi lại request, khởi động lại | Client hiển thị lỗi, không báo thành công giả | Giao diện, API và log | **Record** |
+| T14 | Mất kết nối Wi-Fi | Thiết bị ở trạng thái an toàn | Ngắt Wi-Fi rồi kết nối lại | Thiết bị kết nối lại và không thực hiện lệnh trùng lặp | Bằng chứng từ Serial Monitor | **Pass** |
+| T15 | Lệnh không được hỗ trợ | Môi trường kiểm thử được kiểm soát | Gửi một lệnh không hợp lệ | Backend hiện vẫn chấp nhận yêu cầu nhưng firmware từ chối thực thi và không gửi ACK. Ghi nhận đây là lỗi xác thực của backend. | API + SQL + Serial Monitor | **Fail (dự kiến)** |
 
-## Kiểm tra API và database
+---
+
+## Bước 3 - Kiểm tra API và cơ sở dữ liệu
 
 Từ EC2 Linux Bash:
 
@@ -48,7 +54,17 @@ curl -s http://127.0.0.1:8000/api/devices/room_01/latest
 curl -s http://127.0.0.1:8000/api/devices/room_01/history
 ```
 
-Tạo telemetry bằng các field camelCase ở 5.6. Tạo command bằng `{ "command": "FAN_ON" }`; Pydantic field cũng có alias `Command`, nhưng `populate_by_name=True` nên lowercase `command` được chấp nhận. Device row phải tồn tại trước, thông thường do telemetry request đầu tiên tạo. Trong PostgreSQL `psql`, kiểm tra command state:
+Tạo telemetry bằng các trường dữ liệu theo chuẩn camelCase được định nghĩa trong Mục 5.6. Tạo một lệnh điều khiển như sau:
+
+```json
+{
+  "command": "FAN_ON"
+}
+```
+
+Mô hình Pydantic cũng hỗ trợ tên trường Command; tuy nhiên, do populate_by_name=True, trường command viết thường vẫn được chấp nhận. Một bản ghi thiết bị phải tồn tại trước đó, thông thường được tạo bởi request telemetry đầu tiên.
+
+Kiểm tra trạng thái các lệnh trong PostgreSQL:
 
 ```sql
 SELECT
@@ -61,24 +77,84 @@ ORDER BY id DESC
 LIMIT 6;
 ```
 
-Thiết bị polling có thể ACK nhanh đến mức query sau không còn thấy `Pending`. Hãy giữ POST response thể hiện `Pending`, rồi chụp bản ghi `Executed` cuối cùng có cùng ID.
+Do thiết bị có thể gửi ACK gần như ngay lập tức sau khi nhận lệnh, trạng thái Pending có thể biến mất rất nhanh. Vì vậy, cần lưu lại phản hồi POST thể hiện trạng thái Pending trước khi chụp trạng thái cuối cùng là Executed của cùng Command ID.
 
-## Xử lý lỗi và nghiệm thu
+---
 
-Trong T13/T14, UI và firmware phải báo unavailable mà không tuyên bố thành công. Frontend đã kiểm tra hiện trả simulated success cho một số command lỗi, nên T13 dự kiến sẽ lộ defect cho đến khi hành vi này được sửa. ACK retry không được lặp actuator action. Backend đã kiểm tra không có command enum validator, vì vậy đánh dấu T15 **Fail** khi backend nhận giá trị; firmware từ chối không làm backend validation thành pass.
+### Bằng chứng T02 - Telemetry được lưu vào Amazon RDS
 
-<!-- TODO IMAGE: /images/5-Workshop/5.8-testing/telemetry-api-database-validation.png — Telemetry request/response khớp với query telemetry_logs của room_01; che endpoint và credential. -->
-<!-- TODO IMAGE: /images/5-Workshop/5.8-testing/command-pending-to-executed.png — Cùng command ID xuất hiện trước ở Pending, sau ở Executed sau ACK trong evidence API/SQL. -->
-<!-- TODO IMAGE: /images/5-Workshop/5.8-testing/dashboard-hardware-control.png — Control dashboard ghép với evidence vật lý cho quạt, đèn, rèm; hiện command ID khi có thể và che thông tin mạng. -->
+Hình 15 minh họa một request curl được thực hiện trong môi trường kiểm soát nhằm tách riêng việc kiểm tra khả năng lưu dữ liệu từ FastAPI xuống PostgreSQL. Việc tích hợp với phần cứng đã được kiểm thử riêng trước đó; hình này chỉ dùng để xác thực trường hợp kiểm thử T02.
 
-![Kiểm tra điều khiển quạt từ xa qua dashboard control panel](/images/5-Workshop/5.8-testing/dashboard-hardware-control_Fan.PNG)
+![Telemetry submitted through the API and stored in PostgreSQL](/images/5-Workshop/5.8-testing/telemetry-api-database-validation.png)
 
-![Kiểm tra điều khiển đèn từ xa qua dashboard control panel](/images/5-Workshop/5.8-testing/dashboard-hardware-control_Light.PNG)
+*Hình 15. Dữ liệu telemetry được gửi thông qua REST API và được lưu thành công vào Amazon RDS for PostgreSQL.*
 
-![Kiểm tra điều khiển đèn từ xa qua dashboard control panel](/images/5-Workshop/5.8-testing/dashboard-hardware-control_Curtain.PNG)
-*Hình 5-8. Kiểm tra điều khiển đèn từ xa qua dashboard control panel theo thời gian thực.*
-## Kết quả và xử lý sự cố
+---
 
-Đây là kế hoạch thực thi, không phải tuyên bố test đã chạy. Không gọi là stress testing và không bịa số liệu latency, throughput hoặc reliability. Test fail phải ghi layer lỗi, log/request evidence, owner, cách sửa và kết quả rerun.
+### Bằng chứng T05/T10 - Vòng đời của lệnh điều khiển
 
-Tiếp theo: [cấu hình và xác minh CloudWatch](../5.9-CloudWatch-Monitoring/).
+Để tách riêng việc kiểm thử backend trong thời điểm phần cứng chưa sẵn sàng, lệnh FAN_ON được tạo thông qua REST API và endpoint ACK được gọi thủ công. Kết quả cho thấy cùng một Command ID (189) chuyển từ trạng thái Pending sang Executed, qua đó xác thực luồng xử lý giữa backend và cơ sở dữ liệu mà không phụ thuộc vào phần cứng.
+
+![Command 189 changing from Pending to Executed after ACK](/images/5-Workshop/5.8-testing/command-pending-to-executed.png)
+
+*Hình 16. Xác thực vòng đời của lệnh điều khiển từ Pending sang Executed thông qua endpoint ACK của FastAPI.*
+
+---
+
+### Bằng chứng T06-T09 - Dashboard và phần cứng
+
+Các ảnh chụp dashboard dưới đây minh họa việc gửi thành công các lệnh điều khiển từ xa cho quạt, đèn và rèm cửa. Phản hồi thực tế của các thiết bị được ghi lại trong video minh họa.
+
+![Remote fan control through dashboard](/images/5-Workshop/5.8-testing/dashboard-hardware-control_Fan.PNG)
+
+![Remote light control through dashboard](/images/5-Workshop/5.8-testing/dashboard-hardware-control_LED.PNG)
+
+![Remote curtain control through dashboard](/images/5-Workshop/5.8-testing/dashboard-hardware-control_Curtain.PNG)
+
+*Hình 17. Giao diện dashboard dùng để gửi các lệnh điều khiển từ xa cho quạt, hệ thống chiếu sáng và rèm cửa.*
+
+Video minh họa đầy đủ được lưu tại Google Drive:
+
+https://drive.google.com/file/d/1T97dUY58hbT2ppxvg7ESR12Jg9BA828W/view?usp=sharing
+
+Video này cung cấp bằng chứng end-to-end cho thấy các lệnh từ dashboard được ESP32 nhận thành công và điều khiển chính xác các thiết bị vật lý gồm quạt, đèn và rèm cửa.
+
+---
+
+## Bước 4 - Xử lý lỗi và tiêu chí chấp nhận
+
+Các trường hợp kiểm thử lỗi (T13-T15) nhằm xác minh rằng hệ thống xử lý và thông báo lỗi đúng cách, đồng thời không tạo ra trạng thái thành công giả.
+
+- Trong trường hợp backend ngừng hoạt động (T13), giao diện người dùng và firmware phải hiển thị trạng thái không khả dụng thay vì báo lệnh thực hiện thành công.
+- Khi mất kết nối Wi-Fi (T14), firmware phải tự động kết nối lại và tiếp tục polling mà không thực hiện lại các lệnh trước đó.
+- Đối với các lệnh không được hỗ trợ (T15), backend lý tưởng nên từ chối ngay từ bước xác thực. Tuy nhiên, do backend hiện chưa kiểm tra tập lệnh hợp lệ, việc chấp nhận các giá trị không hợp lệ cần được ghi nhận là một lỗi xác thực của backend.
+
+---
+
+## Kết quả mong đợi
+
+Mỗi trường hợp kiểm thử từ T01 đến T15 cần bao gồm:
+
+- Kết quả thực tế quan sát được.
+- Trạng thái Pass, Fail hoặc Not Run.
+- Bằng chứng hỗ trợ như phản hồi API, truy vấn SQL, đầu ra của phần cứng, ảnh chụp dashboard hoặc log CloudWatch.
+
+Một quy trình kiểm thử end-to-end được xem là thành công khi cùng một Device ID và Command ID có thể được đối chiếu nhất quán trên REST API, PostgreSQL, firmware, dashboard và hệ thống giám sát.
+
+---
+
+## Khắc phục sự cố
+
+Phần này mô tả hướng dẫn thực hiện kiểm thử, không phải khẳng định rằng tất cả các bài kiểm thử đã được chạy. Không mô tả đây là kiểm thử hiệu năng (stress/performance testing) và không đưa ra các số liệu về độ trễ hoặc thông lượng nếu chúng chưa được đo đạc riêng.
+
+| Triệu chứng | Cách kiểm tra |
+| :--- | :--- |
+| Không quan sát được trạng thái Pending | Lưu phản hồi POST trước khi ACK và truy vấn lại cùng Command ID sau đó |
+| Dashboard và cơ sở dữ liệu không đồng nhất | Kiểm tra endpoint API, nguồn dữ liệu của dashboard và bản ghi mới nhất trong cơ sở dữ liệu |
+| Lệnh được thực hiện nhiều lần | So sánh Command ID, lastAck và pendingAck; phân biệt việc gửi lại ACK với việc thực thi lại lệnh |
+| Backend báo thành công dù đang gặp lỗi | Kiểm tra xử lý lỗi của frontend và trạng thái hoạt động của backend |
+| Backend chấp nhận lệnh không hợp lệ | Ghi nhận đây là lỗi xác thực của backend cho đến khi chức năng kiểm tra lệnh được triển khai |
+| Không thể tái hiện bài kiểm thử | Ghi lại commit ID, vùng AWS, Device ID, thời gian và toàn bộ điều kiện tiên quyết |
+| Bằng chứng chứa thông tin nhạy cảm | Che thông tin nhạy cảm và chụp lại trước khi công bố |
+
+Tiếp theo: [Cấu hình và xác thực CloudWatch](../5.9-CloudWatch-Monitoring/).
