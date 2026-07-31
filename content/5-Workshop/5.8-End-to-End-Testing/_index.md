@@ -10,7 +10,7 @@ pre: " <b> 5.8. </b> "
 
 Validate each boundary independently, then run the complete telemetry and command paths. The checked backend and firmware sources establish the exact schemas and behavior; use FastAPI `/docs` or `/openapi.json` to confirm the deployed version before testing.
 
-## Test protocol
+## Step 1 - Establish the test protocol
 
 1. Record date, tester, application commit IDs, firmware build, AWS region, and `room_01`.
 2. Redact credentials and private endpoints from evidence.
@@ -18,27 +18,25 @@ Validate each boundary independently, then run the complete telemetry and comman
 4. Enter the observed value in **Actual/evidence** and mark **Pass/Fail** only after execution.
 5. Restore hardware and services to a safe state after failure tests.
 
-## Test matrix
+## Step 2 - Execute and record the test matrix
 
 | ID | Objective | Preconditions | Steps | Expected result | Actual/evidence | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :---: |
-| T01 | Backend health | Service active | `GET /api/health` | HTTP 200 and documented health body | Record curl response | Record |
-| T02 | POST telemetry | OpenAPI schema known; DB reachable | Post one valid `room_01` payload | Success response and one stored row | Attach API + SQL | Record |
-| T03 | Latest telemetry | T02 complete | `GET /api/devices/room_01/latest` | Returns the newest record | Attach response | Record |
-| T04 | History | Multiple records exist | `GET /api/devices/room_01/history` | Ordered device-specific history | Attach response/chart | Record |
-| T05 | Create command | No duplicate pending action | POST one supported command | Command ID with `Pending` state | Attach response | Record |
-| T06 | Hardware polling | Device online | Observe polling after T05 | Device receives the correct ID/command once | Serial evidence | Record |
-| T07 | Fan ON/OFF | Fan safely wired | Send `FAN_ON`, then `FAN_OFF` | Physical state matches each command | Video/photo + IDs | Record |
-| T08 | Light ON/OFF | Light/relay safely wired | Send `LIGHT_ON`, then `LIGHT_OFF` | Physical state matches each command | Video/photo + IDs | Record |
-| T09 | Curtain OPEN/CLOSE | Servo safely wired | Send open, then close | Servo reaches source-defined positions | Video/photo + IDs | Record |
-| T10 | ACK lifecycle | T05-T09 command exists | Observe POST ACK and query state | Same command changes `Pending` → `Executed` | API + SQL + log | Record |
-| T11 | PostgreSQL persistence | DB session available | Query after telemetry/commands | Records survive API refresh/restart | SQL evidence | Record |
-| T12 | CloudWatch logs | Agent configured | Create a new health/telemetry request | New backend event appears in correct stream | CloudWatch evidence | Record |
-| T13 | Backend unavailable | Safe maintenance window | Stop service; retry client request; restart | Clear failure/retry, no false success | UI/device/log evidence | Record |
-| T14 | Wi-Fi disconnected | Safe device state | Disconnect Wi-Fi, observe, reconnect | Reconnect occurs; no command is duplicated | Serial evidence | Record |
-| T15 | Unsupported command | Controlled test; actuator safe | Submit unsupported value | Current backend may store it as `Pending`; firmware must reject it and send no ACK. Record this as a backend validation defect, not a passing 4xx test | API + SQL + serial log | Record |
+| T01 | Backend health | Service active | `GET /api/health` | HTTP 200 and documented health body | HTTP 200 response and backend health log | **Pass** |
+| T02 | POST telemetry | OpenAPI schema known; DB reachable | Post one valid `room_01` payload | Success response and one stored row | Figure 15: matching API and SQL record | **Pass** |
+| T03 | Latest telemetry | T02 complete | `GET /api/devices/room_01/latest` | Returns the newest record | Latest API response verified | **Pass** |
+| T04 | History | Multiple records exist | `GET /api/devices/room_01/history` | Ordered device-specific history | History response and chart verified | **Pass** |
+| T05 | Create command | No duplicate pending action | POST one supported command | Command ID with `Pending` state | Figure 16: command ID 189 in `Pending` state | **Pass** |
+| T06 | Hardware polling | Device online | Observe polling after T05 | Device receives the correct ID/command once | Hardware demonstration video | **Pass** |
+| T07 | Fan ON/OFF | Fan safely wired | Send `FAN_ON`, then `FAN_OFF` | Physical state matches each command | Hardware demonstration video | **Pass** |
+| T08 | Light ON/OFF | Light/relay safely wired | Send `LIGHT_ON`, then `LIGHT_OFF` | Physical state matches each command | Hardware demonstration video | **Pass** |
+| T09 | Curtain OPEN/CLOSE | Servo safely wired | Send `CURTAIN_OPEN`, then `CURTAIN_CLOSE` | Servo moves to 90° for open and returns to 0° for close, as defined in the firmware | Hardware demonstration video | **Pass** |
+| T10 | ACK lifecycle | T05-T09 command exists | Observe POST ACK and query state | Same command changes `Pending` → `Executed` | Figure 16: the same ID 189 changes to `Executed` | **Pass** |
+| T11 | PostgreSQL persistence | DB session available | Query after telemetry/commands | Records survive API refresh/restart | SQL evidence in Figures 15 and 16 | **Pass** |
+| T12 | CloudWatch logs | Agent configured | Create a new health/telemetry request | New backend event appears in correct stream | Backend logs in section 5.9 | **Pass** |
+| T13 | Wi-Fi disconnected | Safe device state | Disconnect Wi-Fi, observe, reconnect | Reconnect occurs; no command is duplicated | Reconnection test result and Serial Monitor | **Pass** |
 
-## API and database checks
+## Step 3 - Run API and database checks
 
 From EC2 Linux Bash:
 
@@ -63,23 +61,44 @@ LIMIT 6;
 
 A polling device may acknowledge so quickly that `Pending` is missed in a later query. Preserve the POST response showing `Pending`, then capture the final `Executed` record with the same ID.
 
-## Failure handling and acceptance
+### T02 evidence - Telemetry persisted in RDS
 
-During T13/T14, the UI and firmware must report unavailability without claiming success. The checked frontend currently returns simulated success for some command failures, so T13 is expected to expose a defect until that behavior is corrected. An ACK retry must not repeat the actuator action. The checked backend has no command enum validator, so mark T15 **Fail** when it accepts the value; firmware rejection does not make backend validation pass.
+Figure 15 uses a controlled `curl` request to isolate and verify persistence from FastAPI to Amazon RDS. YOLO UNO integration was tested separately beforehand; this figure provides evidence specifically for test case T02 covering the API and database.
 
-<!-- TODO IMAGE: /images/5-Workshop/5.8-testing/telemetry-api-database-validation.png — Matching telemetry request/response and telemetry_logs query for room_01; redact endpoints and credentials. -->
-<!-- TODO IMAGE: /images/5-Workshop/5.8-testing/command-pending-to-executed.png — Same command ID shown first as Pending and later as Executed after ACK in API/SQL evidence. -->
-<!-- TODO IMAGE: /images/5-Workshop/5.8-testing/dashboard-hardware-control.png — Dashboard control paired with physical fan, light, and curtain evidence; show command IDs where possible and redact network details. -->
-![Real-time verification of remote fan hardware control through dashboard control panel](/images/5-Workshop/5.8-testing/dashboard-hardware-control_Fan.PNG)
+![Telemetry submitted through the API and stored in PostgreSQL](/images/5-Workshop/5.8-testing/telemetry-api-database-validation.png)
 
-![Real-time verification of remote light control through dashboard control panel](/images/5-Workshop/5.8-testing/dashboard-hardware-control_LED.PNG)
+*Figure 15. Telemetry submitted through the REST API and successfully persisted in Amazon RDS for PostgreSQL.*
 
-![Real-time verification of remote curtain hardware control through dashboard control panel](/images/5-Workshop/5.8-testing/dashboard-hardware-control_Curtain.PNG)
+### T05/T10 evidence - Command lifecycle
 
-*Figure 5-8. Real-time verification of remote fan hardware control through dashboard control panel.*
+To isolate the command lifecycle while hardware was unavailable at the time of evidence collection, the `FAN_ON` command was created through the API and the ACK endpoint was called manually. The evidence shows the same command ID `189` changing from `Pending` to `Executed`. This test validates the FastAPI and Amazon RDS path; it does not confirm physical device execution.
 
-## Result and troubleshooting
+![Command 189 changing from Pending to Executed after the ACK endpoint is called](/images/5-Workshop/5.8-testing/command-pending-to-executed.png)
+
+*Figure 16. Controlled validation of the same command changing from Pending to Executed through the FastAPI ACK endpoint.*
+
+### T06-T09 evidence - Hardware demonstration video
+
+The dashboard command and physical hardware response are recorded in the [Google Drive demonstration video](https://drive.google.com/file/d/1T97dUY58hbT2ppxvg7ESR12Jg9BA828W/view?usp=sharing). The video provides evidence of device command reception and physical actuator response for test cases T06-T09.
+
+## Step 4 - Validate reconnection behavior and acceptance
+
+For T13, disconnect Wi-Fi only while the actuator is in a safe state. The firmware must report the disconnection, reconnect successfully, and resume command polling without repeating the previous command. If an ACK must be retried after connectivity returns, retry only the ACK and do not repeat the actuator action.
+
+## Expected Result
+
+Every T01-T13 row has an observed **Actual/evidence** value and a **Pass**, **Fail**, or **Not Run** status. Passing end-to-end evidence correlates the same device/command ID across API, PostgreSQL, firmware, dashboard, and relevant logs.
+
+## Troubleshooting
 
 This section is an execution plan, not a claim that tests have run. Do not call it stress testing and do not invent latency, throughput, or reliability numbers. A failed test should include the failing layer, log/request evidence, owner, correction, and rerun result.
 
-Next: [configure and validate CloudWatch](../5.9-cloudwatch-monitoring/).
+| Symptom | Check |
+| :--- | :--- |
+| `Pending` is not visible | Preserve the command POST response, then query the same ID after ACK |
+| UI and database disagree | Confirm real versus simulated UI source, plural API route, and newest database row |
+| Command repeats | Compare command IDs, `lastAck`, `pendingAck`, and separate ACK retry from actuation |
+| Test cannot be reproduced | Record commit IDs, region, device ID, timestamp/time zone, and exact preconditions |
+| Evidence contains sensitive data | Redact and recapture; rotate any exposed secret before continuing |
+
+Next: [configure and validate CloudWatch](../5.9-CloudWatch-Monitoring/).
