@@ -88,7 +88,7 @@ curl http://127.0.0.1:8000/api/health
 ```
 
 <p align="center">
-  <img src="/images/5-Workshop/5.5-backend-database/backend-systemd-health-check.png"
+  <img src="/images/5-Workshop/5.5-Backend-and-Database/backend-systemd-health-check.png"
        alt="FastAPI backend systemd service and health check"
        width="100%" />
 </p>
@@ -103,7 +103,7 @@ After the ASG instances are registered, verify the same endpoint through the ALB
 curl.exe -sS -i "http://<ALB_DNS_NAME>/api/health"
 ```
 
-![Health check through the Application Load Balancer](/images/5-Workshop/5.5-backend-database/alb-health-check.png)
+![Health check through the Application Load Balancer](/images/5-Workshop/5.5-Backend-and-Database/alb-health-check.png)
 *Figure 8a. The ALB endpoint returns HTTP 200 for `/api/health`; target-group evidence in section 5.4 confirms both registered backends are Healthy.*
 
 ## Step 4 - Connect EC2 to Amazon RDS
@@ -144,7 +144,7 @@ LIMIT 6;
 ```
 
 <p align="center">
-  <img src="/images/5-Workshop/5.5-backend-database/postgresql-tables-and-commands.png"
+  <img src="/images/5-Workshop/5.5-Backend-and-Database/postgresql-tables-and-commands.png"
        alt="PostgreSQL tables and executed IoT commands"
        width="100%" />
 </p>
@@ -153,7 +153,7 @@ LIMIT 6;
 
 The screenshot confirms an SSL/TLS PostgreSQL session from EC2 to the `iot_dashboard` database. It lists the four application tables and recent command rows whose `device_id` is `room_01`. Examples include `CURTAIN_CLOSE`, `CURTAIN_OPEN`, `MODE_AUTO`, and `LIGHT_OFF`, all displayed in the `Executed` state. Database credentials are not shown.
 
-![Telemetry API response and matching PostgreSQL record](/images/5-Workshop/5.5-backend-database/telemetry-api-database.png)
+![Telemetry API response and matching PostgreSQL record](/images/5-Workshop/5.5-Backend-and-Database/telemetry-api-database.png)
 *Figure 9a. A telemetry POST and latest API response correlate with the same `telemetry_logs` record in PostgreSQL.*
 
 ## Step 6 - Expected Results

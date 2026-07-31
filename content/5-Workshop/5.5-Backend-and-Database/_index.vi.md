@@ -88,7 +88,7 @@ curl http://127.0.0.1:8000/api/health
 ```
 
 <p align="center">
-  <img src="/images/5-Workshop/5.5-backend-database/backend-systemd-health-check.png"
+  <img src="/images/5-Workshop/5.5-Backend-and-Database/backend-systemd-health-check.png"
        alt="Dịch vụ systemd của FastAPI backend và kết quả health check"
        width="100%" />
 </p>
@@ -103,7 +103,7 @@ Sau khi các instance của ASG được đăng ký, kiểm tra cùng endpoint q
 curl.exe -sS -i "http://<ALB_DNS_NAME>/api/health"
 ```
 
-![Kiểm tra health qua Application Load Balancer](/images/5-Workshop/5.5-backend-database/alb-health-check.png)
+![Kiểm tra health qua Application Load Balancer](/images/5-Workshop/5.5-Backend-and-Database/alb-health-check.png)
 *Hình 8a. Endpoint ALB trả HTTP 200 cho `/api/health`; bằng chứng target group ở mục 5.4 xác nhận cả hai backend đã đăng ký đều Healthy.*
 
 ## Bước 4 - Kết nối EC2 với Amazon RDS
@@ -144,7 +144,7 @@ LIMIT 6;
 ```
 
 <p align="center">
-  <img src="/images/5-Workshop/5.5-backend-database/postgresql-tables-and-commands.png"
+  <img src="/images/5-Workshop/5.5-Backend-and-Database/postgresql-tables-and-commands.png"
        alt="Các bảng PostgreSQL và command IoT ở trạng thái Executed"
        width="100%" />
 </p>
@@ -153,7 +153,7 @@ LIMIT 6;
 
 Ảnh xác nhận một phiên PostgreSQL dùng SSL/TLS từ EC2 tới database `iot_dashboard`. Bốn bảng ứng dụng và các command gần nhất có `device_id` là `room_01` được hiển thị. Các ví dụ gồm `CURTAIN_CLOSE`, `CURTAIN_OPEN`, `MODE_AUTO` và `LIGHT_OFF`, đều ở trạng thái `Executed`. Ảnh không hiển thị mật khẩu database.
 
-![Phản hồi telemetry API và bản ghi PostgreSQL tương ứng](/images/5-Workshop/5.5-backend-database/telemetry-api-database.png)
+![Phản hồi telemetry API và bản ghi PostgreSQL tương ứng](/images/5-Workshop/5.5-Backend-and-Database/telemetry-api-database.png)
 *Hình 9a. Telemetry POST và latest API response đối chiếu được với cùng bản ghi `telemetry_logs` trong PostgreSQL.*
 
 ## Bước 6 - Kết quả mong đợi
