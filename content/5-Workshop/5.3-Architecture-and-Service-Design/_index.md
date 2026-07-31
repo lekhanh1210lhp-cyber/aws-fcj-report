@@ -8,7 +8,7 @@ pre: " <b> 5.3. </b> "
 
 ## Architecture
 
-![AWS IoT Monitoring and Control Dashboard architecture](/images/5-Workshop/5.3-architecture/aws-iot-dashboard-architecture.png)
+![AWS IoT Monitoring and Control Dashboard architecture](/images/5-Workshop/5.3-architecture/aws_diagram.png)
 
 *Figure 5-2. The architecture image copied from the application repository shows the service boundaries, EC2-to-RDS connection, device HTTP paths, and CloudWatch monitoring path.*
 

@@ -38,7 +38,7 @@ The expected result is a reproducible prototype for `room_01`, not an enterprise
 
 ## Architecture
 
-![AWS IoT Monitoring and Control Dashboard architecture](/images/5-Workshop/5.3-architecture/aws-iot-dashboard-architecture.png)
+![AWS IoT Monitoring and Control Dashboard architecture](/images/5-Workshop/5.3-architecture/aws_diagram.png)
 
 *Figure 5-1. The source-repository architecture places the local dashboard user, React frontend, and YOLO UNO outside AWS; EC2 and RDS inside the VPC; and IAM and CloudWatch as AWS account/regional services outside the VPC boundary.*
 

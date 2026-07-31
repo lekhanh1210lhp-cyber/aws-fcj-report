@@ -8,7 +8,7 @@ pre: " <b> 5.3. </b> "
 
 ## Kiến trúc
 
-![Kiến trúc AWS IoT Monitoring and Control Dashboard](/images/5-Workshop/5.3-architecture/aws-iot-dashboard-architecture.png)
+![Kiến trúc AWS IoT Monitoring and Control Dashboard](/images/5-Workshop/5.3-architecture/aws_diagram.png)
 
 *Hình 5-2. Sơ đồ kiến trúc từ kho mã nguồn ứng dụng, thể hiện ranh giới dịch vụ, kết nối EC2–RDS, giao tiếp HTTP của thiết bị và luồng giám sát qua CloudWatch.*
 

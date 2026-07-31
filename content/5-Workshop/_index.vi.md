@@ -38,7 +38,7 @@ Kết quả cuối cùng là một mô hình thử nghiệm có thể tái tạo
 
 ## Kiến trúc
 
-![Kiến trúc AWS IoT Monitoring and Control Dashboard](/images/5-Workshop/5.3-architecture/aws-iot-dashboard-architecture.png)
+![Kiến trúc AWS IoT Monitoring and Control Dashboard](/images/5-Workshop/5.3-architecture/aws_diagram.png)
 
 *Hình 5-1. Sơ đồ kiến trúc từ kho mã nguồn ứng dụng: người dùng dashboard, React frontend chạy cục bộ và YOLO UNO nằm ngoài AWS; EC2 và RDS nằm trong VPC; IAM và CloudWatch hoạt động ở cấp tài khoản hoặc khu vực nên không nằm trong ranh giới VPC.*
 
